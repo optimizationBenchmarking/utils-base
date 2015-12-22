@@ -39,6 +39,8 @@ public final class Execute {
    *          the result
    * @return the {@link java.util.concurrent.Future} denoting the task's
    *         completion
+   * @param <T>
+   *          the return type
    */
   public static final <T> Future<T> submitToCommonPool(final Runnable task,
       final T result) {
@@ -53,6 +55,8 @@ public final class Execute {
    *          the task
    * @return the {@link java.util.concurrent.Future} denoting the task's
    *         completion
+   * @param <T>
+   *          the return type
    */
   public static final <T> Future<T> submitToCommonPool(
       final Callable<T> task) {
@@ -67,6 +71,8 @@ public final class Execute {
    *          the task
    * @return the {@link java.util.concurrent.Future} denoting the task's
    *         completion
+   * @param <T>
+   *          the return type
    */
   public static final <T> Future<T> submitToCommonPool(
       final ForkJoinTask<T> task) {
@@ -368,9 +374,9 @@ public final class Execute {
   /**
    * Execute a set of {@link java.lang.Runnable}s in parallel and append
    * the corresponding {@link java.util.concurrent.Future}s to a
-   * {@java.util.Collection collection}. No guarantee about the execution
-   * order is given. This method does not guarantee that the task will
-   * actually be executed in parallel. If parallel execution is not
+   * {@link java.util.Collection collection}. No guarantee about the
+   * execution order is given. This method does not guarantee that the task
+   * will actually be executed in parallel. If parallel execution is not
    * possible, because, e.g., no {@link java.util.concurrent.ForkJoinPool}
    * could be detected, the task is directly executed.
    *
@@ -407,9 +413,9 @@ public final class Execute {
   /**
    * Execute a {@link java.util.concurrent.Callable}s in parallel and
    * append the corresponding {@link java.util.concurrent.Future}s to a
-   * {@java.util.Collection collection}. No guarantee about the execution
-   * order is given. This method does not guarantee that the task will
-   * actually be executed in parallel. If parallel execution is not
+   * {@link java.util.Collection collection}. No guarantee about the
+   * execution order is given. This method does not guarantee that the task
+   * will actually be executed in parallel. If parallel execution is not
    * possible, because, e.g., no {@link java.util.concurrent.ForkJoinPool}
    * could be detected, the task is directly executed.
    *
@@ -513,7 +519,7 @@ public final class Execute {
   /**
    * Execute a set of {@link java.lang.Runnable}s and append the
    * corresponding {@link java.util.concurrent.Future}s to a
-   * {@java.util.Collection collection}.
+   * {@link java.util.Collection collection}.
    *
    * @param dest
    *          the collection to receive the
@@ -552,7 +558,7 @@ public final class Execute {
   /**
    * Execute a {@link java.util.concurrent.Callable}s and append the
    * corresponding {@link java.util.concurrent.Future}s to a
-   * {@java.util.Collection collection}.
+   * {@link java.util.Collection collection}.
    *
    * @param dest
    *          the collection to receive the
@@ -698,12 +704,12 @@ public final class Execute {
   /**
    * Execute a set of {@link java.lang.Runnable}s in parallel and wait
    * until all of them have terminated. Append the corresponding
-   * {@link java.util.concurrent.Future}s to a
-   * {@java.util.Collection collection}. No guarantee about the execution
-   * order is given. This method does not guarantee that the task will
-   * actually be executed in parallel. If parallel execution is not
-   * possible, because, e.g., no {@link java.util.concurrent.ForkJoinPool}
-   * could be detected, the task is directly executed.
+   * {@link java.util.concurrent.Future}s to a {@link java.util.Collection
+   * collection}. No guarantee about the execution order is given. This
+   * method does not guarantee that the task will actually be executed in
+   * parallel. If parallel execution is not possible, because, e.g., no
+   * {@link java.util.concurrent.ForkJoinPool} could be detected, the task
+   * is directly executed.
    *
    * @param dest
    *          the collection to receive the
@@ -753,12 +759,12 @@ public final class Execute {
   /**
    * Execute a {@link java.util.concurrent.Callable}s in parallel and wait
    * until all of them have terminated. Append the corresponding
-   * {@link java.util.concurrent.Future}s to a
-   * {@java.util.Collection collection}. No guarantee about the execution
-   * order is given. This method does not guarantee that the task will
-   * actually be executed in parallel. If parallel execution is not
-   * possible, because, e.g., no {@link java.util.concurrent.ForkJoinPool}
-   * could be detected, the task is directly executed.
+   * {@link java.util.concurrent.Future}s to a {@link java.util.Collection
+   * collection}. No guarantee about the execution order is given. This
+   * method does not guarantee that the task will actually be executed in
+   * parallel. If parallel execution is not possible, because, e.g., no
+   * {@link java.util.concurrent.ForkJoinPool} could be detected, the task
+   * is directly executed.
    *
    * @param dest
    *          the collection to receive the

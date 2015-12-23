@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 import org.optimizationBenchmarking.utils.comparison.EComparison;
 import org.optimizationBenchmarking.utils.error.ErrorUtils;
 import org.optimizationBenchmarking.utils.error.RethrowMode;
-import org.optimizationBenchmarking.utils.io.nul.NullInputStream;
-import org.optimizationBenchmarking.utils.io.nul.NullOutputStream;
+import org.optimizationBenchmarking.utils.io.nullIO.NullInputStream;
+import org.optimizationBenchmarking.utils.io.nullIO.NullOutputStream;
 import org.optimizationBenchmarking.utils.io.paths.PathUtils;
 import org.optimizationBenchmarking.utils.parallel.ByteProducerConsumerBuffer;
 import org.optimizationBenchmarking.utils.text.textOutput.MemoryTextOutput;
@@ -21,8 +21,8 @@ import org.optimizationBenchmarking.utils.text.textOutput.MemoryTextOutput;
 /**
  * A builder for external processes.
  */
-public final class ExternalProcessBuilder extends
-    _BasicProcessBuilder<ExternalProcess, ExternalProcessBuilder> {
+public final class ExternalProcessBuilder
+    extends _BasicProcessBuilder<ExternalProcess, ExternalProcessBuilder> {
 
   /** an atomic process counter */
   private static final AtomicLong PROC_ID = new AtomicLong();
@@ -110,7 +110,8 @@ public final class ExternalProcessBuilder extends
 
   /** {@inheritDoc} */
   @Override
-  public final ExternalProcessBuilder removeEnvironmentVar(final String key) {
+  public final ExternalProcessBuilder removeEnvironmentVar(
+      final String key) {
     this.m_pb.environment().remove(key);
     return this;
   }
@@ -170,8 +171,8 @@ public final class ExternalProcessBuilder extends
     final Redirect redir;
 
     file = PathUtils.getPhysicalFile(dest);
-    this.m_pb.redirectOutput(redir = (append ? Redirect.appendTo(file)
-        : Redirect.to(file)));
+    this.m_pb.redirectOutput(
+        redir = (append ? Redirect.appendTo(file) : Redirect.to(file)));
     this.m_stdout = EProcessStream.REDIRECT_TO_PATH;
 
     if (this.m_pb.redirectErrorStream()) {
@@ -234,23 +235,25 @@ public final class ExternalProcessBuilder extends
     if (merge) {
       if (this.m_stderr != this.m_stdout) {
         throw new IllegalStateException(//
-            "If you merge stdout and stderr, they cannot have different stream modes, but stdout has " + //$NON-NLS-1$
-                this.m_stdout + " and stderr has " //$NON-NLS-1$
+            "If you merge stdout and stderr, they cannot have different stream modes, but stdout has " //$NON-NLS-1$
+                + this.m_stdout + " and stderr has " //$NON-NLS-1$
                 + this.m_stderr);
       }
       if (!(EComparison.equals(err, out))) {
         throw new IllegalStateException(//
-            "If you merge stdout and stderr, they cannot have different redirects, but stdout has " + //$NON-NLS-1$
-                this.m_pb.redirectOutput() + " and stderr has " //$NON-NLS-1$
+            "If you merge stdout and stderr, they cannot have different redirects, but stdout has " //$NON-NLS-1$
+                + this.m_pb.redirectOutput() + " and stderr has " //$NON-NLS-1$
                 + this.m_pb.redirectError());
       }
     } else {
-      if ((((t1 = out.type()) == Redirect.Type.APPEND) || (t1 == Redirect.Type.WRITE))
-          && (((t2 = err.type()) == Redirect.Type.APPEND) || (t2 == Redirect.Type.WRITE))
+      if ((((t1 = out.type()) == Redirect.Type.APPEND)
+          || (t1 == Redirect.Type.WRITE))
+          && (((t2 = err.type()) == Redirect.Type.APPEND)
+              || (t2 == Redirect.Type.WRITE))
           && EComparison.equals((f = out.file()), err.file())) {
         throw new IllegalStateException(//
-            "If you do not merge stdout and stderr, they cannot be redirected to the same file " + //$NON-NLS-1$
-                t1 + " and stderr has " //$NON-NLS-1$
+            "If you do not merge stdout and stderr, they cannot be redirected to the same file " //$NON-NLS-1$
+                + t1 + " and stderr has " //$NON-NLS-1$
                 + t2 + " and both redirect to '" + //$NON-NLS-1$
                 f + '\'');
       }
@@ -343,7 +346,7 @@ public final class ExternalProcessBuilder extends
     try {
       process = this.m_pb.start();
     } catch (final IOException ioe) {
-      ErrorUtils.logError(log, ("Error when starting " + name), ioe, true,//$NON-NLS-1$
+      ErrorUtils.logError(log, ("Error when starting " + name), ioe, true, //$NON-NLS-1$
           RethrowMode.AS_IO_EXCEPTION);
       return null; // never reached
     }

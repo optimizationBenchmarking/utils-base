@@ -1,4 +1,4 @@
-package org.optimizationBenchmarking.utils.io.nul;
+package org.optimizationBenchmarking.utils.io.nullIO;
 
 import java.io.Writer;
 
@@ -44,7 +44,8 @@ public final class NullWriter extends Writer {
 
   /** {@inheritDoc} */
   @Override
-  public final void write(final char cbuf[], final int off, final int len) {//
+  public final void write(final char cbuf[], final int off,
+      final int len) {//
   }
 
   /** {@inheritDoc} */

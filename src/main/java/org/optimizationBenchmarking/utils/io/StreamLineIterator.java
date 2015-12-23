@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.optimizationBenchmarking.utils.collections.iterators.IterableIterator;
-import org.optimizationBenchmarking.utils.io.nul.NullBufferedReader;
+import org.optimizationBenchmarking.utils.io.nullIO.NullBufferedReader;
 
 /**
  * An interator which iterates over the lines from a reader.

@@ -8,10 +8,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.optimizationBenchmarking.utils.io.nul.NullBufferedReader;
-import org.optimizationBenchmarking.utils.io.nul.NullBufferedWriter;
-import org.optimizationBenchmarking.utils.io.nul.NullInputStream;
-import org.optimizationBenchmarking.utils.io.nul.NullOutputStream;
+import org.optimizationBenchmarking.utils.io.nullIO.NullBufferedReader;
+import org.optimizationBenchmarking.utils.io.nullIO.NullBufferedWriter;
+import org.optimizationBenchmarking.utils.io.nullIO.NullInputStream;
+import org.optimizationBenchmarking.utils.io.nullIO.NullOutputStream;
 
 /** A process with which we can communicate via text. */
 public final class TextProcess extends _BasicProcess {

@@ -1,3 +1,8 @@
+##
+## Build with CircleCI
+##
+## https://circleci.com/gh/optimizationBenchmarking/utils-base
+#
 # We set the environment variable JAVA_OPTS to reduce
 # the memory footprint in order to prevent unexpected
 # test termination.

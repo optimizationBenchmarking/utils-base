@@ -7,7 +7,7 @@
 [<img alt="Snap CI Build Status" src="https://img.shields.io/snap-ci/optimizationBenchmarking/utils-base/master.svg" height="20"/>](https://snap-ci.com/optimizationBenchmarking/utils-base/branch/master)
 [<img alt="Wercker Build Status" src="https://img.shields.io/wercker/ci/567a005a13c2df2b623ee96c.svg" height="20"/>](https://app.wercker.com/#applications/567a005a13c2df2b623ee96c)
 [<img alt="Shippable Build Status" src="https://img.shields.io/shippable/567a0f771895ca447466cf07.svg" height="20"/>](https://app.shippable.com/projects/567a0f771895ca447466cf07)
-
+[<img alt="AppVeyor Build Status" src="https://img.shields.io/appveyor/ci/thomasWeise/utils-base.svg" height="20"/>](https://ci.appveyor.com/project/thomasWeise/utils-base)
 
 This library provides the basic utility classes used by the [optimizationBenchmarking](http://www.github.com/optimizationBenchmarking/) tool suite. They are licensed under the GNU General Public License Version 3 is provided in the file "[LICENSE.md](http://github.com/optimizationBenchmarking/utils-base/tree/master/LICENSE.md)" and can be found online at
 [http://www.gnu.org/meta/licenses/gpl-3.0.txt](http://www.gnu.org/meta/licenses/gpl-3.0.txt).

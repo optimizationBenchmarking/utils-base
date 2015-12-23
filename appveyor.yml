@@ -2,6 +2,8 @@
 ## Build with appveyor
 ##
 
+clone_folder: c:\a
+
 install:
   - cinst jdk8
   - cinst maven

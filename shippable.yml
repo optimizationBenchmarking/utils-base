@@ -12,6 +12,7 @@ jdk:
 #
 # install maven
 before_install:
+  - shippable_retry apt-get update
   - shippable_retry apt-get install -y maven
 #
 # Activate jdk

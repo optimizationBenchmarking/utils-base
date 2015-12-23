@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * it just fills up the logs with rubbish. With this filter here, we try to
  * prevent this behavior. The filter is applied to the
  * {@linkplain java.util.logging.Logger#getGlobal() global logger} and all
- * of its {@links java.util.logging.Logger#getParent() parents} and
+ * of its {@link java.util.logging.Logger#getParent() parents} and
  * its/their {@linkplain java.util.logging.Logger#getHandlers() handlers}
  * recursively. It will hopefully remove this useless log entries. The
  * filter is applied in the moment when we invoke

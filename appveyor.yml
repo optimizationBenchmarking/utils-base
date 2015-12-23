@@ -1,12 +1,31 @@
 ##
 ## Build with appveyor
 ##
+  
+environment:
+  matrix:
+    - JAVA_HOME: C:\Program Files\Java\jdk1.7.0
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
 
 install:
-  - cinst jdk8
-  - cinst maven -version 3.3.1
-  - echo %PATH%
-  - echo SET PATH=%PATH% > C:\setupPath.bat
+  - ps: >-
+      $MVNDIR = 'C:\bin\apache-maven-3.2.5\'
+      if(!(Test-Path -Path $MVNDIR )){
+        Write-Host (Test-Path -Path $MVNDIR)
+        Write-Host 'Installing Maven'
+        cinst maven -Version 3.2.5
+      } else {
+        Write-Host 'Found Maven cached installation'
+      }
+  # choco does not set the PATH environment variable correctly
+  # so we do it manually, like
+  # https://github.com/abelsromero/asciidoctor-maven-plugin/blob/master/appveyor.yml
+  - cmd: SET PATH=C:\bin\apache-maven-3.2.5\bin;%JAVA_HOME%\bin;%PATH%
+  - cmd: mvn --version
+  - cmd: java -version
+  
+cache:
+  - C:\bin\apache-maven-3.2.5\
 
 platform:
   - x86
@@ -16,9 +35,7 @@ configuration:
   - Release
     
 build_script:
-  - C:\setupPath.bat
-  - mvn clean compile package install
+  - mvn clean compile package install -B -Dmaven.test.skip=true
   
 test_script:
-  - C:\setupPath.bat
-  - mvn test
+  - mvn test -B

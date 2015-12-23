@@ -4,7 +4,9 @@
 
 install:
   - cinst jdk8
-  - cinst maven
+  - cinst maven -version 3.3.1
+  - echo %PATH%
+  - echo SET PATH=%PATH% > C:\setupPath.bat
 
 platform:
   - x86
@@ -12,20 +14,11 @@ platform:
   
 configuration:
   - Release
-  
-before_build:
-  - echo %PATH%
-  - dir C:\bin\apache-maven-3.3.1\bin
-  - mvn.bat clean
-  
+    
 build_script:
-  - mvn.bat compile
-  
-after_build:
-  - mvn.bat package
+  - C:\setupPath.bat
+  - mvn clean compile package install
   
 test_script:
-  - mvn.bat test
-  
-after_test:
-  - mvn.bat install
+  - C:\setupPath.bat
+  - mvn test

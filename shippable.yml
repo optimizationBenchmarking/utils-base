@@ -1,6 +1,7 @@
 ##
 ## Build with Shippable
 ##
+## https://app.shippable.com/projects/567a0f771895ca447466cf07
 #
 #
 language: java
@@ -12,8 +13,8 @@ jdk:
 #
 # install maven
 before_install:
-  - shippable_retry apt-get update
-  - shippable_retry apt-get install -y maven
+  - shippable_retry sudo apt-get update
+  - shippable_retry sudo apt-get install -y maven
 #
 # Activate jdk
 before_script:

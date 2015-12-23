@@ -5,6 +5,7 @@
 [<img alt="CircleCI Build Status" src="https://img.shields.io/circleci/project/optimizationBenchmarking/utils-base.svg" height="20"/>](https://circleci.com/gh/optimizationBenchmarking/utils-base)
 [<img alt="Semaphore Build Status" src="https://semaphoreci.com/api/v1/projects/307f0e82-6765-4e5c-80c6-3566c2086110/642552/shields_badge.svg" height="20"/>](https://semaphoreci.com/thomasweise/utils-base)
 [<img alt="Snap CI Build Status" src="https://img.shields.io/snap-ci/optimizationBenchmarking/utils-base/master.svg" height="20"/>](https://snap-ci.com/optimizationBenchmarking/utils-base/branch/master)
+[<img alt="Wercker Build Status" src="https://img.shields.io/wercker/ci/567a005a13c2df2b623ee96c.svg" height="20"/>](https://app.wercker.com/#applications/567a005a13c2df2b623ee96c)
 
 
 This library provides the basic utility classes used by the [optimizationBenchmarking](http://www.github.com/optimizationBenchmarking/) tool suite. They are licensed under the GNU General Public License Version 3 is provided in the file "[LICENSE.md](http://github.com/optimizationBenchmarking/utils-base/tree/master/LICENSE.md)" and can be found online at

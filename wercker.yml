@@ -5,4 +5,7 @@ box: maven:3.3.3-jdk-8
 #
 build:
     steps:
-      - mvn compile test package install
+        - script:
+            name: Maven Build
+            code: |
+                  mvn compile test package install

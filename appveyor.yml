@@ -2,8 +2,6 @@
 ## Build with appveyor
 ##
 
-clone_folder: c:\a
-
 install:
   - cinst jdk8
   - cinst maven
@@ -16,16 +14,16 @@ configuration:
   - Release
   
 before_build:
-  - mvn clean
+  - mvn.bat clean
   
 build_script:
-  - mvn compile
+  - mvn.bat compile
   
 after_build:
-  - mvn package
+  - mvn.bat package
   
 test_script:
-  - mvn test
+  - mvn.bat test
   
 after_test:
-  - mvn install
+  - mvn.bat install

@@ -14,6 +14,8 @@ configuration:
   - Release
   
 before_build:
+  - echo %PATH%
+  - dir C:\bin\apache-maven-3.3.1\bin
   - mvn.bat clean
   
 build_script:

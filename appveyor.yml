@@ -1,0 +1,29 @@
+##
+## Build with appveyor
+##
+
+install:
+  - cinst jdk8
+  - cinst maven
+
+platform:
+  - x86
+  - x64
+  
+configuration:
+  - Release
+  
+before_build:
+  - mvn clean
+  
+build_script:
+  - mvn compile
+  
+after_build:
+  - mvn package
+  
+test_script:
+  - mvn test
+  
+after_test:
+  - mvn install

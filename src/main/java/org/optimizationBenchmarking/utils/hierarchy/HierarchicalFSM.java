@@ -1,7 +1,6 @@
 package org.optimizationBenchmarking.utils.hierarchy;
 
-import java.io.Closeable;
-
+import org.optimizationBenchmarking.utils.IScope;
 import org.optimizationBenchmarking.utils.error.ErrorUtils;
 import org.optimizationBenchmarking.utils.error.RethrowMode;
 import org.optimizationBenchmarking.utils.text.TextUtils;
@@ -108,7 +107,7 @@ import org.optimizationBenchmarking.utils.text.textOutput.MemoryTextOutput;
  * get exceptions.
  * </p>
  */
-public class HierarchicalFSM extends FSM implements Closeable {
+public class HierarchicalFSM extends FSM implements IScope {
 
   /** the ground state */
   private static final int STATE_NEW = 0;

@@ -1,6 +1,6 @@
 package org.optimizationBenchmarking.utils.parallel;
 
-import java.io.Closeable;
+import org.optimizationBenchmarking.utils.IScope;
 
 /**
  * <p>
@@ -20,7 +20,7 @@ import java.io.Closeable;
  * @param <T>
  *          the array type
  */
-public abstract class ProducerConsumerBuffer<T> implements Closeable {
+public abstract class ProducerConsumerBuffer<T> implements IScope {
 
   /** the buffer */
   private T m_buffer;

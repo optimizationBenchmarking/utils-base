@@ -1,11 +1,11 @@
 package org.optimizationBenchmarking.utils.tools.impl.abstr;
 
-import java.io.Closeable;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.optimizationBenchmarking.utils.IScope;
 import org.optimizationBenchmarking.utils.collections.ImmutableAssociation;
 import org.optimizationBenchmarking.utils.collections.lists.ArrayListView;
 import org.optimizationBenchmarking.utils.collections.lists.ArraySetView;
@@ -70,8 +70,7 @@ import org.optimizationBenchmarking.utils.tools.spec.IFileProducerListener;
  * producing tools are combined to create an output document.
  * </p>
  */
-public final class FileProducerSupport extends _FileSet implements
-    Closeable {
+public final class FileProducerSupport extends _FileSet implements IScope {
 
   /**
    * the map of files if more than one was produced (otherwise,
@@ -254,14 +253,14 @@ public final class FileProducerSupport extends _FileSet implements
     }
 
     if (single != null) {
-      listener.onFilesFinalized(new ArraySetView(
-          new ImmutableAssociation[] { single }));
+      listener.onFilesFinalized(
+          new ArraySetView(new ImmutableAssociation[] { single }));
       return;
     }
 
     if (files != null) {
       listener.onFilesFinalized((Collection) (//
-          FileProducerSupport.__make(files)));
+      FileProducerSupport.__make(files)));
       return;
     }
 

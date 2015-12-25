@@ -409,6 +409,69 @@ public class CollectionTest<ET, T extends Collection<ET>>
     this.__testAddAllAndItertorRemove(2, new Random());
   }
 
+  /**
+   * Test an element of the list, called by {@link #testEachElement()}.
+   *
+   * @param element
+   *          the element to test
+   * @param context
+   *          the context, created by
+   *          {@link #testEachElement_createContext()}
+   */
+  protected void testEachElement_testElement(final ET element,
+      final Object context) {
+    //
+  }
+
+  /**
+   * Create a context that can be used during element testing.
+   *
+   * @return the context object
+   */
+  protected Object testEachElement_createContext() {
+    return null;
+  }
+
+  /**
+   * Finalize the test of each element
+   *
+   * @param collection
+   *          the collection
+   * @param context
+   *          the context, created by
+   *          {@link #testEachElement_createContext()}
+   */
+  protected void testEachElement_finalize(final T collection,
+      final Object context) {
+    //
+  }
+
+  /**
+   * Test sub lists
+   */
+  @Test(timeout = 3600000)
+  public void testEachElement() {
+    final T list;
+    final int size;
+    final Object context;
+    int found;
+
+    list = this.getInstance();
+    Assert.assertNotNull(list);
+
+    size = list.size();
+    found = 0;
+    context = this.testEachElement_createContext();
+    for (final ET element : list) {
+      ++found;
+      this.testEachElement_testElement(element, context);
+    }
+
+    Assert.assertEquals(size, found);
+
+    this.testEachElement_finalize(list, context);
+  }
+
   /** {@inheritDoc} */
   @Override
   public void validateInstance() {
@@ -425,6 +488,6 @@ public class CollectionTest<ET, T extends Collection<ET>>
 
     this.testAddAndItertorRemove();
     this.testAddAllAndItertorRemove();
+    this.testEachElement();
   }
-
 }

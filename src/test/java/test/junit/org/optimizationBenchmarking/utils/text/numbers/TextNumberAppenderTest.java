@@ -6,6 +6,8 @@ import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.numbers.NumberAppender;
 import org.optimizationBenchmarking.utils.text.numbers.TextNumberAppender;
 
+import shared.junit.org.optimizationBenchmarking.utils.text.numbers.NumberAppenderTest;
+
 /**
  * The test of
  * {@link org.optimizationBenchmarking.utils.text.numbers.TextNumberAppender}

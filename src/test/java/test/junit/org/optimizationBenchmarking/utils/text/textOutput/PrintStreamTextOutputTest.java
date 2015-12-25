@@ -8,6 +8,8 @@ import org.junit.Ignore;
 import org.optimizationBenchmarking.utils.text.textOutput.AbstractTextOutput;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
+import shared.junit.org.optimizationBenchmarking.utils.text.textOutput.TextOutputTest;
+
 /**
  * A test of an internal wrapper class of
  * {@link org.optimizationBenchmarking.utils.text.textOutput.ITextOutput}.

@@ -1,4 +1,4 @@
-package test.junit.org.optimizationBenchmarking.utils.text.textOutput;
+package shared.junit.org.optimizationBenchmarking.utils.text.textOutput;
 
 import java.util.ArrayList;
 import java.util.Random;

@@ -1,4 +1,4 @@
-package test.junit.org.optimizationBenchmarking.utils.parallel;
+package shared.junit.org.optimizationBenchmarking.utils.parallel;
 
 import java.util.Random;
 
@@ -29,7 +29,7 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
    *          the size
    * @return the array
    */
-  abstract T _new(final int size);
+  protected abstract T createArray(final int size);
 
   /**
    * fill an array with random data
@@ -39,7 +39,7 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
    * @param r
    *          the randomizer
    */
-  abstract void _random(final T array, final Random r);
+  protected abstract void randomizeArray(final T array, final Random r);
 
   /**
    * assert that the contents of two arrays are equal
@@ -49,7 +49,7 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
    * @param b
    *          the second array
    */
-  abstract void _assertEquals(final T a, final T b);
+  protected abstract void assertEquals(final T a, final T b);
 
   /**
    * create a new buffer
@@ -58,7 +58,8 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
    *          the size
    * @return the buffer
    */
-  abstract ProducerConsumerBuffer<T> _newBuffer(final int size);
+  protected abstract ProducerConsumerBuffer<T> createBuffer(
+      final int size);
 
   /**
    * Test whether the written data and the data we read is the same
@@ -89,9 +90,9 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
           size = ((i + 1) * 64);
         }
       }
-      read = this._new(size);
-      write = this._new(size);
-      this._random(write, r);
+      read = this.createArray(size);
+      write = this.createArray(size);
+      this.randomizeArray(write, r);
 
       switch (r.nextInt(3)) {
         case 0: {
@@ -116,7 +117,8 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
         }
       }
 
-      try (final ProducerConsumerBuffer<T> buffer = this._newBuffer(use)) {
+      try (final ProducerConsumerBuffer<T> buffer = this
+          .createBuffer(use)) {
         a = new __WriterThread(write, size, buffer);
         b = new __ReaderThread(read, size, buffer);
 
@@ -134,7 +136,7 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
         b.join();
       }
 
-      this._assertEquals(write, read);
+      this.assertEquals(write, read);
     }
   }
 

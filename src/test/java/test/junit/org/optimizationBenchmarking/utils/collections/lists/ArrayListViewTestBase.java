@@ -6,7 +6,7 @@ import org.junit.Ignore;
 import org.optimizationBenchmarking.utils.collections.lists.ArrayListView;
 
 import shared.junit.InstanceTest;
-import test.junit.org.optimizationBenchmarking.utils.collections.BasicListTest;
+import shared.junit.org.optimizationBenchmarking.utils.collections.BasicListTest;
 
 /**
  * a test for collection classes

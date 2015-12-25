@@ -1,4 +1,4 @@
-package test.junit.org.optimizationBenchmarking.utils.parsers;
+package shared.junit.org.optimizationBenchmarking.utils.parsers;
 
 import java.util.Collection;
 import java.util.Map;

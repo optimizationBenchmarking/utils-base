@@ -1,4 +1,4 @@
-package test.junit.org.optimizationBenchmarking.utils.text.numbers;
+package shared.junit.org.optimizationBenchmarking.utils.text.numbers;
 
 import java.util.Random;
 

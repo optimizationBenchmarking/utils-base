@@ -12,6 +12,7 @@ import org.optimizationBenchmarking.utils.text.numbers.AlphabeticNumberAppender;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 import org.optimizationBenchmarking.utils.text.textOutput.MemoryTextOutput;
 
+import shared.junit.org.optimizationBenchmarking.utils.text.textOutput.TextOutputTest;
 import shared.randomization.LoremIpsum;
 import shared.randomization.RandomUtils;
 

@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.optimizationBenchmarking.utils.text.transformations.CharTransformer;
 import org.optimizationBenchmarking.utils.text.transformations.LookupCharTransformer;
 
+import shared.junit.org.optimizationBenchmarking.utils.text.transformations.CharTransformerTest;
+
 /**
  * test the test char transformer
  */

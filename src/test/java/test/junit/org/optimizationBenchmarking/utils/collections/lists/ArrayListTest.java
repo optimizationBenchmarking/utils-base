@@ -2,7 +2,7 @@ package test.junit.org.optimizationBenchmarking.utils.collections.lists;
 
 import java.util.ArrayList;
 
-import test.junit.org.optimizationBenchmarking.utils.collections.ListTest;
+import shared.junit.org.optimizationBenchmarking.utils.collections.ListTest;
 
 /**
  * This is a test designed to verify that our tests are compatible to the

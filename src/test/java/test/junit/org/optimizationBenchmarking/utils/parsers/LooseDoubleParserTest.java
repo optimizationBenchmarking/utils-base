@@ -11,6 +11,8 @@ import org.optimizationBenchmarking.utils.collections.lists.ArrayListView;
 import org.optimizationBenchmarking.utils.parsers.LooseDoubleParser;
 import org.optimizationBenchmarking.utils.parsers.Parser;
 
+import shared.junit.org.optimizationBenchmarking.utils.parsers.ParserTest;
+
 /**
  * the basic test for double parsers
  */

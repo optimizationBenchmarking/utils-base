@@ -1,4 +1,4 @@
-package test.junit.org.optimizationBenchmarking.utils.text.transformations;
+package shared.junit.org.optimizationBenchmarking.utils.text.transformations;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -6,6 +6,8 @@ import org.optimizationBenchmarking.utils.text.TextUtils;
 import org.optimizationBenchmarking.utils.text.transformations.CharTransformer;
 import org.optimizationBenchmarking.utils.text.transformations.LaTeXCharTransformer;
 
+import shared.junit.org.optimizationBenchmarking.utils.text.transformations.CharTransformerTest;
+
 /**
  * test the LaTeX char transformer
  */

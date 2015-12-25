@@ -1,4 +1,4 @@
-package test.junit.org.optimizationBenchmarking.utils.collections;
+package shared.junit.org.optimizationBenchmarking.utils.collections;
 
 import java.util.ArrayList;
 import java.util.Iterator;

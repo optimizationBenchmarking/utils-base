@@ -1,4 +1,4 @@
-package test.junit.org.optimizationBenchmarking.utils.tools.impl.process;
+package test.junit.org.optimizationBenchmarking.utils.tools.process;
 
 import org.optimizationBenchmarking.utils.tools.impl.process.ExternalProcessExecutor;
 

@@ -3,7 +3,7 @@ package test.junit.org.optimizationBenchmarking.utils.collections.maps;
 import org.optimizationBenchmarking.utils.collections.maps.ChainedMapEntry;
 import org.optimizationBenchmarking.utils.collections.maps.ObjectMap;
 
-import test.junit.org.optimizationBenchmarking.utils.collections.MapTest;
+import shared.junit.org.optimizationBenchmarking.utils.collections.MapTest;
 
 /**
  * This is a test designed to verify that our tests are compatible to the

@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.optimizationBenchmarking.utils.parallel.ByteProducerConsumerBuffer;
 import org.optimizationBenchmarking.utils.parallel.ProducerConsumerBuffer;
 
+import shared.junit.org.optimizationBenchmarking.utils.parallel.ProducerConsumerBufferTest;
+
 /**
  * The base class for testing producer and consumer buffers.
  */
@@ -19,25 +21,26 @@ public class ByteProducerConsumerBufferTest
 
   /** {@inheritDoc} */
   @Override
-  final byte[] _new(final int size) {
+  protected final byte[] createArray(final int size) {
     return new byte[size];
   }
 
   /** {@inheritDoc} */
   @Override
-  final void _random(final byte[] array, final Random r) {
+  protected final void randomizeArray(final byte[] array, final Random r) {
     r.nextBytes(array);
   }
 
   /** {@inheritDoc} */
   @Override
-  final void _assertEquals(final byte[] a, final byte[] b) {
+  protected final void assertEquals(final byte[] a, final byte[] b) {
     Assert.assertArrayEquals(a, b);
   }
 
   /** {@inheritDoc} */
   @Override
-  final ProducerConsumerBuffer<byte[]> _newBuffer(final int size) {
+  protected final ProducerConsumerBuffer<byte[]> createBuffer(
+      final int size) {
     return new ByteProducerConsumerBuffer(size);
   }
 

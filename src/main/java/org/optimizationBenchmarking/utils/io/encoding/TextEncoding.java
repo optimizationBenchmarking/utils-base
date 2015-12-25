@@ -18,8 +18,8 @@ import org.optimizationBenchmarking.utils.text.TextUtils;
 /**
  * A text encoding based on some fixed character set.
  */
-public final class TextEncoding extends
-    StreamEncoding<BufferedReader, BufferedWriter> {
+public final class TextEncoding
+    extends StreamEncoding<BufferedReader, BufferedWriter> {
   /** the serial version uid */
   private static final long serialVersionUID = 1L;
 
@@ -58,13 +58,13 @@ public final class TextEncoding extends
     names = new ArrayList<>();
 
     sn = this.name();
-    snlc = TextUtils.toLowerCase(sn);
+    snlc = TextUtils.toComparisonCase(sn);
 
     names.add(snlc);
     jn = this.getJavaName();
     if (jn != null) {
       if ((jn != sn) && (!(sn.equals(jn)))) {
-        jnlc = TextUtils.toLowerCase(jn);
+        jnlc = TextUtils.toComparisonCase(jn);
         if (!(snlc.equals(jnlc))) {
           names.add(jnlc);
         }
@@ -76,29 +76,29 @@ public final class TextEncoding extends
         if (cs != null) {
           lc = cs.displayName();
           if (lc != null) {
-            lc = TextUtils.toLowerCase(lc);
+            lc = TextUtils.toComparisonCase(lc);
 
-            if (!(names.contains(lc) || lc
-                .equalsIgnoreCase(StreamEncoding._DEFAULT))) {
+            if (!(names.contains(lc) || //
+                lc.equalsIgnoreCase(StreamEncoding._DEFAULT))) {
               names.add(lc);
             }
           }
 
           lc = cs.displayName(Locale.US);
           if (lc != null) {
-            lc = TextUtils.toLowerCase(lc);
+            lc = TextUtils.toComparisonCase(lc);
 
-            if (!(names.contains(lc) || lc
-                .equalsIgnoreCase(StreamEncoding._DEFAULT))) {
+            if (!(names.contains(lc) || //
+                lc.equalsIgnoreCase(StreamEncoding._DEFAULT))) {
               names.add(lc);
             }
           }
 
           for (String s : cs.aliases()) {
             if (s != null) {
-              s = TextUtils.toLowerCase(s);
-              if (!(names.contains(s) || s
-                  .equalsIgnoreCase(StreamEncoding._DEFAULT))) {
+              s = TextUtils.toComparisonCase(s);
+              if (!(names.contains(s) || //
+                  s.equalsIgnoreCase(StreamEncoding._DEFAULT))) {
                 names.add(s);
               }
             }
@@ -113,7 +113,7 @@ public final class TextEncoding extends
     for (final String s : moreNames) {
       lc = TextUtils.prepare(s);
       if (lc != null) {
-        lc = TextUtils.toLowerCase(lc);
+        lc = TextUtils.toComparisonCase(lc);
         if (!(names.contains(lc))) {
           names.add(lc);
         }
@@ -172,16 +172,16 @@ public final class TextEncoding extends
   @Override
   public final BufferedReader wrapInputStream(final InputStream input)
       throws IOException {
-    return new _EncodedBufferedReader(new InputStreamReader(input,
-        this.m_javaName), this);
+    return new _EncodedBufferedReader(
+        new InputStreamReader(input, this.m_javaName), this);
   }
 
   /** {@inheritDoc} */
   @Override
   public final BufferedWriter wrapOutputStream(final OutputStream output)
       throws IOException {
-    return new _EncodedBufferedWriter(new OutputStreamWriter(output,
-        this.m_javaName), this);
+    return new _EncodedBufferedWriter(
+        new OutputStreamWriter(output, this.m_javaName), this);
   }
 
   /** {@inheritDoc} */

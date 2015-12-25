@@ -39,7 +39,7 @@ public class StringMapCI<ET> extends StringMap<ET> {
     final String t;
     t = super._prepare(s);
     if (t != null) {
-      return TextUtils.toLowerCase(t);
+      return TextUtils.toComparisonCase(t);
     }
     return null;
   }

@@ -23,8 +23,7 @@ final class _TextConst implements Comparable<_TextConst> {
   /** the constants */
   private static final _TextConst[] CONSTS = new _TextConst[] {
 
-      new _TextConst(
-          TextUtils.toLowerCase(Double.toString(Double.NEGATIVE_INFINITY)), //
+      new _TextConst(Double.toString(Double.NEGATIVE_INFINITY), //
           Double.NEGATIVE_INFINITY, Long.MIN_VALUE, Integer.MIN_VALUE,
           false), //
 
@@ -34,8 +33,7 @@ final class _TextConst implements Comparable<_TextConst> {
       new _TextConst(LooseDoubleParser.NEGATIVE_INFINITY,
           Double.NEGATIVE_INFINITY), //
 
-      new _TextConst(
-          TextUtils.toLowerCase(Double.toString(Double.POSITIVE_INFINITY)), //
+      new _TextConst(Double.toString(Double.POSITIVE_INFINITY), //
           Double.POSITIVE_INFINITY), //
 
       new _TextConst("positiveinfinity", //$NON-NLS-1$
@@ -68,7 +66,7 @@ final class _TextConst implements Comparable<_TextConst> {
       new _TextConst("unendlich", //$NON-NLS-1$
           Double.POSITIVE_INFINITY), //
 
-      new _TextConst(TextUtils.toLowerCase(Double.toString(Double.NaN)), //
+      new _TextConst(Double.toString(Double.NaN), //
           Double.NaN), //
 
       new _TextConst("nan!", //$NON-NLS-1$
@@ -265,7 +263,7 @@ final class _TextConst implements Comparable<_TextConst> {
   _TextConst(final String n, final double d, final long l, final int i,
       final boolean b, final int state) {
     super();
-    this.m_name = n;
+    this.m_name = TextUtils.toComparisonCase(n);
     this.m_d = d;
     this.m_l = l;
     this.m_i = i;
@@ -426,7 +424,7 @@ final class _TextConst implements Comparable<_TextConst> {
     _TextConst midVal;
     final String name;
 
-    name = TextUtils.toLowerCase(constName);
+    name = TextUtils.toComparisonCase(constName);
     low = 0;
     high = (_TextConst.CONSTS.length - 1);
 

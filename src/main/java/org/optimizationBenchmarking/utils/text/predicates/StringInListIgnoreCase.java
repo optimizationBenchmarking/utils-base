@@ -47,7 +47,7 @@ public class StringInListIgnoreCase<T> extends StringInList<T> {
     }
 
     for (; (--i) >= 0;) {
-      list[i] = TextUtils.toLowerCase(list[i]);
+      list[i] = TextUtils.toComparisonCase(list[i]);
     }
     Arrays.sort(list);
 
@@ -57,6 +57,6 @@ public class StringInListIgnoreCase<T> extends StringInList<T> {
   /** {@inheritDoc} */
   @Override
   protected String getString(final T object) {
-    return TextUtils.toLowerCase(super.getString(object));
+    return TextUtils.toComparisonCase(super.getString(object));
   }
 }

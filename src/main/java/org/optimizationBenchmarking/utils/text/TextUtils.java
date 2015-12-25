@@ -243,6 +243,48 @@ public final class TextUtils {
   }
 
   /**
+   * Translate a string to a form which is most suitable for storage in
+   * data structures which perform many case-insensitive comparisons and
+   * case-insensitive hashing.
+   *
+   * @param s
+   *          the string
+   * @return the form most suitable for many case-insensitive comparisons
+   *         and case-insensitive hashing
+   */
+  public static final String toComparisonCase(final String s) {
+    return TextUtils.toUpperCase(s);
+  }
+
+  /**
+   * Translate a character to a form which is most suitable for storage in
+   * data structures which perform many case-insensitive comparisons and
+   * case-insensitive hashing.
+   *
+   * @param c
+   *          the character
+   * @return the form most suitable for many case-insensitive comparisons
+   *         and case-insensitive hashing
+   */
+  public static final int toComparisonCase(final int c) {
+    return TextUtils.toUpperCase(c);
+  }
+
+  /**
+   * Translate a character to a form which is most suitable for storage in
+   * data structures which perform many case-insensitive comparisons and
+   * case-insensitive hashing.
+   *
+   * @param c
+   *          the character
+   * @return the form most suitable for many case-insensitive comparisons
+   *         and case-insensitive hashing
+   */
+  public static final char toComparisonCase(final char c) {
+    return TextUtils.toUpperCase(c);
+  }
+
+  /**
    * Normalize a string.
    *
    * @param s

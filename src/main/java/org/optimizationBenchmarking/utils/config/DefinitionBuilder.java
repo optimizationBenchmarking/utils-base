@@ -79,7 +79,7 @@ public final class DefinitionBuilder extends BuilderFSM<Definition> {
     this.fsmStateAssert(BuilderFSM.STATE_OPEN);
 
     use = this.normalize(parameter);
-    str = TextUtils.toUpperCase(use.m_name);
+    str = TextUtils.toComparisonCase(use.m_name);
     old = this.m_params.get(str);
 
     if (old == null) {

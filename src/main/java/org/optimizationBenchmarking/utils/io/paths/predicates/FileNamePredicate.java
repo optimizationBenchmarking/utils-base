@@ -56,8 +56,9 @@ public final class FileNamePredicate extends StringInListIgnoreCase<Path> {
   protected final String getString(final Path file) {
     final String s;
 
-    s = (this.m_ignoreExtension ? PathUtils
-        .getFileNameWithoutExtension(file) : PathUtils.getName(file));
-    return ((s != null) ? TextUtils.toLowerCase(s) : null);
+    s = (this.m_ignoreExtension//
+        ? PathUtils.getFileNameWithoutExtension(file) //
+        : PathUtils.getName(file));
+    return ((s != null) ? TextUtils.toComparisonCase(s) : null);
   }
 }

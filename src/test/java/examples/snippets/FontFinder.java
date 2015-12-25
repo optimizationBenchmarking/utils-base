@@ -109,7 +109,7 @@ public final class FontFinder {
 
     found = 0;
     outer: for (final String font : fonts) {
-      lc = TextUtils.toLowerCase(font);
+      lc = TextUtils.toComparisonCase(font);
       for (size = 5; size < 16; size++) {
         for (style = 0; style <= 3; style++) {
           try {
@@ -119,7 +119,7 @@ public final class FontFinder {
                 size);
 
             ff = load.getFontName();
-            ff = TextUtils.toLowerCase(ff);
+            ff = TextUtils.toComparisonCase(ff);
             if (ff.equalsIgnoreCase(font) || ff.contains(lc)
                 || lc.contains(ff)) {
               System.out.print('\'');

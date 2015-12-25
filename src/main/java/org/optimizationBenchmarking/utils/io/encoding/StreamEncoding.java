@@ -38,7 +38,7 @@ public abstract class StreamEncoding<IST extends Closeable, OST extends Closeabl
   private static final long serialVersionUID = 1L;
 
   /** the default string */
-  static final String _DEFAULT = "default".intern(); //$NON-NLS-1$
+  static final String _DEFAULT = TextUtils.toComparisonCase("default"); //$NON-NLS-1$
 
   /** the encodings */
   private static final StringMapCI<StreamEncoding<?, ?>> ENCODINGS = new StringMapCI<>();
@@ -437,7 +437,7 @@ public abstract class StreamEncoding<IST extends Closeable, OST extends Closeabl
   /** {@inheritDoc} */
   @Override
   protected final int calcHashCode() {
-    return HashUtils.hashCode(TextUtils.toLowerCase(this.m_name));
+    return HashUtils.hashCode(TextUtils.toComparisonCase(this.m_name));
   }
 
   /** {@inheritDoc} */

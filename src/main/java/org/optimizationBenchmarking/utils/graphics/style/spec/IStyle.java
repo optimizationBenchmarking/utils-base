@@ -1,6 +1,6 @@
 package org.optimizationBenchmarking.utils.graphics.style.spec;
 
-import java.awt.Graphics2D;
+import java.awt.Graphics;
 
 import org.optimizationBenchmarking.utils.IScope;
 import org.optimizationBenchmarking.utils.text.ETextCase;
@@ -26,7 +26,7 @@ public interface IStyle {
    * @return an instance of
    *         {@link org.optimizationBenchmarking.utils.IScope}
    */
-  public abstract IScope applyTo(final Graphics2D g);
+  public abstract IScope applyTo(final Graphics g);
 
   /**
    * Append the name of this style to a given text output

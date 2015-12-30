@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.optimizationBenchmarking.utils.collections.iterators.BasicIterator;
 import org.optimizationBenchmarking.utils.collections.visitors.IVisitor;
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 
 /**
  * The default map. This code basically corresponds to
@@ -21,8 +21,8 @@ import org.optimizationBenchmarking.utils.comparison.EComparison;
  * @param <NT>
  *          the entry type
  */
-public class ObjectMap<K, V, NT extends ChainedMapEntry<K, V>> extends
-    BasicMap<K, V, NT> {
+public class ObjectMap<K, V, NT extends ChainedMapEntry<K, V>>
+    extends BasicMap<K, V, NT> {
   /** the serial version uid */
   private static final long serialVersionUID = 1L;
 
@@ -127,8 +127,8 @@ public class ObjectMap<K, V, NT extends ChainedMapEntry<K, V>> extends
 
   /**
    * Calculate the capacity needed to facilitate {@code size} elements in
-   * the table without violating the
-   * {@link #_getThresholdFromCapacity(int) threshold}
+   * the table without violating the {@link #_getThresholdFromCapacity(int)
+   * threshold}
    *
    * @param size
    *          the number of elements
@@ -198,7 +198,7 @@ public class ObjectMap<K, V, NT extends ChainedMapEntry<K, V>> extends
 
     index = ObjectMap._indexFor(hash, table.length);
     for (e = s = table[index]; e != null; e = e.m_next) {
-      if ((e.m_hash == hash) && EComparison.equals(e.getKey(), key)) {
+      if ((e.m_hash == hash) && Compare.equals(e.getKey(), key)) {
         return ((NT) e);
       }
     }
@@ -354,7 +354,7 @@ public class ObjectMap<K, V, NT extends ChainedMapEntry<K, V>> extends
       table = this.m_table;
       for (ChainedMapEntry<K, V> e : table) {
         while (e != null) {
-          if (EComparison.equals(value, e.getValue())) {
+          if (Compare.equals(value, e.getValue())) {
             return true;
           }
           e = e.m_next;

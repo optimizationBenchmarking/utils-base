@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hierarchy.BuilderFSM;
 import org.optimizationBenchmarking.utils.hierarchy.FSM;
 import org.optimizationBenchmarking.utils.hierarchy.HierarchicalFSM;
@@ -139,8 +139,7 @@ public class ConfigurationBuilder extends BuilderFSM<Configuration> {
         ConfigurationBuilder.FLAG_BASE_PATH_HAS_BEEN_SET,
         FSM.FLAG_NOTHING);
 
-    if (!(EComparison.equals(base,
-        this.m_data.m_pathParser.getBasePath()))) {
+    if (!(Compare.equals(base, this.m_data.m_pathParser.getBasePath()))) {
       this.m_data.m_pathParser = ((base == null) ? PathParser.INSTANCE
           : new PathParser(base));
     }

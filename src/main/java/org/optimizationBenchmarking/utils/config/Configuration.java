@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import org.optimizationBenchmarking.utils.collections.lists.ArrayListView;
 import org.optimizationBenchmarking.utils.collections.lists.ArraySetView;
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.error.RethrowMode;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
 import org.optimizationBenchmarking.utils.parsers.BoundedLooseByteParser;
@@ -600,7 +600,7 @@ public final class Configuration implements Serializable, ITextable {
         }
       }
 
-      return EComparison.equals(this.m_owner, conf.m_owner);
+      return Compare.equals(this.m_owner, conf.m_owner);
     }
 
     return false;

@@ -3,7 +3,7 @@ package org.optimizationBenchmarking.utils.config;
 import java.util.LinkedHashMap;
 
 import org.optimizationBenchmarking.utils.collections.cache.NormalizingCache;
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hierarchy.BuilderFSM;
 import org.optimizationBenchmarking.utils.hierarchy.HierarchicalFSM;
 import org.optimizationBenchmarking.utils.parsers.BoundedLooseByteParser;
@@ -87,7 +87,7 @@ public final class DefinitionBuilder extends BuilderFSM<Definition> {
       return;
     }
 
-    if (EComparison.equals(old, use)) {
+    if (Compare.equals(old, use)) {
       return;
     }
 

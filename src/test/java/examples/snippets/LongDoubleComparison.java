@@ -2,7 +2,7 @@ package examples.snippets;
 
 import java.util.Random;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 
 /**
  * With this program, I am looking for inconsistencies when comparing
@@ -219,7 +219,7 @@ public class LongDoubleComparison {
     /** {@inheritDoc} */
     @Override
     final int _compare(final Number a, final Number b) {
-      return EComparison.compareNumbers(a, b);
+      return Compare.compare(a, b);
     }
   }
 }

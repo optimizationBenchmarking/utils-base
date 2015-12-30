@@ -1,6 +1,6 @@
 package org.optimizationBenchmarking.utils.math;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
 import org.optimizationBenchmarking.utils.text.ITextable;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
@@ -266,7 +266,7 @@ public abstract class BasicNumber extends Number
       if (stateA == BasicNumber.STATE_INTEGER) {
         return (this.longValue() == ((Number) o).longValue());
       }
-      return (EComparison.EQUAL.compare(this.doubleValue(),
+      return (Compare.equals(this.doubleValue(),
           ((Number) o).doubleValue()));
     }
     return false;
@@ -339,8 +339,7 @@ public abstract class BasicNumber extends Number
             }
 
             case STATE_DOUBLE: {
-              return EComparison.compareLongToDouble(this.longValue(),
-                  b.doubleValue());
+              return Compare.compare(this.longValue(), b.doubleValue());
             }
 
             case STATE_NEGATIVE_OVERFLOW:
@@ -358,13 +357,12 @@ public abstract class BasicNumber extends Number
           switch (stateB) {
 
             case STATE_INTEGER: {
-              return (-(EComparison.compareLongToDouble(b.longValue(),
+              return (-(Compare.compare(b.longValue(),
                   this.doubleValue())));
             }
 
             case STATE_DOUBLE: {
-              return EComparison.compareDoubles(this.doubleValue(),
-                  b.doubleValue());
+              return Compare.compare(this.doubleValue(), b.doubleValue());
             }
 
             case STATE_NEGATIVE_OVERFLOW:
@@ -458,7 +456,7 @@ public abstract class BasicNumber extends Number
         }
 
         case STATE_DOUBLE: {
-          return (-(EComparison.compareLongToDouble(number.longValue(),
+          return (-(Compare.compare(number.longValue(),
               this.doubleValue())));
         }
 
@@ -480,7 +478,7 @@ public abstract class BasicNumber extends Number
         return ((doubleB != doubleB) ? (-1) : 1);
       }
       case STATE_INTEGER: {
-        return EComparison.compareLongToDouble(this.longValue(), doubleB);
+        return Compare.compare(this.longValue(), doubleB);
       }
       case STATE_DOUBLE: {
         doubleA = this.doubleValue();

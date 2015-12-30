@@ -11,7 +11,7 @@ import org.optimizationBenchmarking.utils.collections.iterators.BasicIterator;
 import org.optimizationBenchmarking.utils.collections.lists.ArrayListView;
 import org.optimizationBenchmarking.utils.collections.lists.ArraySetView;
 import org.optimizationBenchmarking.utils.collections.visitors.IVisitor;
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.predicates.IPredicate;
 import org.optimizationBenchmarking.utils.text.ITextable;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
@@ -79,7 +79,7 @@ public class BasicCompound<ET>
       ita = this.iterator();
 
       while (ita.hasNext() && itb.hasNext()) {
-        if (!(EComparison.equals(ita.next(), itb.next()))) {
+        if (!(Compare.equals(ita.next(), itb.next()))) {
           return false;
         }
       }

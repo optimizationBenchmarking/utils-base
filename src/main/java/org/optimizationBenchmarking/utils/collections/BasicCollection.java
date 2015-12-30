@@ -3,7 +3,7 @@ package org.optimizationBenchmarking.utils.collections;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 
 /**
  * the base class for all sfc collections
@@ -38,7 +38,7 @@ public class BasicCollection<ET> extends BasicCompound<ET>
 
     it = this.iterator();
     while (it.hasNext()) {
-      if (EComparison.equals(o, it.next())) {
+      if (Compare.equals(o, it.next())) {
         it.remove();
         return true;
       }

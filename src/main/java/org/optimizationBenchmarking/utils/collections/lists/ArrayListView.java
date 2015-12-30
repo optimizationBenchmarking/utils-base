@@ -8,17 +8,19 @@ import org.optimizationBenchmarking.utils.IImmutable;
 import org.optimizationBenchmarking.utils.collections.iterators.ArrayIterator;
 import org.optimizationBenchmarking.utils.collections.iterators.BasicIterator;
 import org.optimizationBenchmarking.utils.collections.visitors.IVisitor;
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.predicates.IPredicate;
 import org.optimizationBenchmarking.utils.text.TextUtils;
 
 /**
  * An immutable {@link java.util.List list} view on an array.
  *
- * @param <DT>
+ * @param
+ *          <DT>
  *          the type
  */
-public class ArrayListView<DT> extends BasicList<DT> implements IImmutable {
+public class ArrayListView<DT> extends BasicList<DT>
+    implements IImmutable {
   /** the serial version uid */
   private static final long serialVersionUID = 1L;
 
@@ -74,7 +76,8 @@ public class ArrayListView<DT> extends BasicList<DT> implements IImmutable {
   @Override
   @SuppressWarnings("unchecked")
   public final BasicIterator<DT> iterator() {
-    return ((this.m_data.length <= 0) ? ((BasicIterator<DT>) (BasicIterator.EMPTY_ITERATOR))
+    return ((this.m_data.length <= 0)
+        ? ((BasicIterator<DT>) (BasicIterator.EMPTY_ITERATOR))
         : new ArrayIterator<>(this.m_data));
   }
 
@@ -102,7 +105,8 @@ public class ArrayListView<DT> extends BasicList<DT> implements IImmutable {
 
     len = this.m_data.length;
 
-    out = ((a.length >= len) ? a : //
+    out = ((a.length >= len) ? a
+        : //
         ((T[]) (java.lang.reflect.Array.newInstance(//
             a.getClass().getComponentType(), len))));
     System.arraycopy(this.m_data, 0, out, 0, len);
@@ -386,7 +390,7 @@ public class ArrayListView<DT> extends BasicList<DT> implements IImmutable {
       ita = this.iterator();
 
       while (ita.hasNext() && itb.hasNext()) {
-        if (!(EComparison.equals(ita.next(), itb.next()))) {
+        if (!(Compare.equals(ita.next(), itb.next()))) {
           return false;
         }
       }

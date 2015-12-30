@@ -2,7 +2,7 @@ package org.optimizationBenchmarking.utils.config;
 
 import org.optimizationBenchmarking.utils.collections.iterators.BasicIterator;
 import org.optimizationBenchmarking.utils.collections.lists.ArrayListView;
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
 import org.optimizationBenchmarking.utils.parsers.Parser;
 
@@ -128,7 +128,7 @@ public final class InstanceParameter<T> extends Parameter<T> {
       p = ((InstanceParameter) o);
       return (this._equalsPA(p) && //
           (this.m_allowsMore == p.m_allowsMore) && //
-          EComparison.equals(this.m_choices, p.m_choices));
+          Compare.equals(this.m_choices, p.m_choices));
     }
     return false;
   }

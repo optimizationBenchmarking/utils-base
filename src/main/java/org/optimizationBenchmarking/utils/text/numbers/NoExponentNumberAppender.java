@@ -2,7 +2,7 @@ package org.optimizationBenchmarking.utils.text.numbers;
 
 import java.math.BigDecimal;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
@@ -67,8 +67,7 @@ public final class NoExponentNumberAppender
     choice1 = new BigDecimal(v);
     choice2 = new BigDecimal(numberString1.m_string);
 
-    compareChoices = EComparison.compareDoubles(
-        Math.abs(choice1.doubleValue() - v),
+    compareChoices = Compare.compare(Math.abs(choice1.doubleValue() - v),
         Math.abs(choice2.doubleValue() - v));
 
     if (compareChoices < 0) {

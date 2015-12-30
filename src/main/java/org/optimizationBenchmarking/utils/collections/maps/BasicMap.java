@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.optimizationBenchmarking.utils.collections.iterators.BasicIterator;
 import org.optimizationBenchmarking.utils.collections.visitors.IVisitor;
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 
 /**
  * The basic map class. The idea behind this class is that it should be
@@ -121,7 +121,8 @@ public class BasicMap<K, V, NT extends BasicMapEntry<K, V>> extends
    *         otherwise
    */
   public final boolean contains(final NT entry) {
-    return ((entry != null) && (this.getEntry(entry.getKey(), false) == entry));
+    return ((entry != null)
+        && (this.getEntry(entry.getKey(), false) == entry));
   }
 
   /** {@inheritDoc} */
@@ -131,7 +132,7 @@ public class BasicMap<K, V, NT extends BasicMapEntry<K, V>> extends
 
     it = this.iterator();
     while (it.hasNext()) {
-      if (EComparison.equals(it.next().getValue(), value)) {
+      if (Compare.equals(it.next().getValue(), value)) {
         return true;
       }
     }

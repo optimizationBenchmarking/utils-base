@@ -1,6 +1,6 @@
 package org.optimizationBenchmarking.utils.parsers;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
 import org.optimizationBenchmarking.utils.reflection.ReflectionUtils;
 
@@ -203,9 +203,9 @@ public class LooseDoubleParser extends DoubleParser {
     }
     if (other instanceof LooseDoubleParser) {
       parser = ((LooseDoubleParser) other);
-      return (EComparison.EQUAL.compare(parser.getLowerBoundDouble(),
+      return (Compare.equals(parser.getLowerBoundDouble(),
           this.getLowerBoundDouble()) && //
-          EComparison.EQUAL.compare(parser.getUpperBoundDouble(),
+          Compare.equals(parser.getUpperBoundDouble(),
               this.getUpperBoundDouble()));
     }
     return false;

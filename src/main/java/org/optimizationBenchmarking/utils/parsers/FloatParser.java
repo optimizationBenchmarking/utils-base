@@ -1,6 +1,6 @@
 package org.optimizationBenchmarking.utils.parsers;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
 
 /**
@@ -242,10 +242,8 @@ public abstract class FloatParser extends NumberParser<Float> {
     }
     if (other instanceof FloatParser) {
       parser = ((FloatParser) other);
-      return (EComparison.EQUAL.compare(parser.getLowerBound(),
-          this.getLowerBound()) && //
-          EComparison.EQUAL.compare(parser.getUpperBound(),
-              this.getUpperBound()));
+      return (Compare.equals(parser.getLowerBound(), this.getLowerBound())
+          && Compare.equals(parser.getUpperBound(), this.getUpperBound()));
     }
     return false;
   }

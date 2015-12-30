@@ -1,6 +1,6 @@
 package org.optimizationBenchmarking.utils.parsers;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
 
 /**
@@ -166,9 +166,9 @@ public abstract class DoubleParser extends NumberParser<Double> {
     }
     if (other instanceof DoubleParser) {
       parser = ((DoubleParser) other);
-      return (EComparison.EQUAL.compare(parser.getLowerBoundDouble(),
+      return (Compare.equals(parser.getLowerBoundDouble(),
           this.getLowerBoundDouble()) && //
-          EComparison.EQUAL.compare(parser.getUpperBoundDouble(),
+          Compare.equals(parser.getUpperBoundDouble(),
               this.getUpperBoundDouble()));
     }
     return false;

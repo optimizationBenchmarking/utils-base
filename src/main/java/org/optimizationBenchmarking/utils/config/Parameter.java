@@ -1,7 +1,7 @@
 package org.optimizationBenchmarking.utils.config;
 
 import org.optimizationBenchmarking.utils.collections.iterators.BasicIterator;
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
 import org.optimizationBenchmarking.utils.parsers.Parser;
 import org.optimizationBenchmarking.utils.reflection.EPrimitiveType;
@@ -95,8 +95,8 @@ public class Parameter<T> extends DefinitionElement {
    */
   final boolean _equalsPA(final Parameter<?> param) {
     return (this._equalsDE(param) && //
-        EComparison.equals(this.m_default, param.m_default) && //
-        EComparison.equals(this.m_parser, param.m_parser));
+        Compare.equals(this.m_default, param.m_default) && //
+        Compare.equals(this.m_parser, param.m_parser));
   }
 
   /** {@inheritDoc} */
@@ -159,7 +159,7 @@ public class Parameter<T> extends DefinitionElement {
 
     while (iterator.hasNext()) {
       compare = iterator.next().m_name;
-      if (EComparison.equals(this.m_parser.parseString(compare), parsed)) {
+      if (Compare.equals(this.m_parser.parseString(compare), parsed)) {
         return compare;
       }
     }
@@ -167,8 +167,8 @@ public class Parameter<T> extends DefinitionElement {
     // If the conversion of the parsed string value to the parsed.
     try {
       compare = String.valueOf(value);
-      if (EComparison.equals(this.m_parser.parseString(compare), parsed)) {
-        if (EComparison.equals(compare, value)) {
+      if (Compare.equals(this.m_parser.parseString(compare), parsed)) {
+        if (Compare.equals(compare, value)) {
           return value;
         }
         return compare;
@@ -179,8 +179,8 @@ public class Parameter<T> extends DefinitionElement {
 
     try {
       compare = String.valueOf(parsed);
-      if (EComparison.equals(this.m_parser.parseString(compare), parsed)) {
-        if (EComparison.equals(compare, value)) {
+      if (Compare.equals(this.m_parser.parseString(compare), parsed)) {
+        if (Compare.equals(compare, value)) {
           return value;
         }
         return compare;

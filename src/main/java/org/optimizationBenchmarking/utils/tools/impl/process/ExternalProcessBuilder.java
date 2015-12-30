@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.optimizationBenchmarking.utils.comparison.EComparison;
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.error.ErrorUtils;
 import org.optimizationBenchmarking.utils.error.RethrowMode;
 import org.optimizationBenchmarking.utils.io.nullIO.NullInputStream;
@@ -239,7 +239,7 @@ public final class ExternalProcessBuilder
                 + this.m_stdout + " and stderr has " //$NON-NLS-1$
                 + this.m_stderr);
       }
-      if (!(EComparison.equals(err, out))) {
+      if (!(Compare.equals(err, out))) {
         throw new IllegalStateException(//
             "If you merge stdout and stderr, they cannot have different redirects, but stdout has " //$NON-NLS-1$
                 + this.m_pb.redirectOutput() + " and stderr has " //$NON-NLS-1$
@@ -250,7 +250,7 @@ public final class ExternalProcessBuilder
           || (t1 == Redirect.Type.WRITE))
           && (((t2 = err.type()) == Redirect.Type.APPEND)
               || (t2 == Redirect.Type.WRITE))
-          && EComparison.equals((f = out.file()), err.file())) {
+          && Compare.equals((f = out.file()), err.file())) {
         throw new IllegalStateException(//
             "If you do not merge stdout and stderr, they cannot be redirected to the same file " //$NON-NLS-1$
                 + t1 + " and stderr has " //$NON-NLS-1$

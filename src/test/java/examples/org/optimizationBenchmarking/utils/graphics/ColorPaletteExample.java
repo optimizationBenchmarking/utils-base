@@ -25,7 +25,7 @@ public class ColorPaletteExample extends GraphicExample {
   private final IColorPalette m_palette;
 
   /**
-   * Create the file producer example
+   * Create the color palette example
    *
    * @param listener
    *          the file producer listener

@@ -1,6 +1,7 @@
 package org.optimizationBenchmarking.utils.graphics.style.spec;
 
 import java.awt.Font;
+import java.util.Collection;
 
 import org.optimizationBenchmarking.utils.graphics.EFontFamily;
 
@@ -57,4 +58,19 @@ public interface IFontStyle extends IStyle {
    * @return the size of this font
    */
   public abstract int getSize();
+
+  /**
+   * Get the list of font name or face choices. The choices are ordered by
+   * priority, i.e., the first list element represents the
+   * {@link #getFont() physical font} of the style, the following elements
+   * may represent aliases, and the last element may represent the
+   * {@link #getFamily() font family}. The aim is to provide a list of
+   * fonts that an underlying physical system may try to load in order to
+   * create the same physical appearance. The earlier the element in the
+   * list which could finally be loaded, the more similar the appearance
+   * should be.
+   *
+   * @return the list of font name or face choices
+   */
+  public abstract Collection<String> getFaceChoices();
 }

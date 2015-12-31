@@ -8,9 +8,11 @@ import org.optimizationBenchmarking.utils.graphics.EColorModel;
 import org.optimizationBenchmarking.utils.graphics.graphic.spec.IGraphicDriver;
 import org.optimizationBenchmarking.utils.graphics.graphic.spec.IGraphicFormat;
 import org.optimizationBenchmarking.utils.graphics.style.spec.IColorPalette;
+import org.optimizationBenchmarking.utils.graphics.style.spec.IFontPalette;
 import org.optimizationBenchmarking.utils.io.paths.TempDir;
 
 import examples.org.optimizationBenchmarking.utils.graphics.ColorPaletteExample;
+import examples.org.optimizationBenchmarking.utils.graphics.FontPaletteExample;
 import shared.FileProducerCollector;
 import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 
@@ -163,6 +165,36 @@ public abstract class AbstractGraphicDriverTest
   public void testSmallColorPaletteRGB15() {
     this.testColorPalette(this.getSmallColorPalette(),
         EColorModel.RGB_15_BIT);
+  }
+
+  /**
+   * Get a font palette for the font palette test.
+   *
+   * @return the font palette
+   */
+  protected abstract IFontPalette getFontPalette();
+
+  /** test whether the graphics works with a font palette */
+  @Test(timeout = 3600000)
+  public void testFontPalette() {
+    final FileProducerCollector collector;
+    final IGraphicFormat expected;
+
+    expected = this.getExpectedOutputFormat();
+
+    collector = ((expected != null) ? new FileProducerCollector() : null);
+    try (final TempDir temp = new TempDir()) {
+      new FontPaletteExample(//
+          collector, //
+          temp.getPath(), //
+          this.getInstance(), //
+          null, null, -1, -1d, this.getFontPalette()).run();
+      if (collector != null) {
+        collector.assertFilesOfType(expected);
+      }
+    } catch (final IOException ioe) {
+      throw new RuntimeException("Error during IO.", ioe); //$NON-NLS-1$
+    }
   }
 
   /** {@inheritDoc} */

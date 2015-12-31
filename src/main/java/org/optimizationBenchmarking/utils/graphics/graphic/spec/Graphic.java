@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Shape;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -630,4 +631,20 @@ public abstract class Graphic extends Graphics2D
       final double dy1, final double dx2, final double dy2,
       final double sx1, final double sy1, final double sx2,
       final double sy2, final Color bgcolor, final ImageObserver observer);
+
+  /**
+   * Create a shape composed of a set of points
+   *
+   * @param xPoints
+   *          the x points
+   * @param yPoints
+   *          the y points
+   * @param nPoints
+   *          the number of points
+   * @param close
+   *          should we close the shape?
+   * @return the shape
+   */
+  public abstract Shape createShape(final double[] xPoints,
+      final double[] yPoints, final int nPoints, final boolean close);
 }

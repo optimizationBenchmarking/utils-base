@@ -9,10 +9,13 @@ import org.optimizationBenchmarking.utils.graphics.graphic.spec.IGraphicDriver;
 import org.optimizationBenchmarking.utils.graphics.graphic.spec.IGraphicFormat;
 import org.optimizationBenchmarking.utils.graphics.style.spec.IColorPalette;
 import org.optimizationBenchmarking.utils.graphics.style.spec.IFontPalette;
+import org.optimizationBenchmarking.utils.graphics.style.spec.IStrokePalette;
 import org.optimizationBenchmarking.utils.io.paths.TempDir;
 
 import examples.org.optimizationBenchmarking.utils.graphics.ColorPaletteExample;
+import examples.org.optimizationBenchmarking.utils.graphics.DrawingExample;
 import examples.org.optimizationBenchmarking.utils.graphics.FontPaletteExample;
+import examples.org.optimizationBenchmarking.utils.graphics.StrokePaletteExample;
 import shared.FileProducerCollector;
 import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 
@@ -197,6 +200,92 @@ public abstract class AbstractGraphicDriverTest
     }
   }
 
+  /**
+   * Get a stroke palette for the stroke palette test.
+   *
+   * @return the stroke palette
+   */
+  protected abstract IStrokePalette getStrokePalette();
+
+  /** test whether the graphics works with a stroke palette */
+  @Test(timeout = 3600000)
+  public void testStrokePalette() {
+    final FileProducerCollector collector;
+    final IGraphicFormat expected;
+
+    expected = this.getExpectedOutputFormat();
+
+    collector = ((expected != null) ? new FileProducerCollector() : null);
+    try (final TempDir temp = new TempDir()) {
+      new StrokePaletteExample(//
+          collector, //
+          temp.getPath(), //
+          this.getInstance(), //
+          null, null, -1, -1d, this.getStrokePalette()).run();
+      if (collector != null) {
+        collector.assertFilesOfType(expected);
+      }
+    } catch (final IOException ioe) {
+      throw new RuntimeException("Error during IO.", ioe); //$NON-NLS-1$
+    }
+  }
+
+  /**
+   * test whether the tool can be used for drawing
+   *
+   * @param model
+   *          the color model
+   * @param dpi
+   *          the dots per inch
+   * @param quality
+   *          the quality
+   */
+  protected void testDrawing(final EColorModel model, final int dpi,
+      final double quality) {
+    final FileProducerCollector collector;
+    final IGraphicFormat expected;
+
+    expected = this.getExpectedOutputFormat();
+
+    collector = ((expected != null) ? new FileProducerCollector() : null);
+    try (final TempDir temp = new TempDir()) {
+      new DrawingExample(//
+          collector, //
+          temp.getPath(), //
+          this.getInstance(), //
+          null, model, dpi, quality).run();
+      if (collector != null) {
+        collector.assertFilesOfType(expected);
+      }
+    } catch (final IOException ioe) {
+      throw new RuntimeException("Error during IO.", ioe); //$NON-NLS-1$
+    }
+  }
+
+  /** test whether the graphics works with poor settings */
+  @Test(timeout = 3600000)
+  public void testDrawingGray30DPI001Q() {
+    this.testDrawing(EColorModel.GRAY_8_BIT, 30, 0.01d);
+  }
+
+  /** test whether the graphics works with poor but colorful settings */
+  @Test(timeout = 3600000)
+  public void testDrawingColor30DPI001Q() {
+    this.testDrawing(EColorModel.ARGB_32_BIT, 30, 0.01d);
+  }
+
+  /** test whether the graphics works with gray HQ settings */
+  @Test(timeout = 3600000)
+  public void testDrawingGray600DPI1Q() {
+    this.testDrawing(EColorModel.GRAY_16_BIT, 600, 1d);
+  }
+
+  /** test whether the graphics works with HQ settings */
+  @Test(timeout = 3600000)
+  public void testDrawingColor600DPI1Q() {
+    this.testDrawing(EColorModel.ARGB_32_BIT, 600, 1d);
+  }
+
   /** {@inheritDoc} */
   @Override
   public void validateInstance() {
@@ -213,5 +302,13 @@ public abstract class AbstractGraphicDriverTest
     this.testGrayColorPaletteRGB15();
     this.testSmallColorPaletteRGB15();
     this.testSmallColorPaletteRGB16();
+
+    this.testFontPalette();
+    this.testStrokePalette();
+
+    this.testDrawingGray30DPI001Q();
+    this.testDrawingColor30DPI001Q();
+    this.testDrawingGray600DPI1Q();
+    this.testDrawingColor600DPI1Q();
   }
 }

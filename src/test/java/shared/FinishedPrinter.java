@@ -11,10 +11,10 @@ import org.optimizationBenchmarking.utils.collections.lists.ArraySetView;
 import org.optimizationBenchmarking.utils.config.Configuration;
 import org.optimizationBenchmarking.utils.io.IFileType;
 import org.optimizationBenchmarking.utils.text.textOutput.MemoryTextOutput;
-import org.optimizationBenchmarking.utils.tools.spec.IFileProducerListener;
+import org.optimizationBenchmarking.utils.tools.impl.abstr.AbstractFileProducerListener;
 
 /** A class which will print the finished files */
-public final class FinishedPrinter implements IFileProducerListener {
+public final class FinishedPrinter extends AbstractFileProducerListener {
 
   /** the source objects */
   private final ArrayListView<Object> m_src;

@@ -2,7 +2,7 @@ package test.junit.org.optimizationBenchmarking.utils.tools.process;
 
 import org.optimizationBenchmarking.utils.tools.impl.process.ExternalProcessExecutor;
 
-import test.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
+import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 
 /**
  * Test the

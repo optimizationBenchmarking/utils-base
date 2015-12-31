@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.optimizationBenchmarking.utils.io.IFileType;
-import org.optimizationBenchmarking.utils.tools.spec.IFileProducerListener;
 
 /**
  * A collector for files. This is a base class providing (but not
@@ -18,7 +17,7 @@ import org.optimizationBenchmarking.utils.tools.spec.IFileProducerListener;
  * {@link java.io.Closeable}, so instances of it can be handed around
  * freely.
  */
-public abstract class FileCollector implements IFileProducerListener {
+public abstract class FileCollector extends AbstractFileProducerListener {
 
   /** Create the file collector */
   protected FileCollector() {

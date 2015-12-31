@@ -6,7 +6,7 @@ import org.optimizationBenchmarking.utils.compiler.JavaCompilerJob;
 import org.optimizationBenchmarking.utils.compiler.JavaCompilerJobBuilder;
 import org.optimizationBenchmarking.utils.compiler.JavaCompilerTool;
 
-import test.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
+import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 
 /**
  * Test the

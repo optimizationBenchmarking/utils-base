@@ -2,7 +2,7 @@ package org.optimizationBenchmarking.utils.graphics.style.spec;
 
 import java.awt.Color;
 
-/** A palette of colors. */
+/** A palette of colors provides a set of colors. */
 public interface IColorPalette
     extends IStylePalette<IColorStyle>, IBasicColors {
   /**

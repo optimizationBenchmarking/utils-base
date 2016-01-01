@@ -21,7 +21,7 @@ public interface ITitledElement extends IChartElement {
    * this font may be scaled to a smaller (or maybe even larger) size to
    * create a more overall pleasing visual expression. Thus, you can
    * directly use fonts from a
-   * {@link org.optimizationBenchmarking.utils.graphics.style.font.FontPalette}
+   * {@link org.optimizationBenchmarking.utils.graphics.style.spec.IFontPalette}
    * which would potentially be too large or too small to look good and
    * expect the underlying
    * {@link org.optimizationBenchmarking.utils.chart.spec.IChartDriver

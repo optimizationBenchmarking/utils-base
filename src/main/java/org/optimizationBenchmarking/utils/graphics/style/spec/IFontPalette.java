@@ -2,7 +2,7 @@ package org.optimizationBenchmarking.utils.graphics.style.spec;
 
 import org.optimizationBenchmarking.utils.graphics.EFontFamily;
 
-/** A font palette. */
+/** A font palette provides a set of fonts. */
 public interface IFontPalette
     extends IStylePalette<IFontStyle>, IBasicFonts {
   /**

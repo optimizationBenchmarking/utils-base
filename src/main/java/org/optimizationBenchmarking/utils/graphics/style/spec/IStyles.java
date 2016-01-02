@@ -4,7 +4,7 @@ package org.optimizationBenchmarking.utils.graphics.style.spec;
  * The style manager allows to allocate and use colors. Style managers may
  * be scoped.
  */
-public interface IStyles extends IBasicColors, IBasicFonts, IBasicStrokes {
+public interface IStyles extends IBasicStyles {
   /**
    * Allocate a color. Best effort is made to return colors different from
    * those allocated before and to prevent them from being allocated again.

@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
 
-import org.optimizationBenchmarking.utils.math.statistics.aggregate.ScalarAggregate;
-
 /** The interface for defining an axis */
 public interface IAxis extends ITitledElement {
 
@@ -62,35 +60,50 @@ public interface IAxis extends ITitledElement {
   public abstract void setGridLineColor(final Color gridLineColor);
 
   /**
-   * Set the aggregate used to compute the minimum axis value
+   * Set the minimum value for the axis as number. If the object provided
+   * as {@code minimum} implements the interface
+   * {@link org.optimizationBenchmarking.utils.math.statistics.aggregate.IAggregate}
+   * , then its {@code append} methods will be invoked for all available
+   * data elements of the axis dimension. Only after that, the numerical
+   * value will be accessed. Otherwise, i.e., if {@code minimum} is just a
+   * plain {@link java.lang.Number}, then we will directly access its
+   * value.
    *
-   * @param min
-   *          the aggregate used to compute the minimum axis value
+   * @param minimum
+   *          the minimum value for the axis, may be an implementation of
+   *          {@link org.optimizationBenchmarking.utils.math.statistics.aggregate.IAggregate}
    */
-  public abstract void setMinimumAggregate(final ScalarAggregate min);
+  public abstract void setMinimum(final Number minimum);
 
   /**
-   * Set the minimum value for the axis
+   * Set the minimum value for the axis as {@code double} constant.
    *
-   * @param min
+   * @param minimum
    *          the minimum value for the axis
    */
-  public abstract void setMinimum(final double min);
+  public abstract void setMinimum(final double minimum);
 
   /**
-   * Set the aggregate used to compute the maximum axis value
+   * Set the maximum value for the axis as number. If the object provided
+   * as {@code maximum} implements the interface
+   * {@link org.optimizationBenchmarking.utils.math.statistics.aggregate.IAggregate}
+   * , then its {@code append} methods will be invoked for all available
+   * data elements of the axis dimension. Only after that, the numerical
+   * value will be accessed. Otherwise, i.e., if {@code maximum} is just a
+   * plain {@link java.lang.Number}, then we will directly access its
+   * value.
    *
-   * @param max
-   *          the aggregate used to compute the maximum axis value
+   * @param maximum
+   *          the maximum value for the axis, may be an implementation of
+   *          {@link org.optimizationBenchmarking.utils.math.statistics.aggregate.IAggregate}
    */
-  public abstract void setMaximumAggregate(final ScalarAggregate max);
+  public abstract void setMaximum(final Number maximum);
 
   /**
-   * Set the maximum value for the axis
+   * Set the maximum value for the axis as {@code double} constant.
    *
-   * @param max
-   *          the maximum value for the axis
+   * @param maximum
+   *          the minimum value for the axis
    */
-  public abstract void setMaximum(final double max);
-
+  public abstract void setMaximum(final double maximum);
 }

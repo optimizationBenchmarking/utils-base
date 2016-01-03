@@ -14,7 +14,16 @@ public interface IChartBuilder extends IToolJobBuilder {
   public abstract IChartBuilder setLogger(final Logger logger);
 
   /**
-   * Set the graphic to paint on
+   * Set the graphic to paint on. The bounding box of the chart to be
+   * painted will be set to the bounding box returned by
+   * {@link org.optimizationBenchmarking.utils.graphics.GraphicUtils#getBounds(java.awt.Graphics)}
+   * . This will either be the
+   * {@linkplain org.optimizationBenchmarking.utils.graphics.graphic.spec.Graphic#getBounds()
+   * bounding box} of the graphics context, if {@code graphic} is an
+   * instance of
+   * {@link org.optimizationBenchmarking.utils.graphics.graphic.spec.Graphic}
+   * , or {@linkplain java.awt.Graphics2D#getClipBounds() bounding box} of
+   * the current clipping area.
    *
    * @param graphic
    *          the graphic to paint

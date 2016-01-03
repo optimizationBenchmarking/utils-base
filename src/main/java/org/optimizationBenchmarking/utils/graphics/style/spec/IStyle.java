@@ -21,12 +21,12 @@ public interface IStyle {
    * application shall be reset to their state before the style
    * application.
    *
-   * @param g
-   *          the graphic
+   * @param graphics
+   *          the graphics
    * @return an instance of
    *         {@link org.optimizationBenchmarking.utils.IScope}
    */
-  public abstract IScope applyTo(final Graphics g);
+  public abstract IScope applyTo(final Graphics graphics);
 
   /**
    * Append the name of this style to a given text output

@@ -2,65 +2,69 @@ package org.optimizationBenchmarking.utils.graphics;
 
 import java.awt.BasicStroke;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
 import java.awt.font.TextAttribute;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import org.optimizationBenchmarking.utils.error.ErrorUtils;
+import org.optimizationBenchmarking.utils.graphics.graphic.spec.Graphic;
 
 /** a utility class for graphics stuff */
 public final class GraphicUtils {
 
   /** the default rendering hints */
-  private static final RenderingHintHolder[] DEFAULT_RENDERING_HINTS;
+  private static final RenderingHintHolder[] DEFAULT_RENDERING_HINTS = //
+  GraphicUtils.__createDefaultRenderingHints();
 
-  static {
-    DEFAULT_RENDERING_HINTS = new RenderingHintHolder[10];
+  /**
+   * create the default rendering hints.
+   *
+   * @return the default rendering hints
+   */
+  private static final RenderingHintHolder[] __createDefaultRenderingHints() {
+    final RenderingHintHolder[] def;
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[0] = new RenderingHintHolder(
-        RenderingHints.KEY_FRACTIONALMETRICS,
+    def = new RenderingHintHolder[10];
+
+    def[0] = new RenderingHintHolder(RenderingHints.KEY_FRACTIONALMETRICS,
         RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[1] = new RenderingHintHolder(
+    def[1] = new RenderingHintHolder(
         RenderingHints.KEY_ALPHA_INTERPOLATION,
         RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[2] = new RenderingHintHolder(
-        RenderingHints.KEY_COLOR_RENDERING,
+    def[2] = new RenderingHintHolder(RenderingHints.KEY_COLOR_RENDERING,
         RenderingHints.VALUE_COLOR_RENDER_QUALITY);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[3] = new RenderingHintHolder(
-        RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+    def[3] = new RenderingHintHolder(RenderingHints.KEY_RENDERING,
+        RenderingHints.VALUE_RENDER_QUALITY);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[4] = new RenderingHintHolder(
-        RenderingHints.KEY_STROKE_CONTROL,
+    def[4] = new RenderingHintHolder(RenderingHints.KEY_STROKE_CONTROL,
         RenderingHints.VALUE_STROKE_NORMALIZE);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[5] = new RenderingHintHolder(
+    def[5] = new RenderingHintHolder(
         RenderingHints.KEY_ALPHA_INTERPOLATION,
         RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[6] = new RenderingHintHolder(
-        RenderingHints.KEY_ANTIALIASING,
+    def[6] = new RenderingHintHolder(RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[7] = new RenderingHintHolder(
-        RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+    def[7] = new RenderingHintHolder(RenderingHints.KEY_DITHERING,
+        RenderingHints.VALUE_DITHER_ENABLE);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[8] = new RenderingHintHolder(
-        RenderingHints.KEY_INTERPOLATION,
+    def[8] = new RenderingHintHolder(RenderingHints.KEY_INTERPOLATION,
         RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
-    GraphicUtils.DEFAULT_RENDERING_HINTS[9] = new RenderingHintHolder(
-        RenderingHints.KEY_TEXT_ANTIALIASING,
+    def[9] = new RenderingHintHolder(RenderingHints.KEY_TEXT_ANTIALIASING,
         RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
-  }
-
-  /** the forbidden constructor */
-  private GraphicUtils() {
-    ErrorUtils.doNotCall();
+    return def;
   }
 
   /**
@@ -208,6 +212,95 @@ public final class GraphicUtils {
     underlineAtt = ((Number) (font.getAttributes()
         .get(TextAttribute.UNDERLINE)));
     return ((underlineAtt != null) && (underlineAtt.intValue() >= 0));
+  }
+
+  /**
+   * Get the bounds of a graphics context
+   *
+   * @param graphics
+   *          the context
+   * @return the bounds
+   */
+  public static final Rectangle2D getBounds(final Graphics graphics) {
+    return GraphicUtils.getBounds(graphics, true);
+  }
+
+  /**
+   * Get the bounds of a graphics context
+   *
+   * @param graphics
+   *          the context
+   * @param checkIsGraphic
+   *          {@code true} if we should check whether the object implements
+   *          {@link org.optimizationBenchmarking.utils.graphics.graphic.spec.Graphic}
+   *          and hence provides
+   *          {@link org.optimizationBenchmarking.utils.graphics.graphic.spec.Graphic#getBounds()}
+   *          , {@code false} if only the basic {@code java.awt}
+   *          functionality should be used.
+   * @return the bounds
+   */
+  public static final Rectangle2D getBounds(final Graphics graphics,
+      final boolean checkIsGraphic) {
+    final int size, offset;
+    final Graphics2D graphics2D;
+    Point2D.Double topLeftCorner, bottomRightCorner, temp;
+    AffineTransform transform;
+    Rectangle clipRectangle;
+
+    if (checkIsGraphic && (graphics instanceof Graphic)) {
+      return ((Graphic) graphics).getBounds();
+    }
+
+    if (graphics instanceof Graphics2D) {
+      graphics2D = ((Graphics2D) graphics);
+      clipRectangle = graphics2D.getClipBounds();
+
+      if (clipRectangle != null) {
+        return clipRectangle;
+      }
+
+      clipRectangle = graphics2D.getDeviceConfiguration().getBounds();
+      if (clipRectangle != null) {
+
+        transform = graphics2D.getTransform();
+        if ((transform == null) || (transform.isIdentity())) {
+          return clipRectangle;
+        }
+
+        try {
+          transform.invert();
+        } catch (final RuntimeException runtimeException) {
+          throw runtimeException;
+        } catch (final Throwable error) {
+          throw new RuntimeException((((//
+          "Error while inverting transform ") + transform)//$NON-NLS-1$
+              + '.'), error);
+        }
+
+        temp = new Point2D.Double(clipRectangle.getMinX(),
+            clipRectangle.getMinY());
+
+        topLeftCorner = new Point2D.Double();
+        transform.transform(temp, topLeftCorner);
+
+        temp.x += clipRectangle.getWidth();
+        temp.y += clipRectangle.getHeight();
+        bottomRightCorner = new Point2D.Double();
+        transform.transform(temp, bottomRightCorner);
+        clipRectangle.setFrameFromDiagonal(topLeftCorner,
+            bottomRightCorner);
+        return clipRectangle;
+      }
+    }
+
+    size = ((Integer.MAX_VALUE - 4) | 1);
+    offset = (-(size >>> 1));
+    return new Rectangle(offset, offset, size, size);
+  }
+
+  /** the forbidden constructor */
+  private GraphicUtils() {
+    ErrorUtils.doNotCall();
   }
 
   /** the internal rendering hint holder */

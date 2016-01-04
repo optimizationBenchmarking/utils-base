@@ -1,8 +1,12 @@
 package org.optimizationBenchmarking.utils.math.functions.basic;
 
+import org.optimizationBenchmarking.utils.document.spec.IMath;
+import org.optimizationBenchmarking.utils.document.spec.IParameterRenderer;
+import org.optimizationBenchmarking.utils.document.spec.IText;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
 import org.optimizationBenchmarking.utils.math.MathUtils;
 import org.optimizationBenchmarking.utils.math.functions.UnaryFunction;
+import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /** a function which divides its inputs by a {@code long} value */
 public final class DivideByConstantLong extends UnaryFunction {
@@ -77,5 +81,26 @@ public final class DivideByConstantLong extends UnaryFunction {
   @Override
   public final String toString() {
     return ("/" + this.m_divisor); //$NON-NLS-1$
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final void mathRender(final IMath out,
+      final IParameterRenderer renderer) {
+    try (final IMath div = out.div()) {
+      renderer.renderParameter(0, div);
+      try (final IText text = div.number()) {
+        text.append(this.m_divisor);
+      }
+    }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final void mathRender(final ITextOutput out,
+      final IParameterRenderer renderer) {
+    renderer.renderParameter(0, out);
+    out.append('/');
+    out.append(this.m_divisor);
   }
 }

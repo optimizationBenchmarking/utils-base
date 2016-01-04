@@ -3,7 +3,9 @@ package org.optimizationBenchmarking.utils.units;
 import org.optimizationBenchmarking.utils.collections.lists.ArraySetView;
 import org.optimizationBenchmarking.utils.math.Rational;
 import org.optimizationBenchmarking.utils.math.functions.UnaryFunction;
+import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.TextUtils;
+import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /** Units of length and corresponding conversion factors. */
 public enum ELength implements IUnit {
@@ -567,5 +569,42 @@ public enum ELength implements IUnit {
   @Override
   public final EDimensions getDimension() {
     return EDimensions.LENGTH;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printShortName(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWord(this.getName(), textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printLongName(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWord(this.getLongName(), textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    ETextCase nextCase;
+
+    nextCase = textCase.appendWords("the length unit", textOut); //$NON-NLS-1$
+    textOut.append(' ');
+    nextCase = nextCase.appendWords(this.getLongName(), textOut);
+    textOut.append(' ');
+    textOut.append('(');
+    nextCase.appendWords(this.getShortcut(), textOut);
+    textOut.append(')');
+    textOut.append('.');
+    return ETextCase.AT_SENTENCE_START;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String getPathComponentSuggestion() {
+    return "length_" + this.getShortcut(); //$NON-NLS-1$
   }
 }

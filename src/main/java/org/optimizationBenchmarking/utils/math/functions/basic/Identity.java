@@ -1,6 +1,9 @@
 package org.optimizationBenchmarking.utils.math.functions.basic;
 
+import org.optimizationBenchmarking.utils.document.spec.IMath;
+import org.optimizationBenchmarking.utils.document.spec.IParameterRenderer;
 import org.optimizationBenchmarking.utils.math.functions.UnaryFunction;
+import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /** The identity function returns its input values. */
 public final class Identity extends UnaryFunction {
@@ -68,6 +71,20 @@ public final class Identity extends UnaryFunction {
   @Override
   public int getPrecedencePriority() {
     return Integer.MAX_VALUE;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final void mathRender(final IMath out,
+      final IParameterRenderer renderer) {
+    renderer.renderParameter(0, out);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final void mathRender(final ITextOutput out,
+      final IParameterRenderer renderer) {
+    renderer.renderParameter(0, out);
   }
 
   // default, automatic serialization replacement and resolve routines for

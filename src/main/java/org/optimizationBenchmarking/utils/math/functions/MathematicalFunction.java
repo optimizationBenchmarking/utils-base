@@ -2,7 +2,11 @@ package org.optimizationBenchmarking.utils.math.functions;
 
 import java.io.Serializable;
 
+import org.optimizationBenchmarking.utils.document.spec.IMath;
+import org.optimizationBenchmarking.utils.document.spec.IMathRenderable;
+import org.optimizationBenchmarking.utils.document.spec.IParameterRenderer;
 import org.optimizationBenchmarking.utils.text.TextUtils;
+import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /**
  * <p>
@@ -18,7 +22,8 @@ import org.optimizationBenchmarking.utils.text.TextUtils;
  * </ol>
  * TODO: Add IMathRenderable
  */
-public abstract class MathematicalFunction implements Serializable {
+public abstract class MathematicalFunction
+    implements Serializable, IMathRenderable {
 
   /** the serial version uid */
   private static final long serialVersionUID = 1L;
@@ -458,6 +463,57 @@ public abstract class MathematicalFunction implements Serializable {
    */
   public int getPrecedencePriority() {
     return MathematicalFunction.DEFAULT_PRECEDENCE_PRIORITY;
+  }
+
+  /**
+   * Render this mathematical function to the given text output device
+   *
+   * @param out
+   *          the text output device
+   * @param renderer
+   *          the parameter renderer
+   */
+  @Override
+  public void mathRender(final ITextOutput out,
+      final IParameterRenderer renderer) {
+    final int arity;
+    char separator;
+    int index;
+
+    out.append(this.toString());
+    separator = '(';
+    arity = this.getMinArity();
+
+    for (index = 0; index < arity; index++) {
+      out.append(separator);
+      separator = ',';
+      renderer.renderParameter(index, out);
+    }
+
+    out.append(')');
+  }
+
+  /**
+   * Render this mathematical function to the given math output device
+   *
+   * @param out
+   *          the math output device
+   * @param renderer
+   *          the parameter renderer
+   */
+  @Override
+  public void mathRender(final IMath out,
+      final IParameterRenderer renderer) {
+    final int arity;
+    int index;
+
+    arity = this.getMinArity();
+    try (final IMath math = out.nAryFunction(//
+        this.toString(), arity, arity)) {
+      for (index = 0; index < arity; index++) {
+        renderer.renderParameter(index, math);
+      }
+    }
   }
 
   /** {@inheritDoc} */

@@ -1,9 +1,10 @@
 package org.optimizationBenchmarking.utils.units;
 
+import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
 import org.optimizationBenchmarking.utils.math.functions.UnaryFunction;
 
 /** The interface common to all units. */
-public interface IUnit {
+public interface IUnit extends ISemanticComponent {
   /**
    * Obtain the conversion function to a given unit, return {@code null} if
    * no conversion is known.

@@ -4,10 +4,16 @@
 
 	<groupId>org.optimizationBenchmarking</groupId>
 	<artifactId>utils-base</artifactId>
-	<version>0.8.5</version>
+	<version>0.8.5-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Base Utilities</name>
 	<description>This project holds the basic utilities used in all other projects of the Optimization Benchmarking Tool Suite.</description>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>9</version>
+	</parent>
 
 	<url>http://www.optimizationBenchmarking.org/</url>
 	<organization>
@@ -76,6 +82,35 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 
 		<plugins>
 

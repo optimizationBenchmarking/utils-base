@@ -251,4 +251,21 @@ public abstract class ChartExample implements Runnable {
   public final void run() {
     this.perform(this.m_selector, this.m_styles, this.m_random);
   }
+
+  /**
+   * create a random chart example
+   *
+   * @param selector
+   *          the chart selector
+   * @param styles
+   *          the basic styles
+   * @param random
+   *          the random number generator
+   * @return the chart example
+   */
+  public static final ChartExample createRandomChartExample(
+      final IChartSelector selector, final IBasicStyles styles,
+      final Random random) {
+    return new SimplePieChartExample(selector, styles, random);
+  }
 }

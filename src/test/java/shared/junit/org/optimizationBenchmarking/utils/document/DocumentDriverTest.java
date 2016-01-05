@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.optimizationBenchmarking.utils.MemoryUtils;
 import org.optimizationBenchmarking.utils.document.spec.IDocument;
 import org.optimizationBenchmarking.utils.document.spec.IDocumentDriver;
@@ -22,6 +23,7 @@ import org.optimizationBenchmarking.utils.tools.spec.IFileProducerListener;
 
 import examples.org.optimizationBenchmarking.utils.document.RandomDocumentExample;
 import shared.FileProducerCollector;
+import shared.junit.CategorySlowTests;
 import shared.junit.InstanceTest;
 import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 
@@ -232,6 +234,7 @@ public abstract class DocumentDriverTest<ConfigType>
    *           if something goes wrong
    */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testParallelRandomDocumentCreation_3_fifo()
       throws Throwable {
     this.__doParallelRandomTest(3, true, new Random());
@@ -244,6 +247,7 @@ public abstract class DocumentDriverTest<ConfigType>
    *           if something goes wrong
    */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testParallelRandomDocumentCreation_3_default()
       throws Throwable {
     this.__doParallelRandomTest(3, false, new Random());

@@ -313,6 +313,7 @@ public abstract class DocumentDriverTest<ConfigType>
     super.validateInstance();
     this.testDocumentDriverAsTool();
     try {
+      this.testSerialRandomDocumentCreation();
       this.testParallelRandomDocumentCreation_1_default();
       this.testParallelRandomDocumentCreation_1_fifo();
       this.testParallelRandomDocumentCreation_2_default();

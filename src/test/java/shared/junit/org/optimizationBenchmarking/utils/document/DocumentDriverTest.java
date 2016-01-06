@@ -82,12 +82,32 @@ public abstract class DocumentDriverTest<ConfigType>
       final IFileProducerListener listener, final Logger logger);
 
   /**
+   * The timeout for serial document generation tests.
+   *
+   * @return the timeout for serial document generation tests
+   */
+  protected long getSerialTimeout() {
+    return 50_000L;
+  }
+
+  /**
+   * The timeout for parallel document generation tests.
+   *
+   * @return the timeout for parallel document generation tests
+   */
+  protected long getParallelTimeout() {
+    return ((this.getSerialTimeout() * 2L) / 3L);
+  }
+
+  /**
    * test the document driver for creating random documents
    *
    * @param service
    *          the service
    * @param r
    *          the random number generator
+   * @param timeout
+   *          the timeout
    * @throws IOException
    *           if i/o fails
    * @throws ExecutionException
@@ -96,7 +116,7 @@ public abstract class DocumentDriverTest<ConfigType>
    *           if execution is interrupted
    */
   private final void __doSerialRandomTest(final ExecutorService service,
-      final Random r)
+      final Random r, final long timeout)
           throws IOException, InterruptedException, ExecutionException {
     final ConfigType config;
     RandomDocumentExample example;
@@ -111,7 +131,7 @@ public abstract class DocumentDriverTest<ConfigType>
       try (final TempDir td = new TempDir()) {
         try (final IDocument doc = this.createDocument(config,
             td.getPath(), "document", files, null)) { //$NON-NLS-1$
-          example = new RandomDocumentExample(doc, r, null, 60_000L);
+          example = new RandomDocumentExample(doc, r, null, timeout);
           try {
             if (service != null) {
               try {
@@ -145,7 +165,7 @@ public abstract class DocumentDriverTest<ConfigType>
    */
   @Test(timeout = 3600000)
   public void testSerialRandomDocumentCreation() throws Throwable {
-    this.__doSerialRandomTest(null, new Random());
+    this.__doSerialRandomTest(null, new Random(), this.getSerialTimeout());
   }
 
   /**
@@ -172,7 +192,7 @@ public abstract class DocumentDriverTest<ConfigType>
     p = new ForkJoinPool(proc,
         ForkJoinPool.defaultForkJoinWorkerThreadFactory, null, fifo);
 
-    this.__doSerialRandomTest(p, new Random());
+    this.__doSerialRandomTest(p, new Random(), this.getParallelTimeout());
 
     p.shutdown();
     p.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
@@ -186,6 +206,7 @@ public abstract class DocumentDriverTest<ConfigType>
    *           if something goes wrong
    */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testParallelRandomDocumentCreation_1_fifo()
       throws Throwable {
     this.__doParallelRandomTest(1, true, new Random());
@@ -198,6 +219,7 @@ public abstract class DocumentDriverTest<ConfigType>
    *           if something goes wrong
    */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testParallelRandomDocumentCreation_1_default()
       throws Throwable {
     this.__doParallelRandomTest(1, false, new Random());

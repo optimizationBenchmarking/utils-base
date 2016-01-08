@@ -27,9 +27,9 @@ public abstract class ClustererTest<CT extends IClusterer>
   }
 
   /**
-   * Get the math engine tool
+   * Get the clustering tool
    *
-   * @return the tool
+   * @return the clustering tool
    */
   protected abstract CT getTool();
 

@@ -1,5 +1,7 @@
 package shared.junit.org.optimizationBenchmarking.utils.ml.fitting;
 
+import java.util.Random;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -48,7 +50,11 @@ public abstract class FitterTest extends TestBase {
     final IFittingJobBuilder builder;
     final IFittingJob job;
     final IFittingResult result;
-    final double[] params;
+    final double[] params, other;
+    final double quality;
+    final Random random;
+    int count, better, i;
+    double newQuality;
 
     Assert.assertNotNull(dataset);
     Assert.assertNotNull(measure);
@@ -76,10 +82,30 @@ public abstract class FitterTest extends TestBase {
         Assert.assertTrue(MathUtils.isFinite(d));
       }
 
-      Assert.assertTrue(MathUtils.isFinite(result.getQuality()));
-      Assert.assertTrue(result.getQuality() >= 0d);
+      quality = result.getQuality();
+      Assert.assertTrue(MathUtils.isFinite(quality));
+      Assert.assertTrue(quality >= 0d);
 
       Assert.assertSame(dataset.function, result.getFittedFunction());
+
+      better = 0;
+      other = params.clone();
+      random = new Random();
+      for (count = 1; count <= 200; count++) {
+        for (i = other.length; (--i) >= 0;) {
+          other[i] = ((random.nextBoolean()//
+              ? ((params[i] * (random.nextInt(101) - 50)))//
+              : random.nextGaussian()) + random.nextDouble());
+        }
+        newQuality = measure.evaluate(dataset.function, other);
+        if (newQuality < quality) {
+          better++;
+        }
+      }
+
+      // An extremely randomly modified solution should never be better
+      // than the fitting result in more than 10% of the cases...
+      Assert.assertTrue((better * 10) < (count - 1));
     }
   }
 }

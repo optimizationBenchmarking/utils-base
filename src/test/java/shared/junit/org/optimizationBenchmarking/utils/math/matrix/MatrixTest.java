@@ -210,12 +210,9 @@ public class MatrixTest<MT extends IMatrix> extends InstanceTest<MT> {
       Assert.assertNotNull(b);
       m = a.m();
       n = a.n();
-      if ((m > 1) || (n > 1)) {
-        Assert.assertNotSame(a, b);
-      } else {
-        if (this.isTopLevelTest()) {
-          Assert.assertSame(a, b);
-        }
+
+      if ((m == 1) && (n == 1) && this.isTopLevelTest()) {
+        Assert.assertSame(a, b);
       }
 
       this.checkIntegerMatrixSame(a, b);

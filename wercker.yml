@@ -3,7 +3,7 @@
 ##
 ## https://app.wercker.com/#applications/567a005a13c2df2b623ee96c
 #
-box: maven:3.3.3-jdk-8
+box: optimizationbenchmarking/linux-evaluator-build
 #
 build:
     steps:

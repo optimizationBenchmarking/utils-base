@@ -54,11 +54,13 @@ final class _InputStreamToBuffer extends _WorkerThread {
           buffer = new byte[4096];
           while (this.m_mode <= _WorkerThread.SHUTTING_DOWN) {
             s = this.m_source.read(buffer);
-            if (s <= 0) {
+            if (s < 0) {
               break;
             }
-            if (this.m_mode <= _WorkerThread.ALIVE) {
-              this.m_dest.writeToBuffer(buffer, 0, s);
+            if (s > 0) {
+              if (this.m_mode <= _WorkerThread.ALIVE) {
+                this.m_dest.writeToBuffer(buffer, 0, s);
+              }
             }
           }
           buffer = null;

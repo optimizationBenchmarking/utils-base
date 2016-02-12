@@ -11,8 +11,11 @@ import org.optimizationBenchmarking.utils.parallel.ByteProducerConsumerBuffer;
  * A thread shoveling data from a
  * {@link org.optimizationBenchmarking.utils.parallel.ByteProducerConsumerBuffer
  * buffer} to an {@link java.io.OutputStream} as long as
- * <code>{@link #m_mode}&le;1</code>. As soon as
- * <code>{@link #m_mode}==2</code>, it will cease all activity.
+ * <code>{@link #m_mode}&le;{@link _WorkerThread#SHUTTING_DOWN}</code> and
+ * the {@link #m_source buffer} has either not yet been closed or data is
+ * available in it. As soon as
+ * <code>{@link #m_mode}&ge;{@link _WorkerThread#KILLED}</code>, it will
+ * cease all activity.
  */
 final class _BufferToOutputStream extends _WorkerThread {
 
@@ -47,10 +50,7 @@ final class _BufferToOutputStream extends _WorkerThread {
     buffer = new byte[4096];
     try {
       try {
-        while (this.m_mode < 2) {
-          if (this.m_source.isClosed()) {
-            break;
-          }
+        while (this.m_mode <= _WorkerThread.SHUTTING_DOWN) {
           s = this.m_source.readFromBuffer(buffer, 0, buffer.length);
           if (s <= 0) {
             break;
@@ -66,11 +66,9 @@ final class _BufferToOutputStream extends _WorkerThread {
         }
       }
     } catch (final Throwable t) {
-      ErrorUtils
-          .logError(
-              this.m_log,
-              "Error during shoveling bytes from byte buffer to external process.", //$NON-NLS-1$
-              t, true, RethrowMode.AS_RUNTIME_EXCEPTION);
+      ErrorUtils.logError(this.m_log, //
+          "Error during shoveling bytes from byte buffer to external process.", //$NON-NLS-1$
+          t, true, RethrowMode.AS_RUNTIME_EXCEPTION);
     }
   }
 }

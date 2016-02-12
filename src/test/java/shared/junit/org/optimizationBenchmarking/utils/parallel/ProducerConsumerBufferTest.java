@@ -70,16 +70,16 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
   @Test(timeout = 3600000)
   public void testReadEqualsWrite() throws InterruptedException {
     int i, size, use;
-    T read, write;
-    Random r;
-    Thread a, b;
+    T readArray, writeArray;
+    Random random;
+    Thread writer, reader;
 
-    r = new Random();
-    for (i = 0; i < 30; i++) {
+    random = new Random();
+    for (i = 0; i < 50; i++) {
 
-      switch (r.nextInt(3)) {
+      switch (random.nextInt(3)) {
         case 0: {
-          size = (1 + r.nextInt(1024 * 1024 * 16));
+          size = (1 + random.nextInt(1024 * 1024 * 16));
           break;
         }
         case 1: {
@@ -90,13 +90,13 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
           size = ((i + 1) * 64);
         }
       }
-      read = this.createArray(size);
-      write = this.createArray(size);
-      this.randomizeArray(write, r);
+      readArray = this.createArray(size);
+      writeArray = this.createArray(size);
+      this.randomizeArray(writeArray, random);
 
-      switch (r.nextInt(3)) {
+      switch (random.nextInt(3)) {
         case 0: {
-          use = (1 + r.nextInt(100));
+          use = (1 + random.nextInt(100));
           break;
         }
         case 1: {
@@ -112,31 +112,31 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
           break;
         }
         default: {
-          use = (1 + r.nextInt(size << 1));
+          use = (1 + random.nextInt(size << 1));
           break;
         }
       }
 
       try (final ProducerConsumerBuffer<T> buffer = this
           .createBuffer(use)) {
-        a = new __WriterThread(write, size, buffer);
-        b = new __ReaderThread(read, size, buffer);
+        writer = new __WriterThread(writeArray, size, buffer, random);
+        reader = new __ReaderThread(readArray, size, buffer);
 
-        if (r.nextBoolean()) {
-          a.start();
+        if (random.nextBoolean()) {
+          writer.start();
           Thread.sleep(100);
-          b.start();
+          reader.start();
         } else {
-          b.start();
+          reader.start();
           Thread.sleep(100);
-          a.start();
+          writer.start();
         }
 
-        a.join();
-        b.join();
+        writer.join();
+        reader.join();
       }
 
-      this.assertEquals(write, read);
+      this.assertEquals(writeArray, readArray);
     }
   }
 
@@ -148,6 +148,8 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
     private final int m_size;
     /** the buffer */
     private final ProducerConsumerBuffer<T> m_buffer;
+    /** the randomizer */
+    private final Random m_rand;
 
     /**
      * create the writer thread
@@ -158,13 +160,16 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
      *          the total amount to write
      * @param buffer
      *          the buffer
+     * @param rand
+     *          the randomizer
      */
     __WriterThread(final T write, final int size,
-        final ProducerConsumerBuffer<T> buffer) {
+        final ProducerConsumerBuffer<T> buffer, final Random rand) {
       super();
       this.m_write = write;
       this.m_size = size;
       this.m_buffer = buffer;
+      this.m_rand = rand;
     }
 
     /** {@inheritDoc} */
@@ -213,6 +218,10 @@ public abstract class ProducerConsumerBufferTest<T> extends TestBase {
             // nothing
           }
         }
+      }
+
+      if (this.m_rand.nextBoolean()) {
+        this.m_buffer.close();
       }
     }
   }

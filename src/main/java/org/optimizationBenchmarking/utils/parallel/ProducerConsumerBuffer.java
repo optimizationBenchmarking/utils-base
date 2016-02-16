@@ -73,7 +73,7 @@ public abstract class ProducerConsumerBuffer<T> implements IScope {
    * any waiting reader will be {@link java.lang.Object#notifyAll()
    * notified}. If the current internal backing store is not big enough to
    * hold the data, a new store will be allocated. If the buffer has been
-   * {@link #close() closed}, nothing will be stored.
+   * {@link #close() closed}, nothing will be done.
    *
    * @param source
    *          the source
@@ -98,13 +98,10 @@ public abstract class ProducerConsumerBuffer<T> implements IScope {
           + " is not possible.");//$NON-NLS-1$
     }
 
-    if (count <= 0) {
+    if ((count <= 0) || (this.m_closed)) {
       return;
     }
 
-    if (this.m_closed) {
-      return;
-    }
     synchronized (this.m_synch) {
       if (this.m_closed) {
         return;
@@ -220,48 +217,50 @@ public abstract class ProducerConsumerBuffer<T> implements IScope {
   private final int __readFromBuffer(final T dest, final int start,
       final int count, final boolean fully, final boolean read) {
     T bufferArray;
-    int s, bufferArraySize, currentSize, readAmount, readPosition;
+    int endIndex, bufferArraySize, currentSize, readAmount, readPosition,
+        size;
 
     if (read) {
-      s = 0;
+      size = 0;
       if ((dest == null) || (count < 0) || (start < 0)
-          || ((count + start) > (s = this._length(dest)))) {
+          || ((count + start) > (size = this._length(dest)))) {
         throw new IllegalArgumentException("Writing " + //$NON-NLS-1$
             count + " elements starting at " + start//$NON-NLS-1$
             + " to array " + dest + //$NON-NLS-1$
-            " of length " + s//$NON-NLS-1$
+            " of length " + size//$NON-NLS-1$
             + " is not possible.");//$NON-NLS-1$
       }
     }
 
-    if (count <= 0) {
-      return (this.m_closed ? (-1) : 0);
-    }
-
     for (;;) {
       synchronized (this.m_synch) {
-
         currentSize = this.m_size;
+
+        if (count <= 0) {
+          return ((this.m_closed && (currentSize <= 0)) ? (-1) : 0);
+        }
+
         if (currentSize >= ((fully && (!(this.m_closed))) ? count : 1)) {
           readAmount = Math.min(currentSize, count);
           bufferArray = this.m_buffer;
           bufferArraySize = this._length(bufferArray);
           readPosition = this.m_readPosition;
-          s = (readPosition + readAmount);
-          if (s <= bufferArraySize) {
+          endIndex = (readPosition + readAmount);
+          if (endIndex <= bufferArraySize) {
             if (read) {
               System.arraycopy(bufferArray, readPosition, dest, start,
                   readAmount);
             }
-            this.m_readPosition = s;
+            this.m_readPosition = endIndex;
           } else {
-            s = (bufferArraySize - readPosition);
+            size = (bufferArraySize - readPosition);
             if (read) {
-              System.arraycopy(bufferArray, readPosition, dest, start, s);
+              System.arraycopy(bufferArray, readPosition, dest, start,
+                  size);
             }
-            this.m_readPosition = readPosition = (readAmount - s);
+            this.m_readPosition = readPosition = (readAmount - size);
             if (read) {
-              System.arraycopy(bufferArray, 0, dest, (start + s),
+              System.arraycopy(bufferArray, 0, dest, (start + size),
                   readPosition);
             }
           }

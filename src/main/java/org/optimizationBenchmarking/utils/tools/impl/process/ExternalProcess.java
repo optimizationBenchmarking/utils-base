@@ -219,7 +219,7 @@ public final class ExternalProcess extends _BasicProcess {
           if (!kill) {
             waiter: for (;;) {
               try {
-                this.m_stdoutWorker.m_mode = 1;
+                this.m_stdoutWorker.m_mode = _WorkerThread.SHUTTING_DOWN;
                 this.m_stdoutWorker.join();
                 break waiter;
               } catch (final InterruptedException ie) {
@@ -233,7 +233,7 @@ public final class ExternalProcess extends _BasicProcess {
           }
 
           if (shouldKill) {
-            this.m_stdoutWorker.m_mode = 2;
+            this.m_stdoutWorker.m_mode = _WorkerThread.KILLED;
           }
         } catch (final Throwable t) {
           error = ErrorUtils.aggregateError(t, error);
@@ -270,7 +270,7 @@ public final class ExternalProcess extends _BasicProcess {
           if (!kill) {
             waiter: for (;;) {
               try {
-                this.m_stderrWorker.m_mode = 1;
+                this.m_stderrWorker.m_mode = _WorkerThread.SHUTTING_DOWN;
                 this.m_stderrWorker.join();
                 break waiter;
               } catch (final InterruptedException ie) {
@@ -284,7 +284,7 @@ public final class ExternalProcess extends _BasicProcess {
           }
 
           if (shouldKill) {
-            this.m_stderrWorker.m_mode = 2;
+            this.m_stderrWorker.m_mode = _WorkerThread.KILLED;
           }
         } catch (final Throwable t) {
           error = ErrorUtils.aggregateError(t, error);
@@ -321,7 +321,7 @@ public final class ExternalProcess extends _BasicProcess {
           if (!kill) {
             waiter: for (;;) {
               try {
-                this.m_stdinWorker.m_mode = 1;
+                this.m_stdinWorker.m_mode = _WorkerThread.SHUTTING_DOWN;
                 this.m_stdinWorker.join();
                 break waiter;
               } catch (final InterruptedException ie) {
@@ -335,7 +335,7 @@ public final class ExternalProcess extends _BasicProcess {
           }
 
           if (shouldKill) {
-            this.m_stdinWorker.m_mode = 2;
+            this.m_stdinWorker.m_mode = _WorkerThread.KILLED;
           }
         } catch (final Throwable t) {
           error = ErrorUtils.aggregateError(t, error);
@@ -349,12 +349,12 @@ public final class ExternalProcess extends _BasicProcess {
       error = ErrorUtils.aggregateError(error, this.m_error);
       if (error != null) {
         if (kill) {
-          ErrorUtils.logError(logger, "Error while forcefully killing ",//$NON-NLS-1$
+          ErrorUtils.logError(logger, "Error while forcefully killing ", //$NON-NLS-1$
               error, true, RethrowMode.AS_IO_EXCEPTION);
         }
 
         ErrorUtils.logError(logger,
-            "Error while gracefully shutting down ",//$NON-NLS-1$
+            "Error while gracefully shutting down ", //$NON-NLS-1$
             error, true, RethrowMode.DONT_RETHROW);
 
         this.m_error = error;
@@ -428,8 +428,8 @@ public final class ExternalProcess extends _BasicProcess {
   }
 
   /** the internal exception handler for worker threads */
-  private final class __UncaughtExceptionHandler implements
-      UncaughtExceptionHandler {
+  private final class __UncaughtExceptionHandler
+      implements UncaughtExceptionHandler {
 
     /** create */
     __UncaughtExceptionHandler() {
@@ -438,7 +438,8 @@ public final class ExternalProcess extends _BasicProcess {
 
     /** {@inheritDoc} */
     @Override
-    public final void uncaughtException(final Thread t, final Throwable e) {
+    public final void uncaughtException(final Thread t,
+        final Throwable e) {
       ExternalProcess.this._addError(e);
     }
   }

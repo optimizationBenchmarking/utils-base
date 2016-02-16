@@ -13,8 +13,9 @@ import org.optimizationBenchmarking.utils.text.textOutput.MemoryTextOutput;
 /**
  * A thread shoveling data from an {@link java.io.InputStream} to a
  * {@link java.util.logging.Logger} as long as
- * <code>{@link #m_mode}&le;1</code>. As soon as
- * <code>{@link #m_mode}=2</code>, all activity is ceased.
+ * <code>{@link #m_mode}&le;{@link _WorkerThread#SHUTTING_DOWN}</code>. As
+ * soon as <code>{@link #m_mode}={@link _WorkerThread#KILLED}</code>, all
+ * activity is ceased.
  */
 final class _InputStreamToLogger extends _WorkerThread {
 
@@ -59,7 +60,7 @@ final class _InputStreamToLogger extends _WorkerThread {
     logger = this.m_log;
     try {
       try {
-        if (this.m_mode >= 2) {
+        if (this.m_mode >= _WorkerThread.KILLED) {
           return;
         }
         hasText = false;
@@ -72,7 +73,7 @@ final class _InputStreamToLogger extends _WorkerThread {
             run = true;
             hasText = false;
 
-            while (run && (this.m_mode < 2)) {
+            while (run && (this.m_mode <= _WorkerThread.SHUTTING_DOWN)) {
               if (hasText) {
                 if ((mto.length() > 524288) || (!(br.ready()))) {
                   if (logger.isLoggable(level)) {
@@ -119,8 +120,8 @@ final class _InputStreamToLogger extends _WorkerThread {
         this.m_source.close();
       }
     } catch (final Throwable t) {
-      ErrorUtils.logError(logger,//
-          "Error during shoveling text from external process to Logger.",//$NON-NLS-1$
+      ErrorUtils.logError(logger, //
+          "Error during shoveling text from external process to Logger.", //$NON-NLS-1$
           t, true, RethrowMode.AS_RUNTIME_EXCEPTION);
     }
   }

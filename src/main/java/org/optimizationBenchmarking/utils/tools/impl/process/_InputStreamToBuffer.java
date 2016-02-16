@@ -10,10 +10,13 @@ import org.optimizationBenchmarking.utils.parallel.ByteProducerConsumerBuffer;
 /**
  * A thread shoveling data from an {@link java.io.InputStream} to a
  * {@link org.optimizationBenchmarking.utils.parallel.ByteProducerConsumerBuffer
- * buffer} as long as <code>{@link #m_mode}=0</code>. As soon as
- * <code>{@link #m_mode}=1</code>, the data from the input stream will be
- * {@link java.io.InputStream#skip(long) skipped} over. If
- * <code>{@link #m_mode}=2</code>, all activity is ceased.
+ * buffer} as long as
+ * <code>{@link #m_mode}=={@link _WorkerThread#ALIVE}</code>. As soon as
+ * <code>{@link #m_mode}&ge;{@link _WorkerThread#SHUTTING_DOWN}</code>, the
+ * data from the input stream will be {@link java.io.InputStream#skip(long)
+ * skipped} over and discarted. If
+ * <code>{@link #m_mode}&ge;{@link _WorkerThread#KILLED}</code>, all
+ * activity is ceased.
  */
 final class _InputStreamToBuffer extends _WorkerThread {
 
@@ -49,16 +52,15 @@ final class _InputStreamToBuffer extends _WorkerThread {
       try {
         try {
           buffer = new byte[4096];
-          while (this.m_mode < 2) {
-            if (this.m_dest.isClosed()) {
-              break;
-            }
+          while (this.m_mode <= _WorkerThread.SHUTTING_DOWN) {
             s = this.m_source.read(buffer);
-            if (s <= 0) {
+            if (s < 0) {
               break;
             }
-            if (this.m_mode < 1) {
-              this.m_dest.writeToBuffer(buffer, 0, s);
+            if (s > 0) {
+              if (this.m_mode <= _WorkerThread.ALIVE) {
+                this.m_dest.writeToBuffer(buffer, 0, s);
+              }
             }
           }
           buffer = null;
@@ -69,11 +71,9 @@ final class _InputStreamToBuffer extends _WorkerThread {
         this.m_source.close();
       }
     } catch (final Throwable t) {
-      ErrorUtils
-          .logError(
-              this.m_log,
-              "Error during shoveling bytes from external process to byte buffer.",//$NON-NLS-1$
-              t, true, RethrowMode.AS_RUNTIME_EXCEPTION);
+      ErrorUtils.logError(this.m_log,
+          "Error during shoveling bytes from external process to byte buffer.", //$NON-NLS-1$
+          t, true, RethrowMode.AS_RUNTIME_EXCEPTION);
     }
   }
 }

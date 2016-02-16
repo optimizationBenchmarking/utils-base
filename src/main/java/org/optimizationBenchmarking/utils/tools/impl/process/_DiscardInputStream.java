@@ -9,8 +9,10 @@ import org.optimizationBenchmarking.utils.error.RethrowMode;
 /**
  * A thread shoveling data from an {@link java.io.InputStream} to the
  * Nirvana, by {@link java.io.InputStream#skip(long) skipping} over it as
- * long as <code>{@link #m_mode}&le;1</code>. As soon as
- * <code>{@link #m_mode}=2</code>, it will cease all activity.
+ * long as
+ * <code>{@link #m_mode}&le;{@link _WorkerThread#SHUTTING_DOWN}</code>. As
+ * soon as <code>{@link #m_mode}&ge;{@link _WorkerThread#KILLED}</code>, it
+ * will cease all activity.
  */
 final class _DiscardInputStream extends _WorkerThread {
 
@@ -37,7 +39,7 @@ final class _DiscardInputStream extends _WorkerThread {
 
     try {
       buffer = new byte[4096];
-      while (this.m_mode < 2) {
+      while (this.m_mode <= _WorkerThread.SHUTTING_DOWN) {
         if (this.m_source.read(buffer) <= 0) {
           break;
         }
@@ -45,7 +47,7 @@ final class _DiscardInputStream extends _WorkerThread {
       buffer = null;
     } catch (final Throwable t) {
       ErrorUtils.logError(this.m_log,
-          "Error during discarding input stream (by skipping).",//$NON-NLS-1$
+          "Error during discarding input stream (by skipping).", //$NON-NLS-1$
           t, true, RethrowMode.AS_RUNTIME_EXCEPTION);
     }
   }

@@ -33,7 +33,9 @@ import org.optimizationBenchmarking.utils.parsers.PathParser;
 import org.optimizationBenchmarking.utils.predicates.IPredicate;
 import org.optimizationBenchmarking.utils.text.TextUtils;
 
-/** Some helper routines for {@link java.nio.file.Path}-based operations. */
+/**
+ * Some helper routines for {@link java.nio.file.Path}-based operations.
+ */
 public final class PathUtils {
 
   /**
@@ -59,7 +61,8 @@ public final class PathUtils {
    *          the path component
    * @return the sanitized component
    */
-  public static final String sanitizePathComponent(final String component) {
+  public static final String sanitizePathComponent(
+      final String component) {
     final char[] data;
     final String normalized;
     int index, codepoint, size;
@@ -201,7 +204,8 @@ public final class PathUtils {
    * @see #normalize(Path, Path)
    * @see #normalize(String)
    */
-  public static final Path normalize(final String path, final Path basePath) {
+  public static final Path normalize(final String path,
+      final Path basePath) {
     final String s;
 
     s = TextUtils.prepare(path);
@@ -242,7 +246,8 @@ public final class PathUtils {
    * @see #normalize(Path)
    */
   @SuppressWarnings("unused")
-  public static final Path normalize(final Path path, final Path basePath) {
+  public static final Path normalize(final Path path,
+      final Path basePath) {
     Path before, p, q;
 
     PathUtils.__pathNotNull(path);
@@ -358,7 +363,7 @@ public final class PathUtils {
     }
 
     message = ("Cannot translate path '" + path + //$NON-NLS-1$
-    "' to a physical file path."); //$NON-NLS-1$;
+        "' to a physical file path."); //$NON-NLS-1$ ;
     if (error != null) {
       throw new IllegalArgumentException(message, error);
     }
@@ -437,7 +442,8 @@ public final class PathUtils {
       stream = null;
       RethrowMode.AS_IO_EXCEPTION.rethrow(//
           (("Error while trying to open an OutputStream to path '" //$NON-NLS-1$
-          + path) + '\''), true, //
+              + path) + '\''),
+          true, //
           ErrorUtils.aggregateError(t3, error));
     }
 
@@ -471,7 +477,7 @@ public final class PathUtils {
           StandardOpenOption.READ);
     } catch (final Throwable t3) {
       RethrowMode.AS_IO_EXCEPTION.rethrow((((//
-          "Error while trying to open InputStream for path '") + //$NON-NLS-1$
+      "Error while trying to open InputStream for path '") + //$NON-NLS-1$
           path) + '\''), true, t3);
       stream = null;
     }
@@ -772,7 +778,8 @@ public final class PathUtils {
    * have such a path and throw it into a platform-native command such as
    * {@code rd}, all hell could break loose (because that path may map to
    * anything, I think).</li>
-   * <li>From an OS command, you may not get detailed error information.</li>
+   * <li>From an OS command, you may not get detailed error information.
+   * </li>
    * <li>Calling an OS command or running a process for each deletion may
    * actually be slower (or faster, who knows, but I like deterministic
    * behavior).</li>
@@ -818,11 +825,11 @@ public final class PathUtils {
    * executables or libraries.
    * </p>
    * <p>
-   * This list contains the environment's <a
-   * href="http://en.wikipedia.org/wiki/PATH_%28variable%29">PATH</a>
-   * variable, as well as the folders containing each element of the <a
-   * href="http://en.wikipedia.org/wiki/Classpath_%28Java%29"
-   * >classpath</a>, the {@link #getCurrentDir() current directory} and the
+   * This list contains the environment's
+   * <a href="http://en.wikipedia.org/wiki/PATH_%28variable%29">PATH</a>
+   * variable, as well as the folders containing each element of the
+   * <a href="http://en.wikipedia.org/wiki/Classpath_%28Java%29" >classpath
+   * </a>, the {@link #getCurrentDir() current directory} and the
    * {@link #getJavaHomeDir() java home directory}. It also includes some
    * standard candidate folders, such as &quot;{@code C:\Windows} &quot; or
    * &quot;{@code /usr/bin}&quot; and folders where we may look for
@@ -914,7 +921,7 @@ public final class PathUtils {
    */
   public static final FileVisitResult visitPath(
       final FileVisitor<Path> visitor, final Path[] visitFirst)
-      throws IOException {
+          throws IOException {
     final __PathVisitor visitorWrapper;
     Path[] pathSet;
     FileVisitResult r;
@@ -982,6 +989,37 @@ public final class PathUtils {
       final IPredicate<Path> pathPredicate,
       final IPredicate<BasicFileAttributes> attsPredicate,
       final Path[] visitFirst) {
+    return PathUtils.findFirstInPath(pathPredicate, attsPredicate,
+        visitFirst, null);
+  }
+
+  /**
+   * Find a {@link java.nio.file.Path path} that matches the given
+   * {@link org.optimizationBenchmarking.utils.predicates.IPredicate
+   * pathPredicate} and whose attributes match the
+   * {@link org.optimizationBenchmarking.utils.predicates.IPredicate
+   * attsPredicate}. Therefore, first, visit the {@link java.nio.file.Path
+   * paths} in the array {@code visitVist}. If no fitting path was found,
+   * then visit the elements of the {@link #getPath() PATH}.
+   *
+   * @param visitFirst
+   *          {@code null} or a list of paths to visit <em>before</em>
+   *          walking through the {@link #getPath() PATH}. Elements in this
+   *          array may also be {@code null} or non-existing paths.
+   * @param pathPredicate
+   *          the path predicate to match
+   * @param attsPredicate
+   *          the attributes predicate
+   * @param logger
+   *          the logger to use, or {@code null} for default
+   * @return the result
+   * @see #visitPath(FileVisitor, Path[])
+   * @see #getPath()
+   */
+  public static final Path findFirstInPath(
+      final IPredicate<Path> pathPredicate,
+      final IPredicate<BasicFileAttributes> attsPredicate,
+      final Path[] visitFirst, final Logger logger) {
     final __FindFirst ff;
     Logger root;
 
@@ -994,9 +1032,9 @@ public final class PathUtils {
     try {
       PathUtils.visitPath(ff, visitFirst);
     } catch (final Throwable error) {
-      root = Configuration.getGlobalLogger();
+      root = ((logger != null) ? logger : Configuration.getGlobalLogger());
       if ((root != null) && (root.isLoggable(Level.WARNING))) {
-        root.log(Level.WARNING,//
+        root.log(Level.WARNING, //
             "Error during the process of locating a file in the PATH.", //$NON-NLS-1$
             error);
       }
@@ -1090,8 +1128,8 @@ public final class PathUtils {
             p1 = null;
           }
 
-          for (final String def : new String[] {//
-          "HOME", //$NON-NLS-1$
+          for (final String def : new String[] { //
+              "HOME", //$NON-NLS-1$
               "HOMEPATH", //$NON-NLS-1$
               "USERPROFILE", //$NON-NLS-1$
           }) {
@@ -1139,11 +1177,11 @@ public final class PathUtils {
       lister = new ListParser<>(__DirPathParser.PARSER, true, true);
 
       // get path lists from environment variables or java configuration
-      for (final String key : new String[] {//
-      Configuration.PARAM_PATH,// PATH
-          "java.class.path",// class path //$NON-NLS-1$
-          "classpath",//environment class path //$NON-NLS-1$
-          "java.library.path",//path to native libraries//$NON-NLS-1$
+      for (final String key : new String[] { //
+          Configuration.PARAM_PATH, // PATH
+          "java.class.path", // class path //$NON-NLS-1$
+          "classpath", // environment class path //$NON-NLS-1$
+          "java.library.path",// path to native libraries//$NON-NLS-1$
       }) {
         path = config.get(key, lister, null);
         if (path != null) {
@@ -1154,8 +1192,8 @@ public final class PathUtils {
       lister = null;
 
       // add paths from environment variables or java config
-      for (final String key : new String[] {//
-      "ProgramFiles", //$NON-NLS-1$
+      for (final String key : new String[] { //
+          "ProgramFiles", //$NON-NLS-1$
           "ProgramFiles(x86)", //$NON-NLS-1$
           "ProgramW6432", //$NON-NLS-1$
           "CommonProgramFiles", //$NON-NLS-1$
@@ -1173,8 +1211,8 @@ public final class PathUtils {
       }
 
       // add default paths if they exist
-      for (final String template : new String[] {//
-      "C:/Program Files", //$NON-NLS-1$
+      for (final String template : new String[] { //
+          "C:/Program Files", //$NON-NLS-1$
           "C:/Program Files (x86)", //$NON-NLS-1$
           "C:/Windows", //$NON-NLS-1$
           "/etc", //$NON-NLS-1$
@@ -1349,8 +1387,8 @@ public final class PathUtils {
    * file tree recursively, by first deleting the files and sub-directories
    * in a directory, then the directory itself.
    */
-  private static final class __DeleteFileTree extends
-      SimpleFileVisitor<Path> {
+  private static final class __DeleteFileTree
+      extends SimpleFileVisitor<Path> {
 
     /** the exceptions */
     private ArrayList<Throwable> m_exceptions;
@@ -1392,7 +1430,8 @@ public final class PathUtils {
      */
     final void _throw(final Path path) throws IOException {
       IOException ioe;
-      if ((this.m_exceptions != null) && (!(this.m_exceptions.isEmpty()))) {
+      if ((this.m_exceptions != null)
+          && (!(this.m_exceptions.isEmpty()))) {
         ioe = new IOException("Error when deleting '" + path + '\''); //$NON-NLS-1$
         for (final Throwable t : this.m_exceptions) {
           ioe.addSuppressed(t);
@@ -1451,7 +1490,8 @@ public final class PathUtils {
    * degree at least.
    */
   @SuppressWarnings("unused")
-  private static final class __PathVisitor extends SimpleFileVisitor<Path> {
+  private static final class __PathVisitor
+      extends SimpleFileVisitor<Path> {
 
     /** some paths we should always skip when traveling through the path */
     static final Object[] SKIP;
@@ -1466,8 +1506,8 @@ public final class PathUtils {
       if (p != null) {
         skip.add(p);
       }
-      for (final String template : new String[] {//
-      "/tmp", //$NON-NLS-1$
+      for (final String template : new String[] { //
+          "/tmp", //$NON-NLS-1$
           "/etc/cups/ssl", //$NON-NLS-1$
           "/etc/ssl/private", //$NON-NLS-1$
           "/etc/polkit-1/localauthority",//$NON-NLS-1$
@@ -1486,8 +1526,8 @@ public final class PathUtils {
         }
       }
 
-      win = Configuration.getRoot().get(
-          "windir", __DirPathParser.PARSER, null);//$NON-NLS-1$
+      win = Configuration.getRoot().get("windir", __DirPathParser.PARSER, //$NON-NLS-1$
+          null);
       if (win == null) {
         try {
           win = __DirPathParser.PARSER.parseString("C:\\Windows"); //$NON-NLS-1$
@@ -1499,8 +1539,8 @@ public final class PathUtils {
       if (win != null) {
 
         // add default paths if they exist
-        for (final String template : new String[] {//
-        "addins", //$NON-NLS-1$
+        for (final String template : new String[] { //
+            "addins", //$NON-NLS-1$
             "ADFS", //$NON-NLS-1$
             "AppCompat", //$NON-NLS-1$
             "apppatch", //$NON-NLS-1$
@@ -1555,7 +1595,7 @@ public final class PathUtils {
             "ShellNew", //$NON-NLS-1$
             "SKB", //$NON-NLS-1$
             "SoftwareDistribution", //$NON-NLS-1$
-            "Speech", //$NON-NLS-1$1$
+            "Speech", //$NON-NLS-1$ 1$
             "SystemResources", //$NON-NLS-1$
             "TAPI", //$NON-NLS-1$
             "Tasks", //$NON-NLS-1$
@@ -1624,21 +1664,21 @@ public final class PathUtils {
      * synchronization here is "just-in-case". Who knows what these new
      * Java versions will parallelize.
      *
-     * @param p
+     * @param path
      *          the path to add
      * @param id
      *          the id
-     * @param s
+     * @param setOfVisitedPaths
      *          the hash set to add to
      * @return the return value
      */
-    private static final boolean __add(final Path p, final Object id,
-        final HashSet<Object> s) {
+    private static final boolean __add(final Path path, final Object id,
+        final HashSet<Object> setOfVisitedPaths) {
       final boolean reta, retb;
 
-      synchronized (s) {
-        reta = s.add(p);
-        retb = ((id != null) ? s.add(id) : reta);
+      synchronized (setOfVisitedPaths) {
+        reta = setOfVisitedPaths.add(path);
+        retb = ((id != null) ? setOfVisitedPaths.add(id) : reta);
       }
 
       return (reta && retb);
@@ -1652,7 +1692,7 @@ public final class PathUtils {
       if ((dir == null) || (attrs == null)
           || (!(__PathVisitor.__add(dir, attrs.fileKey(), this.m_done)))) {
         return ((this.m_lastResult == FileVisitResult.TERMINATE)//
-        ? FileVisitResult.TERMINATE//
+            ? FileVisitResult.TERMINATE//
             : FileVisitResult.SKIP_SUBTREE);
       }
 
@@ -1688,12 +1728,12 @@ public final class PathUtils {
         final IOException exc) throws IOException {
       if ((file != null)//
           && ((!(this.m_inUserDefinedTemplates)) || //
-          (!(exc instanceof NoSuchFileException)))) {
+              (!(exc instanceof NoSuchFileException)))) {
         return (this.m_lastResult = this.m_visitor.visitFileFailed(file,
             exc));
       }
       return ((this.m_lastResult == FileVisitResult.TERMINATE) //
-      ? FileVisitResult.TERMINATE //
+          ? FileVisitResult.TERMINATE //
           : FileVisitResult.CONTINUE);
     }
 
@@ -1704,7 +1744,7 @@ public final class PathUtils {
 
       if (dir == null) {
         return ((this.m_lastResult == FileVisitResult.TERMINATE)//
-        ? FileVisitResult.TERMINATE //
+            ? FileVisitResult.TERMINATE //
             : FileVisitResult.CONTINUE);
       }
       return (this.m_lastResult = this.m_visitor.postVisitDirectory(dir,
@@ -1820,8 +1860,8 @@ public final class PathUtils {
    * This small private class helps to canonicalize a file by tunneling
    * this operation through a <code>PrivilegedAction</code>.
    */
-  private static final class __Canonicalizer implements
-      PrivilegedAction<File> {
+  private static final class __Canonicalizer
+      implements PrivilegedAction<File> {
     /** The file to canonicalize. */
     private final File m_file;
 

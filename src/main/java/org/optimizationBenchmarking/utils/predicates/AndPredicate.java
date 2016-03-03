@@ -1,6 +1,7 @@
 package org.optimizationBenchmarking.utils.predicates;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.optimizationBenchmarking.utils.hash.HashObject;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
@@ -80,4 +81,50 @@ public final class AndPredicate<T> extends HashObject
     return false;
   }
 
+  /**
+   * Join all the predicates in the list with logical AND.
+   *
+   * @param list
+   *          the list of predicates
+   * @return the predicate representing the list, or {@code null} if no
+   *         predicate is contained or {@code list==null}.
+   */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public static final <T> IPredicate<T> and(
+      final List<IPredicate<? super T>> list) {
+    if (list == null) {
+      return null;
+    }
+    return AndPredicate.__and(((List) list), 0, (list.size() - 1));
+  }
+
+  /**
+   * Join all the predicates in the list with logical AND.
+   *
+   * @param list
+   *          the list of predicates
+   * @param startInclusive
+   *          the inclusive start index
+   * @param endInclusive
+   *          the inclusive end index
+   * @return the predicate representing the list, or {@code null} if no
+   *         predicate is contained or {@code list==null}.
+   */
+  private static final <T> IPredicate<T> __and(
+      final List<IPredicate<T>> list, final int startInclusive,
+      final int endInclusive) {
+    final int mid;
+
+    if (startInclusive >= endInclusive) {
+      if (startInclusive <= endInclusive) {
+        return list.get(startInclusive);
+      }
+      return null;
+    }
+
+    mid = ((startInclusive + endInclusive) >>> 1);
+    return new AndPredicate<>(
+        AndPredicate.__and(list, startInclusive, mid), //
+        AndPredicate.__and(list, (mid + 1), endInclusive));//
+  }
 }

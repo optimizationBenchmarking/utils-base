@@ -9,8 +9,11 @@ import org.optimizationBenchmarking.utils.io.paths.predicates.CanExecutePredicat
 import org.optimizationBenchmarking.utils.io.paths.predicates.FileNamePredicate;
 import org.optimizationBenchmarking.utils.io.paths.predicates.IsDirectoryPredicate;
 import org.optimizationBenchmarking.utils.io.paths.predicates.IsFilePredicate;
+import org.optimizationBenchmarking.utils.io.paths.predicates.TextProcessResultContains;
+import org.optimizationBenchmarking.utils.io.paths.predicates.TextProcessResultPredicate;
 import org.optimizationBenchmarking.utils.predicates.AndPredicate;
 import org.optimizationBenchmarking.utils.predicates.IPredicate;
+import org.optimizationBenchmarking.utils.text.predicates.StringContains;
 import org.optimizationBenchmarking.utils.tools.impl.abstr.ToolJobBuilder;
 
 /** The builder for path finders. */
@@ -134,6 +137,64 @@ public final class PathFinderBuilder
       this.m_pathPredicates.add(predicate);
     }
     return this;
+  }
+
+  /**
+   * Add a predicate which executes the given process with the given
+   * {@code arguments}, reads all of its output, and returns {@code true}
+   * only if the process terminates successfully (with return value
+   * {@code 0}).
+   *
+   * @param arguments
+   *          the arguments
+   * @return this builder
+   */
+  public final PathFinderBuilder addCanExecuteAsTextProcess(
+      final String... arguments) {
+    return this.addPathPredicate(//
+        new TextProcessResultPredicate(arguments));
+  }
+
+  /**
+   * Add a predicate which executes the given process with the given
+   * {@code arguments}, reads all of its output, and returns {@code true}
+   * only if each of predicates in {@code predicates} at least return
+   * {@code true} once and the process itself returns {@code 0}.
+   *
+   * @param arguments
+   *          the command line arguments
+   * @param predicates
+   *          the predicates
+   * @return
+   */
+  public final PathFinderBuilder addTextProcessOutputContainsAll(
+      final String[] arguments, final IPredicate<String>[] predicates) {
+    return this.addPathPredicate(
+        new TextProcessResultContains(arguments, predicates));
+  }
+
+  /**
+   * Add a predicate which executes the given process with the given
+   * {@code arguments}, reads all of its output, and returns {@code true}
+   * only if each of the strings in {@code contains} are found in at least
+   * one line of output.
+   *
+   * @param arguments
+   * @param contains
+   * @return
+   */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public final PathFinderBuilder addTextProcessOutputContainsAll(
+      final String[] arguments, final String[] contains) {
+    final IPredicate[] predicates;
+    int i;
+
+    predicates = new IPredicate[contains.length];
+    i = (-1);
+    for (final String s : contains) {
+      predicates[++i] = new StringContains(s);
+    }
+    return this.addTextProcessOutputContainsAll(arguments, predicates);
   }
 
   /**

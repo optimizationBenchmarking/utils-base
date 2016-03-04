@@ -4,7 +4,9 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 
+import org.optimizationBenchmarking.utils.config.Configuration;
 import org.optimizationBenchmarking.utils.io.paths.predicates.CanExecutePredicate;
+import org.optimizationBenchmarking.utils.io.paths.predicates.FileNamePredicate;
 import org.optimizationBenchmarking.utils.io.paths.predicates.IsDirectoryPredicate;
 import org.optimizationBenchmarking.utils.io.paths.predicates.IsFilePredicate;
 import org.optimizationBenchmarking.utils.predicates.AndPredicate;
@@ -33,7 +35,8 @@ public final class PathFinderBuilder
    * Add a path to visit first during the search
    *
    * @param path
-   *          the path to visit first during the search
+   *          the path to visit first during the search, {@code null} is
+   *          silently ignored.
    * @return this builder
    */
   public final PathFinderBuilder addVisitFirst(final Path path) {
@@ -55,7 +58,8 @@ public final class PathFinderBuilder
    * Add a path to visit first during the search
    *
    * @param path
-   *          the path to visit first during the search
+   *          the path to visit first during the search, {@code null} is
+   *          silently ignored.
    * @return this builder
    */
   public final PathFinderBuilder addVisitFirst(final String path) {
@@ -71,6 +75,46 @@ public final class PathFinderBuilder
       }
     }
     return this;
+  }
+
+  /**
+   * Add a configuration-argument based path to be visited first. If a path
+   * is stored under key {@code argument} in {@code config}, this path is
+   * added to the visit-first list for the search. Otherwise, nothing is
+   * added.
+   *
+   * @param config
+   *          the configuration context, {@code null} is silently ignored.
+   * @param argument
+   *          the argument, {@code null} is silently ignored.
+   * @return this builder
+   */
+  public final PathFinderBuilder addConfigArgVisitFirst(
+      final Configuration config, final String argument) {
+    final Path path;
+    if ((config != null) && (argument != null)) {
+      path = config.getPath(argument, null);
+      if (path != null) {
+        return this.addVisitFirst(path);
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Add a configuration-argument based path to be visited first. If a path
+   * is stored under key {@code argument} in
+   * {@link org.optimizationBenchmarking.utils.config.Configuration#getRoot()}
+   * , this path is added to the visit-first list for the search.
+   * Otherwise, nothing is added.
+   *
+   * @param argument
+   *          the argument, {@code null} is silently ignored.
+   * @return this builder
+   */
+  public final PathFinderBuilder addConfigArgVisitFirst(
+      final String argument) {
+    return this.addConfigArgVisitFirst(Configuration.getRoot(), argument);
   }
 
   /**
@@ -93,11 +137,27 @@ public final class PathFinderBuilder
   }
 
   /**
+   * Add a file name comparison predicate
+   *
+   * @param ignoreExtension
+   *          ignore (remove) the file extension (if any) before the name
+   *          comparison
+   * @param names
+   *          the string list
+   * @return this builder
+   */
+  public final PathFinderBuilder addNamePredicate(
+      final boolean ignoreExtension, final String... names) {
+    return this.addPathPredicate(//
+        new FileNamePredicate(ignoreExtension, names));
+  }
+
+  /**
    * Add an attribute predicate. All predicates are concatenated with
-   * logical AND.
+   * logical AND, {@code null} is silently ignored.
    *
    * @param predicate
-   *          the predicate to add
+   *          the predicate to add, {@code null} is silently ignored.
    * @return this finder builder
    */
   public final PathFinderBuilder addAttributePredicate(

@@ -23,7 +23,7 @@ public class TextProcessResultPredicate implements IPredicate<Path> {
    * @param args
    *          the arguments to pass to the text process
    */
-  public TextProcessResultPredicate(final String[] args) {
+  public TextProcessResultPredicate(final String... args) {
     super();
     this.m_args = args;
   }

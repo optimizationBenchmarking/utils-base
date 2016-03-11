@@ -165,7 +165,7 @@ public final class PathFinderBuilder
    *          the command line arguments
    * @param predicates
    *          the predicates
-   * @return
+   * @return this builder
    */
   public final PathFinderBuilder addTextProcessOutputContainsAll(
       final String[] arguments, final IPredicate<String>[] predicates) {
@@ -181,7 +181,7 @@ public final class PathFinderBuilder
    *
    * @param arguments
    * @param contains
-   * @return
+   * @return this builder
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public final PathFinderBuilder addTextProcessOutputContainsAll(

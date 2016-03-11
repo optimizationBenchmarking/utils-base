@@ -20,7 +20,8 @@ public final class MathUtils {
 
   /**
    * The number of unique {@code double} values between {@code a} and
-   * {@code b}.
+   * {@code b}. This method saturates at {@link java.lang.Long#MAX_VALUE},
+   * although there may be more steps.
    *
    * @param a
    *          the first {@code double}
@@ -30,7 +31,7 @@ public final class MathUtils {
    *         {@link Double#NaN} or both are infinities of different signs
    */
   public static final long numbersBetween(final double a, final double b) {
-    final long bitsA;
+    final long bitsA, res;
     double useA, useB, temp;
 
     if ((a != a) || (b != b)) { // take are of NaN
@@ -56,12 +57,65 @@ public final class MathUtils {
     if (useA < 0d) {
       bitsA = Double.doubleToRawLongBits(-useA);
       if (useB < 0d) {
-        return (bitsA - Double.doubleToRawLongBits(-useB));
+        res = (bitsA - Double.doubleToRawLongBits(-useB));
+      } else {
+        res = (bitsA + Double.doubleToRawLongBits(useB));
       }
-      return (bitsA + Double.doubleToRawLongBits(useB));
+    } else {
+      res = (Double.doubleToRawLongBits(useB)
+          - Double.doubleToRawLongBits(useA));
     }
-    return (Double.doubleToRawLongBits(useB)
-        - Double.doubleToRawLongBits(useA));
+    if (res < 0L) {
+      return Long.MAX_VALUE;
+    }
+    return res;
+  }
+
+  /**
+   * The number of unique {@code float} values between {@code a} and
+   * {@code b}.
+   *
+   * @param a
+   *          the first {@code float}
+   * @param b
+   *          the second {@code float}
+   * @return the steps between them, or {@code -1} if either value is
+   *         {@link Float#NaN} or both are infinities of different signs
+   */
+  public static final long numbersBetween(final float a, final float b) {
+    final long bitsA;
+    float useA, useB, temp;
+
+    if ((a != a) || (b != b)) { // take are of NaN
+      return -1L;
+    }
+    useA = (a + 0f);
+    useB = (b + 0f);
+    if (useA > useB) {
+      temp = useB;
+      useB = useA;
+      useA = temp;
+    }
+    if (useA == useB) {
+      return 0L;
+    }
+    if (useA <= Float.NEGATIVE_INFINITY) {
+      return -1L;
+    }
+    if (useB >= Float.POSITIVE_INFINITY) {
+      return -1L;
+    }
+
+    if (useA < 0d) {
+      bitsA = Float.floatToRawIntBits(-useA);
+      if (useB < 0d) {
+        return (bitsA - Float.floatToRawIntBits(-useB));
+      }
+      return (bitsA + Float.floatToRawIntBits(useB));
+
+    }
+    return (((long) (Float.floatToRawIntBits(useB)))
+        - Float.floatToRawIntBits(useA));
   }
 
   /**

@@ -116,4 +116,88 @@ public abstract class PrimitiveTypeRandomization<T> {
    */
   public abstract <X extends Parser<? extends T>> T randomValue(
       final X parser, final boolean fullRange, final Random random);
+
+  /**
+   * Get the primitive type randomization for the specified primitive type.
+   *
+   * @param type
+   *          the type
+   * @return the randomization
+   */
+  public static final PrimitiveTypeRandomization<?> forPrimitiveType(
+      final EPrimitiveType type) {
+    switch (type) {
+      case BYTE: {
+        return ByteRandomization.INSTANCE;
+      }
+      case SHORT: {
+        return ShortRandomization.INSTANCE;
+      }
+      case INT: {
+        return IntRandomization.INSTANCE;
+      }
+      case LONG: {
+        return LongRandomization.INSTANCE;
+      }
+      case FLOAT: {
+        return FloatRandomization.INSTANCE;
+      }
+      case DOUBLE: {
+        return DoubleRandomization.INSTANCE;
+      }
+      default: {
+        throw new IllegalArgumentException(//
+            "There is no primitive type randomizer for type " + type); //$NON-NLS-1$
+      }
+    }
+  }
+
+  /**
+   * Get the primitive type randomization for the specified class.
+   *
+   * @param clazz
+   *          the class
+   * @return the randomization
+   */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public static final <T> PrimitiveTypeRandomization<T> forClass(
+      final Class<T> clazz) {
+    if ((clazz == int.class) || (clazz == Integer.class)) {
+      return ((PrimitiveTypeRandomization) (IntRandomization.INSTANCE));
+    }
+    if ((clazz == long.class) || (clazz == Long.class)) {
+      return ((PrimitiveTypeRandomization) (LongRandomization.INSTANCE));
+    }
+    if ((clazz == double.class) || (clazz == Double.class)) {
+      return ((PrimitiveTypeRandomization) (DoubleRandomization.INSTANCE));
+    }
+    if ((clazz == byte.class) || (clazz == Byte.class)) {
+      return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+    }
+    if ((clazz == short.class) || (clazz == Short.class)) {
+      return ((PrimitiveTypeRandomization) (ShortRandomization.INSTANCE));
+    }
+    if ((clazz == float.class) || (clazz == Float.class)) {
+      return ((PrimitiveTypeRandomization) (FloatRandomization.INSTANCE));
+    }
+    if (Number.class.isAssignableFrom(clazz)) {
+      return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+    }
+
+    throw new IllegalArgumentException(//
+        "There is no primitive type randomizer for class " + clazz); //$NON-NLS-1$
+
+  }
+
+  /**
+   * Get the primitive type randomization for the specified parser.
+   *
+   * @param parser
+   *          the parser
+   * @return the randomization
+   */
+  public static final <T> PrimitiveTypeRandomization<T> forParser(
+      final Parser<T> parser) {
+    return PrimitiveTypeRandomization.forClass(parser.getOutputClass());
+  }
 }

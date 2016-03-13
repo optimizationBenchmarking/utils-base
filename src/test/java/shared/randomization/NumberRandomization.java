@@ -165,26 +165,26 @@ public abstract class NumberRandomization<T extends Number>
    * @return the randomization
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  static final PrimitiveTypeRandomization<Number> _forNumericalPrimitiveType(
+  static final NumberRandomization<Number> _forNumericalPrimitiveType(
       final EPrimitiveType type) {
     switch (type) {
       case BYTE: {
-        return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+        return ((NumberRandomization) (ByteRandomization.INSTANCE));
       }
       case SHORT: {
-        return ((PrimitiveTypeRandomization) (ShortRandomization.INSTANCE));
+        return ((NumberRandomization) (ShortRandomization.INSTANCE));
       }
       case INT: {
-        return ((PrimitiveTypeRandomization) (IntRandomization.INSTANCE));
+        return ((NumberRandomization) (IntRandomization.INSTANCE));
       }
       case LONG: {
-        return ((PrimitiveTypeRandomization) (LongRandomization.INSTANCE));
+        return ((NumberRandomization) (LongRandomization.INSTANCE));
       }
       case FLOAT: {
-        return ((PrimitiveTypeRandomization) (FloatRandomization.INSTANCE));
+        return ((NumberRandomization) (FloatRandomization.INSTANCE));
       }
       case DOUBLE: {
-        return ((PrimitiveTypeRandomization) (DoubleRandomization.INSTANCE));
+        return ((NumberRandomization) (DoubleRandomization.INSTANCE));
       }
       default: {
         return null;
@@ -200,28 +200,28 @@ public abstract class NumberRandomization<T extends Number>
    * @return the randomization
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  static final PrimitiveTypeRandomization<Number> _forNumericalClass(
+  static final NumberRandomization<Number> _forNumericalClass(
       final Class<? extends Number> clazz) {
     if ((clazz == int.class) || (clazz == Integer.class)) {
-      return ((PrimitiveTypeRandomization) (IntRandomization.INSTANCE));
+      return ((NumberRandomization) (IntRandomization.INSTANCE));
     }
     if ((clazz == long.class) || (clazz == Long.class)) {
-      return ((PrimitiveTypeRandomization) (LongRandomization.INSTANCE));
+      return ((NumberRandomization) (LongRandomization.INSTANCE));
     }
     if ((clazz == double.class) || (clazz == Double.class)) {
-      return ((PrimitiveTypeRandomization) (DoubleRandomization.INSTANCE));
+      return ((NumberRandomization) (DoubleRandomization.INSTANCE));
     }
     if ((clazz == byte.class) || (clazz == Byte.class)) {
-      return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+      return ((NumberRandomization) (ByteRandomization.INSTANCE));
     }
     if ((clazz == short.class) || (clazz == Short.class)) {
-      return ((PrimitiveTypeRandomization) (ShortRandomization.INSTANCE));
+      return ((NumberRandomization) (ShortRandomization.INSTANCE));
     }
     if ((clazz == float.class) || (clazz == Float.class)) {
-      return ((PrimitiveTypeRandomization) (FloatRandomization.INSTANCE));
+      return ((NumberRandomization) (FloatRandomization.INSTANCE));
     }
     if (Number.class.isAssignableFrom(clazz)) {
-      return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+      return ((NumberRandomization) (ByteRandomization.INSTANCE));
     }
     return null;
   }
@@ -233,7 +233,7 @@ public abstract class NumberRandomization<T extends Number>
    *          the parser
    * @return the randomization
    */
-  static final PrimitiveTypeRandomization<Number> _forNumberParser(
+  static final NumberRandomization<Number> _forNumberParser(
       final Parser<? extends Number> parser) {
     return NumberRandomization._forNumericalClass(parser.getOutputClass());
   }
@@ -245,9 +245,9 @@ public abstract class NumberRandomization<T extends Number>
    *          the type
    * @return the randomization
    */
-  public static final PrimitiveTypeRandomization<Number> forNumericalPrimitiveType(
+  public static final NumberRandomization<Number> forNumericalPrimitiveType(
       final EPrimitiveType type) {
-    final PrimitiveTypeRandomization<Number> result;
+    final NumberRandomization<Number> result;
 
     result = NumberRandomization._forNumericalPrimitiveType(type);
     if (result != null) {
@@ -265,9 +265,9 @@ public abstract class NumberRandomization<T extends Number>
    *          the class
    * @return the randomization
    */
-  public static final PrimitiveTypeRandomization<Number> forNumericalClass(
+  public static final NumberRandomization<Number> forNumericalClass(
       final Class<? extends Number> clazz) {
-    final PrimitiveTypeRandomization<Number> result;
+    final NumberRandomization<Number> result;
 
     result = NumberRandomization._forNumericalClass(clazz);
     if (result != null) {
@@ -286,7 +286,7 @@ public abstract class NumberRandomization<T extends Number>
    *          the parser
    * @return the randomization
    */
-  public static final PrimitiveTypeRandomization<Number> forNumberParser(
+  public static final NumberRandomization<Number> forNumberParser(
       final Parser<? extends Number> parser) {
     return NumberRandomization.forNumericalClass(parser.getOutputClass());
   }

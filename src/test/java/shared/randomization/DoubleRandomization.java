@@ -127,7 +127,7 @@ public final class DoubleRandomization
       negative = (useLower < 0d);
       bits = Double.doubleToRawLongBits(useLower);
 
-      for (looper = 1000; (--looper) >= 0;) {
+      for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;) {
         offset = LongRandomization.randomNumberBetween(0, steps, true,
             random);
 
@@ -151,7 +151,7 @@ public final class DoubleRandomization
     // ok, scale-uniformity not possible, attempt range uniformity
     difference = (useUpper - useLower);
     if ((difference > 0d) && (difference < Double.POSITIVE_INFINITY)) {
-      for (looper = 1000; (--looper) >= 0;) {
+      for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;) {
         trial = (useLower + (random.nextDouble() * difference));
         if ((trial >= useLower) && (trial <= useUpper)) {
           if (!fullRange) {
@@ -166,7 +166,7 @@ public final class DoubleRandomization
     }
 
     // range too wide
-    for (looper = 1000; (--looper) >= 0;) {
+    for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;) {
       trial = random.nextDouble()
           * Math.exp(random
               .nextInt(DoubleRandomization.MAX_EXP

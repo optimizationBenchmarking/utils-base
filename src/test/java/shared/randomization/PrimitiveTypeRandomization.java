@@ -14,6 +14,9 @@ import org.optimizationBenchmarking.utils.reflection.EPrimitiveType;
  */
 public abstract class PrimitiveTypeRandomization<T> {
 
+  /** the maximum attempts for any loop */
+  static final int MAX_TRIALS = 100;
+
   /** create */
   PrimitiveTypeRandomization() {
     super();

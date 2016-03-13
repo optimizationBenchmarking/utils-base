@@ -129,7 +129,7 @@ public final class FloatRandomization extends NumberRandomization<Float> {
       negative = (useLower < 0d);
       bits = Float.floatToRawIntBits(useLower);
 
-      for (looper = 1000; (--looper) >= 0;) {
+      for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;) {
         offset = LongRandomization.randomNumberBetween(0, steps, true,
             random);
 
@@ -153,7 +153,7 @@ public final class FloatRandomization extends NumberRandomization<Float> {
     // ok, scale-uniformity not possible, attempt range uniformity
     difference = (useUpper - useLower);
     if ((difference > 0d) && (difference < Double.POSITIVE_INFINITY)) {
-      for (looper = 1000; (--looper) >= 0;) {
+      for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;) {
         trial = (float) (useLower + (random.nextDouble() * difference));
         if ((trial >= useLower) && (trial <= useUpper)) {
           if (!fullRange) {
@@ -168,7 +168,7 @@ public final class FloatRandomization extends NumberRandomization<Float> {
     }
 
     // range too wide
-    for (looper = 1000; (--looper) >= 0;) {
+    for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;) {
       trial = (float) (random.nextDouble() * Math.exp(random
           .nextInt(FloatRandomization.MAX_EXP - FloatRandomization.MIN_EXP)
           + FloatRandomization.MIN_EXP));

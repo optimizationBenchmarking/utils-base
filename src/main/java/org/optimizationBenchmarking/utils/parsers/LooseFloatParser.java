@@ -22,41 +22,53 @@ public class LooseFloatParser extends FloatParser {
   /** {@inheritDoc} */
   @Override
   public final float parseFloat(final String string) {
-    final float retVal;
+    final float retVal, f;
     final double d;
 
-    d = LooseDoubleParser.INSTANCE.parseDouble(string);
-    if (d <= Double.NEGATIVE_INFINITY) {
-      retVal = Float.NEGATIVE_INFINITY;
-    } else {
-      if (d >= Double.POSITIVE_INFINITY) {
-        retVal = Float.POSITIVE_INFINITY;
+    findDouble: {
+      findFloat: {
+        try {
+          f = Float.parseFloat(string);
+        } catch (@SuppressWarnings("unused") final Throwable error) {
+          break findFloat;
+        }
+        retVal = f;
+        break findDouble;
+      }
+
+      d = LooseDoubleParser.INSTANCE.parseDouble(string);
+      if (d <= Double.NEGATIVE_INFINITY) {
+        retVal = Float.NEGATIVE_INFINITY;
       } else {
-        if (Double.isNaN(d)) {
-          retVal = Float.NaN;
+        if (d >= Double.POSITIVE_INFINITY) {
+          retVal = Float.POSITIVE_INFINITY;
         } else {
-          if (d == 0d) {
-            retVal = 0f;
+          if (Double.isNaN(d)) {
+            retVal = Float.NaN;
           } else {
-            if (d == (-0d)) {
-              retVal = (-0f);
+            if (d == 0d) {
+              retVal = 0f;
             } else {
-              if ((d > Float.MAX_VALUE) || (d < (-Float.MAX_VALUE))) {
-                throw new IllegalArgumentException(//
-                    ((((("The finite double value " + d) + //$NON-NLS-1$
-                        " is outside of the valid range [") //$NON-NLS-1$
-                        + (-Float.MAX_VALUE)) + ',') + Float.MAX_VALUE)
-                        + "] of floats."); //$NON-NLS-1$
+              if (d == (-0d)) {
+                retVal = (-0f);
+              } else {
+                if ((d > Float.MAX_VALUE) || (d < (-Float.MAX_VALUE))) {
+                  throw new IllegalArgumentException(//
+                      ((((("The finite double value " + d) + //$NON-NLS-1$
+                          " is outside of the valid range [") //$NON-NLS-1$
+                          + (-Float.MAX_VALUE)) + ',') + Float.MAX_VALUE)
+                          + "] of floats."); //$NON-NLS-1$
+                }
+                if ((d > (-1d)) && (d < 1d) && ((d > (-Float.MIN_VALUE))
+                    && (d < Float.MIN_VALUE))) {
+                  throw new IllegalArgumentException(//
+                      ((((("The finite double value " + d) + //$NON-NLS-1$
+                          " has a too small scale for the valid range [") //$NON-NLS-1$
+                          + (-Float.MIN_VALUE)) + ',') + Float.MIN_VALUE)
+                          + "] of floats."); //$NON-NLS-1$
+                }
+                retVal = ((float) d);
               }
-              if ((d > (-1d)) && (d < 1d)
-                  && ((d > (-Float.MIN_VALUE)) && (d < Float.MIN_VALUE))) {
-                throw new IllegalArgumentException(//
-                    ((((("The finite double value " + d) + //$NON-NLS-1$
-                        " has a too small scale for the valid range [") //$NON-NLS-1$
-                        + (-Float.MIN_VALUE)) + ',') + Float.MIN_VALUE)
-                        + "] of floats."); //$NON-NLS-1$
-              }
-              retVal = ((float) d);
             }
           }
         }

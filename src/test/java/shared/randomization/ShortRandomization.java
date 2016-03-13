@@ -116,28 +116,28 @@ public final class ShortRandomization extends NumberRandomization<Short> {
       final Random random) {
     final short useLower, useUpper;
 
-    if (bound1 < bound2) {
+    if (bound1 <= bound2) {
 
       if (bound1Inclusive) {
         useLower = bound1;
       } else {
-        if (bound1 >= Short.MAX_VALUE) {
+        useLower = (short) (bound1 + 1);
+        if ((bound1 >= Short.MAX_VALUE) || (useLower <= bound1)) {
           throw new IllegalArgumentException(//
               "Exclusive lower bound for shorts cannot be " //$NON-NLS-1$
                   + bound1);
         }
-        useLower = (short) (bound1 + 1);
       }
 
       if (bound2Inclusive) {
         useUpper = bound2;
       } else {
-        if (bound2 <= Short.MIN_VALUE) {
+        useUpper = (short) (bound2 - 1);
+        if ((bound2 <= Short.MIN_VALUE) || (useUpper >= bound2)) {
           throw new IllegalArgumentException(//
               "Exclusive upper bound for shorts cannot be " //$NON-NLS-1$
                   + bound2);
         }
-        useUpper = (short) (bound2 - 1);
       }
 
     } else {
@@ -145,23 +145,23 @@ public final class ShortRandomization extends NumberRandomization<Short> {
       if (bound2Inclusive) {
         useLower = bound2;
       } else {
-        if (bound2 >= Short.MAX_VALUE) {
+        useLower = (short) (bound2 + 1);
+        if ((bound2 >= Short.MAX_VALUE) || (useLower <= bound2)) {
           throw new IllegalArgumentException(//
               "Exclusive lower bound for shorts cannot be " //$NON-NLS-1$
                   + bound2);
         }
-        useLower = (short) (bound2 + 1);
       }
 
       if (bound1Inclusive) {
         useUpper = bound1;
       } else {
-        if (bound1 <= Short.MIN_VALUE) {
+        useUpper = (short) (bound1 - 1);
+        if ((bound1 <= Short.MIN_VALUE) || (useUpper >= bound1)) {
           throw new IllegalArgumentException(//
               "Exclusive upper bound for shorts cannot be " //$NON-NLS-1$
                   + bound1);
         }
-        useUpper = (short) (bound1 - 1);
       }
     }
 

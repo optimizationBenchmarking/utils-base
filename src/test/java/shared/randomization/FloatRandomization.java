@@ -216,32 +216,32 @@ public final class FloatRandomization extends NumberRandomization<Float> {
       final Random random) {
     final float useLower, useUpper;
 
-    if (bound1 < bound2) {
+    if (bound1 <= bound2) {
 
       if (bound1Inclusive) {
         useLower = bound1;
       } else {
-        if (bound1 >= Float.MAX_VALUE) {
-          if ((!(fullRange)) || (bound1 >= Float.POSITIVE_INFINITY)) {
-            throw new IllegalArgumentException(//
-                "Exclusive lower bound for floats cannot be " //$NON-NLS-1$
-                    + bound1);
-          }
-        }
         useLower = Math.nextUp(bound1);
+        if ((useLower <= bound1) || //
+            ((bound1 >= Float.MAX_VALUE) && //
+                ((!(fullRange)) || (bound1 >= Float.POSITIVE_INFINITY)))) {
+          throw new IllegalArgumentException(//
+              "Exclusive lower bound for floats cannot be " //$NON-NLS-1$
+                  + bound1);
+        }
       }
 
       if (bound2Inclusive) {
         useUpper = bound2;
       } else {
-        if (bound2 <= (-Float.MAX_VALUE)) {
-          if ((!(fullRange)) || (bound2 <= Float.NEGATIVE_INFINITY)) {
-            throw new IllegalArgumentException(//
-                "Exclusive upper bound for floats cannot be " //$NON-NLS-1$
-                    + bound2);
-          }
-        }
         useUpper = Math.nextAfter(bound2, Double.NEGATIVE_INFINITY);
+        if ((useUpper >= bound2) || //
+            ((bound2 <= (-Float.MAX_VALUE)) && //
+                ((!(fullRange)) || (bound2 <= Float.NEGATIVE_INFINITY)))) {
+          throw new IllegalArgumentException(//
+              "Exclusive upper bound for floats cannot be " //$NON-NLS-1$
+                  + bound2);
+        }
       }
 
     } else {
@@ -249,27 +249,27 @@ public final class FloatRandomization extends NumberRandomization<Float> {
       if (bound2Inclusive) {
         useLower = bound2;
       } else {
-        if (bound2 >= Float.MAX_VALUE) {
-          if ((!(fullRange)) || (bound2 >= Float.POSITIVE_INFINITY)) {
-            throw new IllegalArgumentException(//
-                "Exclusive lower bound for floats cannot be " //$NON-NLS-1$
-                    + bound2);
-          }
-        }
         useLower = Math.nextUp(bound2);
+        if ((useLower <= bound2) || //
+            ((bound2 >= Float.MAX_VALUE) && //
+                ((!(fullRange)) || (bound2 >= Float.POSITIVE_INFINITY)))) {
+          throw new IllegalArgumentException(//
+              "Exclusive lower bound for floats cannot be " //$NON-NLS-1$
+                  + bound2);
+        }
       }
 
       if (bound1Inclusive) {
-        useUpper = bound2;
+        useUpper = bound1;
       } else {
-        if (bound2 <= (-Float.MAX_VALUE)) {
-          if ((!(fullRange)) || (bound2 <= Float.NEGATIVE_INFINITY)) {
-            throw new IllegalArgumentException(//
-                "Exclusive upper bound for floats cannot be " //$NON-NLS-1$
-                    + bound2);
-          }
+        useUpper = Math.nextAfter(bound1, Double.NEGATIVE_INFINITY);
+        if ((useUpper >= bound1) || //
+            ((bound1 <= (-Float.MAX_VALUE)) && //
+                ((!(fullRange)) || (bound1 <= Float.NEGATIVE_INFINITY)))) {
+          throw new IllegalArgumentException(//
+              "Exclusive upper bound for floats cannot be " //$NON-NLS-1$
+                  + bound1);
         }
-        useUpper = Math.nextAfter(bound2, Double.NEGATIVE_INFINITY);
       }
     }
 

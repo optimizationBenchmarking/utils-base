@@ -116,28 +116,28 @@ public final class ByteRandomization extends NumberRandomization<Byte> {
       final Random random) {
     final byte useLower, useUpper;
 
-    if (bound1 < bound2) {
+    if (bound1 <= bound2) {
 
       if (bound1Inclusive) {
         useLower = bound1;
       } else {
-        if (bound1 >= Byte.MAX_VALUE) {
+        useLower = (byte) (bound1 + 1);
+        if ((bound1 >= Byte.MAX_VALUE) || (useLower <= bound1)) {
           throw new IllegalArgumentException(//
               "Exclusive lower bound for bytes cannot be " //$NON-NLS-1$
                   + bound1);
         }
-        useLower = (byte) (bound1 + 1);
       }
 
       if (bound2Inclusive) {
         useUpper = bound2;
       } else {
-        if (bound2 <= Byte.MIN_VALUE) {
+        useUpper = (byte) (bound2 - 1);
+        if ((bound2 <= Byte.MIN_VALUE) || (useUpper >= bound2)) {
           throw new IllegalArgumentException(//
               "Exclusive upper bound for bytes cannot be " //$NON-NLS-1$
                   + bound2);
         }
-        useUpper = (byte) (bound2 - 1);
       }
 
     } else {
@@ -145,23 +145,23 @@ public final class ByteRandomization extends NumberRandomization<Byte> {
       if (bound2Inclusive) {
         useLower = bound2;
       } else {
-        if (bound2 >= Byte.MAX_VALUE) {
+        useLower = (byte) (bound2 + 1);
+        if ((bound2 >= Byte.MAX_VALUE) || (useLower <= bound2)) {
           throw new IllegalArgumentException(//
               "Exclusive lower bound for bytes cannot be " //$NON-NLS-1$
                   + bound2);
         }
-        useLower = (byte) (bound2 + 1);
       }
 
       if (bound1Inclusive) {
         useUpper = bound1;
       } else {
-        if (bound1 <= Byte.MIN_VALUE) {
+        useUpper = (byte) (bound1 - 1);
+        if ((bound1 <= Byte.MIN_VALUE) || (useUpper >= bound1)) {
           throw new IllegalArgumentException(//
               "Exclusive upper bound for bytes cannot be " //$NON-NLS-1$
                   + bound1);
         }
-        useUpper = (byte) (bound1 - 1);
       }
     }
 

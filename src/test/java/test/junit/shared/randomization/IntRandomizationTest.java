@@ -32,4 +32,13 @@ public class IntRandomizationTest
   protected final long upperBound() {
     return Integer.MAX_VALUE;
   }
+
+  /** {@inheritDoc} */
+  @Override
+  protected final long numberBetween(final long bound1,
+      final boolean bound1Inclusive, final long bound2,
+      final boolean bound2Inclusive, final Random random) {
+    return IntRandomization.randomNumberBetween((int) bound1,
+        bound1Inclusive, (int) bound2, bound2Inclusive, true, random);
+  }
 }

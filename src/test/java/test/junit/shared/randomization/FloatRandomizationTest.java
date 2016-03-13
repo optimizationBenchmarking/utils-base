@@ -32,4 +32,25 @@ public class FloatRandomizationTest
   protected final double upperBound() {
     return Float.MAX_VALUE;
   }
+
+  /** {@inheritDoc} */
+  @Override
+  protected final double numberBetween(final double bound1,
+      final boolean bound1Inclusive, final double bound2,
+      final boolean bound2Inclusive, final Random random) {
+    return FloatRandomization.randomNumberBetween((float) bound1,
+        bound1Inclusive, (float) bound2, bound2Inclusive, true, random);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected final double nextUp(final double d) {
+    return Math.nextUp((float) d);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected final double nextDown(final double d) {
+    return Math.nextAfter((float) d, Double.NEGATIVE_INFINITY);
+  }
 }

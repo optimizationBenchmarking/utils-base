@@ -32,4 +32,13 @@ public class ShortRandomizationTest
   protected final long upperBound() {
     return Short.MAX_VALUE;
   }
+
+  /** {@inheritDoc} */
+  @Override
+  protected final long numberBetween(final long bound1,
+      final boolean bound1Inclusive, final long bound2,
+      final boolean bound2Inclusive, final Random random) {
+    return ShortRandomization.randomNumberBetween((short) bound1,
+        bound1Inclusive, (short) bound2, bound2Inclusive, true, random);
+  }
 }

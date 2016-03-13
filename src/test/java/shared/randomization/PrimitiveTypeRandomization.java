@@ -126,30 +126,13 @@ public abstract class PrimitiveTypeRandomization<T> {
    */
   public static final PrimitiveTypeRandomization<?> forPrimitiveType(
       final EPrimitiveType type) {
-    switch (type) {
-      case BYTE: {
-        return ByteRandomization.INSTANCE;
-      }
-      case SHORT: {
-        return ShortRandomization.INSTANCE;
-      }
-      case INT: {
-        return IntRandomization.INSTANCE;
-      }
-      case LONG: {
-        return LongRandomization.INSTANCE;
-      }
-      case FLOAT: {
-        return FloatRandomization.INSTANCE;
-      }
-      case DOUBLE: {
-        return DoubleRandomization.INSTANCE;
-      }
-      default: {
-        throw new IllegalArgumentException(//
-            "There is no primitive type randomizer for type " + type); //$NON-NLS-1$
-      }
+    final PrimitiveTypeRandomization<?> result;
+    result = NumberRandomization._forNumericalPrimitiveType(type);
+    if (result != null) {
+      return result;
     }
+    throw new IllegalArgumentException(//
+        "There is no primitive type randomizer for type " + type); //$NON-NLS-1$
   }
 
   /**
@@ -162,26 +145,11 @@ public abstract class PrimitiveTypeRandomization<T> {
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public static final <T> PrimitiveTypeRandomization<T> forClass(
       final Class<T> clazz) {
-    if ((clazz == int.class) || (clazz == Integer.class)) {
-      return ((PrimitiveTypeRandomization) (IntRandomization.INSTANCE));
-    }
-    if ((clazz == long.class) || (clazz == Long.class)) {
-      return ((PrimitiveTypeRandomization) (LongRandomization.INSTANCE));
-    }
-    if ((clazz == double.class) || (clazz == Double.class)) {
-      return ((PrimitiveTypeRandomization) (DoubleRandomization.INSTANCE));
-    }
-    if ((clazz == byte.class) || (clazz == Byte.class)) {
-      return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
-    }
-    if ((clazz == short.class) || (clazz == Short.class)) {
-      return ((PrimitiveTypeRandomization) (ShortRandomization.INSTANCE));
-    }
-    if ((clazz == float.class) || (clazz == Float.class)) {
-      return ((PrimitiveTypeRandomization) (FloatRandomization.INSTANCE));
-    }
-    if (Number.class.isAssignableFrom(clazz)) {
-      return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+    final PrimitiveTypeRandomization result;
+
+    result = NumberRandomization._forNumericalClass((Class) clazz);
+    if (result != null) {
+      return result;
     }
 
     throw new IllegalArgumentException(//
@@ -196,8 +164,15 @@ public abstract class PrimitiveTypeRandomization<T> {
    *          the parser
    * @return the randomization
    */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public static final <T> PrimitiveTypeRandomization<T> forParser(
       final Parser<T> parser) {
+    final PrimitiveTypeRandomization result;
+
+    result = NumberRandomization._forNumberParser((Parser) parser);
+    if (result != null) {
+      return result;
+    }
     return PrimitiveTypeRandomization.forClass(parser.getOutputClass());
   }
 }

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.optimizationBenchmarking.utils.parsers.NumberParser;
 import org.optimizationBenchmarking.utils.parsers.Parser;
+import org.optimizationBenchmarking.utils.reflection.EPrimitiveType;
 
 /**
  * A generator for random values of a specific primitive numerical type
@@ -126,4 +127,138 @@ public abstract class NumberRandomization<T extends Number>
    */
   abstract <X extends Parser<? extends Number>> T _randomNumber(
       final X parser, final boolean fullRange, final Random random);
+
+  /**
+   * Get the primitive type randomization for the specified primitive type.
+   *
+   * @param type
+   *          the type
+   * @return the randomization
+   */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  static final PrimitiveTypeRandomization<Number> _forNumericalPrimitiveType(
+      final EPrimitiveType type) {
+    switch (type) {
+      case BYTE: {
+        return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+      }
+      case SHORT: {
+        return ((PrimitiveTypeRandomization) (ShortRandomization.INSTANCE));
+      }
+      case INT: {
+        return ((PrimitiveTypeRandomization) (IntRandomization.INSTANCE));
+      }
+      case LONG: {
+        return ((PrimitiveTypeRandomization) (LongRandomization.INSTANCE));
+      }
+      case FLOAT: {
+        return ((PrimitiveTypeRandomization) (FloatRandomization.INSTANCE));
+      }
+      case DOUBLE: {
+        return ((PrimitiveTypeRandomization) (DoubleRandomization.INSTANCE));
+      }
+      default: {
+        return null;
+      }
+    }
+  }
+
+  /**
+   * Get the primitive type randomization for the specified class.
+   *
+   * @param clazz
+   *          the class
+   * @return the randomization
+   */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  static final PrimitiveTypeRandomization<Number> _forNumericalClass(
+      final Class<? extends Number> clazz) {
+    if ((clazz == int.class) || (clazz == Integer.class)) {
+      return ((PrimitiveTypeRandomization) (IntRandomization.INSTANCE));
+    }
+    if ((clazz == long.class) || (clazz == Long.class)) {
+      return ((PrimitiveTypeRandomization) (LongRandomization.INSTANCE));
+    }
+    if ((clazz == double.class) || (clazz == Double.class)) {
+      return ((PrimitiveTypeRandomization) (DoubleRandomization.INSTANCE));
+    }
+    if ((clazz == byte.class) || (clazz == Byte.class)) {
+      return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+    }
+    if ((clazz == short.class) || (clazz == Short.class)) {
+      return ((PrimitiveTypeRandomization) (ShortRandomization.INSTANCE));
+    }
+    if ((clazz == float.class) || (clazz == Float.class)) {
+      return ((PrimitiveTypeRandomization) (FloatRandomization.INSTANCE));
+    }
+    if (Number.class.isAssignableFrom(clazz)) {
+      return ((PrimitiveTypeRandomization) (ByteRandomization.INSTANCE));
+    }
+    return null;
+  }
+
+  /**
+   * Get the primitive type randomization for the specified parser.
+   *
+   * @param parser
+   *          the parser
+   * @return the randomization
+   */
+  static final PrimitiveTypeRandomization<Number> _forNumberParser(
+      final Parser<? extends Number> parser) {
+    return NumberRandomization._forNumericalClass(parser.getOutputClass());
+  }
+
+  /**
+   * Get the primitive type randomization for the specified primitive type.
+   *
+   * @param type
+   *          the type
+   * @return the randomization
+   */
+  public static final PrimitiveTypeRandomization<Number> forNumericalPrimitiveType(
+      final EPrimitiveType type) {
+    final PrimitiveTypeRandomization<Number> result;
+
+    result = NumberRandomization._forNumericalPrimitiveType(type);
+    if (result != null) {
+      return result;
+    }
+    throw new IllegalArgumentException(//
+        "There is no numerical primitive type randomizer for type " //$NON-NLS-1$
+            + type);
+  }
+
+  /**
+   * Get the primitive type randomization for the specified class.
+   *
+   * @param clazz
+   *          the class
+   * @return the randomization
+   */
+  public static final PrimitiveTypeRandomization<Number> forNumericalClass(
+      final Class<? extends Number> clazz) {
+    final PrimitiveTypeRandomization<Number> result;
+
+    result = NumberRandomization._forNumericalClass(clazz);
+    if (result != null) {
+      return result;
+    }
+
+    throw new IllegalArgumentException(//
+        "There is no numerical primitive type randomizer for class " //$NON-NLS-1$
+            + clazz);
+  }
+
+  /**
+   * Get the primitive type randomization for the specified parser.
+   *
+   * @param parser
+   *          the parser
+   * @return the randomization
+   */
+  public static final PrimitiveTypeRandomization<Number> forNumberParser(
+      final Parser<? extends Number> parser) {
+    return NumberRandomization.forNumericalClass(parser.getOutputClass());
+  }
 }

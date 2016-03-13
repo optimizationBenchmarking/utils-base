@@ -1,4 +1,4 @@
-package shared.junit.shared.randomization;
+package test.junit.shared.randomization;
 
 import java.util.HashSet;
 import java.util.Random;

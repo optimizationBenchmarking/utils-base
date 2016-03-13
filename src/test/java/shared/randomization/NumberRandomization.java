@@ -67,6 +67,35 @@ public abstract class NumberRandomization<T extends Number>
         fullRange, random);
   }
 
+  /**
+   * Get a random value between two unordered bounds, which might both be
+   * either inclusive or exclusive
+   *
+   * @param bound1
+   *          the first bound
+   * @param bound1Inclusive
+   *          inclusive property of first bound: {@code true} for
+   *          inclusive, {@code false} for exclusive
+   * @param bound2
+   *          the second bound
+   * @param bound2Inclusive
+   *          inclusive property of second bound: {@code true} for
+   *          inclusive, {@code false} for exclusive
+   * @param fullRange
+   *          should the full range of the type be used, or should we
+   *          restrict the range such that overflows etc. are avoided
+   * @param random
+   *          the random number generator
+   * @return the value, or {@code null} if too many trials attempting to
+   *         create the value have failed
+   * @throws IllegalArgumentException
+   *           if the bounds are invalid
+   */
+  public abstract T randomNumberBetween(final Number bound1,
+      final boolean bound1Inclusive, final Number bound2,
+      final boolean bound2Inclusive, final boolean fullRange,
+      final Random random);
+
   /** {@inheritDoc} */
   @Override
   public final <X extends Parser<? extends T>> T randomValue(

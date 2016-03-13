@@ -186,12 +186,115 @@ public final class FloatRandomization extends NumberRandomization<Float> {
     return (random.nextBoolean() ? useLower : useUpper);
   }
 
+  /**
+   * Get a random value between two unordered bounds, which might both be
+   * either inclusive or exclusive
+   *
+   * @param bound1
+   *          the first bound
+   * @param bound1Inclusive
+   *          inclusive property of first bound: {@code true} for
+   *          inclusive, {@code false} for exclusive
+   * @param bound2
+   *          the second bound
+   * @param bound2Inclusive
+   *          inclusive property of second bound: {@code true} for
+   *          inclusive, {@code false} for exclusive
+   * @param fullRange
+   *          should the full range of the type be used, or should we
+   *          restrict the range such that overflows etc. are avoided
+   * @param random
+   *          the random number generator
+   * @return the value, or {@code null} if too many trials attempting to
+   *         create the value have failed
+   * @throws IllegalArgumentException
+   *           if the bounds are invalid
+   */
+  public static final float randomNumberBetween(final float bound1,
+      final boolean bound1Inclusive, final float bound2,
+      final boolean bound2Inclusive, final boolean fullRange,
+      final Random random) {
+    final float useLower, useUpper;
+
+    if (bound1 < bound2) {
+
+      if (bound1Inclusive) {
+        useLower = bound1;
+      } else {
+        if (bound1 >= Float.MAX_VALUE) {
+          if ((!(fullRange)) || (bound1 >= Float.POSITIVE_INFINITY)) {
+            throw new IllegalArgumentException(//
+                "Exclusive lower bound for floats cannot be " //$NON-NLS-1$
+                    + bound1);
+          }
+        }
+        useLower = Math.nextUp(bound1);
+      }
+
+      if (bound2Inclusive) {
+        useUpper = bound2;
+      } else {
+        if (bound2 <= (-Float.MAX_VALUE)) {
+          if ((!(fullRange)) || (bound2 <= Float.NEGATIVE_INFINITY)) {
+            throw new IllegalArgumentException(//
+                "Exclusive upper bound for floats cannot be " //$NON-NLS-1$
+                    + bound2);
+          }
+        }
+        useUpper = Math.nextAfter(bound2, Double.NEGATIVE_INFINITY);
+      }
+
+    } else {
+
+      if (bound2Inclusive) {
+        useLower = bound2;
+      } else {
+        if (bound2 >= Float.MAX_VALUE) {
+          if ((!(fullRange)) || (bound2 >= Float.POSITIVE_INFINITY)) {
+            throw new IllegalArgumentException(//
+                "Exclusive lower bound for floats cannot be " //$NON-NLS-1$
+                    + bound2);
+          }
+        }
+        useLower = Math.nextUp(bound2);
+      }
+
+      if (bound1Inclusive) {
+        useUpper = bound2;
+      } else {
+        if (bound2 <= (-Float.MAX_VALUE)) {
+          if ((!(fullRange)) || (bound2 <= Float.NEGATIVE_INFINITY)) {
+            throw new IllegalArgumentException(//
+                "Exclusive upper bound for floats cannot be " //$NON-NLS-1$
+                    + bound2);
+          }
+        }
+        useUpper = Math.nextAfter(bound2, Double.NEGATIVE_INFINITY);
+      }
+    }
+
+    return FloatRandomization.randomNumberBetween(useLower, useUpper,
+        fullRange, random);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final Float randomNumberBetween(final Number bound1,
+      final boolean bound1Inclusive, final Number bound2,
+      final boolean bound2Inclusive, final boolean fullRange,
+      final Random random) {
+    return Float.valueOf(//
+        FloatRandomization.randomNumberBetween(bound1.floatValue(),
+            bound1Inclusive, bound2.floatValue(), bound2Inclusive,
+            fullRange, random));
+  }
+
   /** {@inheritDoc} */
   @Override
   public final Float randomValue(final boolean fullRange,
       final Random random) {
-    return Float
-        .valueOf(FloatRandomization.randomNumber(fullRange, random));
+    return Float.valueOf(//
+        FloatRandomization.randomNumber(fullRange, random));
   }
 
   /** {@inheritDoc} */

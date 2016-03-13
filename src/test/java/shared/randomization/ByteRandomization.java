@@ -86,6 +86,101 @@ public final class ByteRandomization extends NumberRandomization<Byte> {
         + lowerBound));
   }
 
+  /**
+   * Get a random value between two unordered bounds, which might both be
+   * either inclusive or exclusive
+   *
+   * @param bound1
+   *          the first bound
+   * @param bound1Inclusive
+   *          inclusive property of first bound: {@code true} for
+   *          inclusive, {@code false} for exclusive
+   * @param bound2
+   *          the second bound
+   * @param bound2Inclusive
+   *          inclusive property of second bound: {@code true} for
+   *          inclusive, {@code false} for exclusive
+   * @param fullRange
+   *          should the full range of the type be used, or should we
+   *          restrict the range such that overflows etc. are avoided
+   * @param random
+   *          the random number generator
+   * @return the value, or {@code null} if too many trials attempting to
+   *         create the value have failed
+   * @throws IllegalArgumentException
+   *           if the bounds are invalid
+   */
+  public static final byte randomNumberBetween(final byte bound1,
+      final boolean bound1Inclusive, final byte bound2,
+      final boolean bound2Inclusive, final boolean fullRange,
+      final Random random) {
+    final byte useLower, useUpper;
+
+    if (bound1 < bound2) {
+
+      if (bound1Inclusive) {
+        useLower = bound1;
+      } else {
+        if (bound1 >= Byte.MAX_VALUE) {
+          throw new IllegalArgumentException(//
+              "Exclusive lower bound for bytes cannot be " //$NON-NLS-1$
+                  + bound1);
+        }
+        useLower = (byte) (bound1 + 1);
+      }
+
+      if (bound2Inclusive) {
+        useUpper = bound2;
+      } else {
+        if (bound2 <= Byte.MIN_VALUE) {
+          throw new IllegalArgumentException(//
+              "Exclusive upper bound for bytes cannot be " //$NON-NLS-1$
+                  + bound2);
+        }
+        useUpper = (byte) (bound2 - 1);
+      }
+
+    } else {
+
+      if (bound2Inclusive) {
+        useLower = bound2;
+      } else {
+        if (bound2 >= Byte.MAX_VALUE) {
+          throw new IllegalArgumentException(//
+              "Exclusive lower bound for bytes cannot be " //$NON-NLS-1$
+                  + bound2);
+        }
+        useLower = (byte) (bound2 + 1);
+      }
+
+      if (bound1Inclusive) {
+        useUpper = bound1;
+      } else {
+        if (bound1 <= Byte.MIN_VALUE) {
+          throw new IllegalArgumentException(//
+              "Exclusive upper bound for bytes cannot be " //$NON-NLS-1$
+                  + bound1);
+        }
+        useUpper = (byte) (bound1 - 1);
+      }
+    }
+
+    return ByteRandomization.randomNumberBetween(useLower, useUpper,
+        fullRange, random);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final Byte randomNumberBetween(final Number bound1,
+      final boolean bound1Inclusive, final Number bound2,
+      final boolean bound2Inclusive, final boolean fullRange,
+      final Random random) {
+    return Byte.valueOf(//
+        ByteRandomization.randomNumberBetween(bound1.byteValue(),
+            bound1Inclusive, bound2.byteValue(), bound2Inclusive,
+            fullRange, random));
+  }
+
   /** {@inheritDoc} */
   @Override
   public final Byte randomValue(final boolean fullRange,

@@ -94,6 +94,101 @@ public final class IntRandomization extends NumberRandomization<Integer> {
     return trial;
   }
 
+  /**
+   * Get a random value between two unordered bounds, which might both be
+   * either inclusive or exclusive
+   *
+   * @param bound1
+   *          the first bound
+   * @param bound1Inclusive
+   *          inclusive property of first bound: {@code true} for
+   *          inclusive, {@code false} for exclusive
+   * @param bound2
+   *          the second bound
+   * @param bound2Inclusive
+   *          inclusive property of second bound: {@code true} for
+   *          inclusive, {@code false} for exclusive
+   * @param fullRange
+   *          should the full range of the type be used, or should we
+   *          restrict the range such that overflows etc. are avoided
+   * @param random
+   *          the random number generator
+   * @return the value, or {@code null} if too many trials attempting to
+   *         create the value have failed
+   * @throws IllegalArgumentException
+   *           if the bounds are invalid
+   */
+  public static final int randomNumberBetween(final int bound1,
+      final boolean bound1Inclusive, final int bound2,
+      final boolean bound2Inclusive, final boolean fullRange,
+      final Random random) {
+    final int useLower, useUpper;
+
+    if (bound1 < bound2) {
+
+      if (bound1Inclusive) {
+        useLower = bound1;
+      } else {
+        if (bound1 >= Integer.MAX_VALUE) {
+          throw new IllegalArgumentException(//
+              "Exclusive lower bound for ints cannot be " //$NON-NLS-1$
+                  + bound1);
+        }
+        useLower = (bound1 + 1);
+      }
+
+      if (bound2Inclusive) {
+        useUpper = bound2;
+      } else {
+        if (bound2 <= Integer.MIN_VALUE) {
+          throw new IllegalArgumentException(//
+              "Exclusive upper bound for ints cannot be " //$NON-NLS-1$
+                  + bound2);
+        }
+        useUpper = (bound2 - 1);
+      }
+
+    } else {
+
+      if (bound2Inclusive) {
+        useLower = bound2;
+      } else {
+        if (bound2 >= Integer.MAX_VALUE) {
+          throw new IllegalArgumentException(//
+              "Exclusive lower bound for ints cannot be " //$NON-NLS-1$
+                  + bound2);
+        }
+        useLower = (bound2 + 1);
+      }
+
+      if (bound1Inclusive) {
+        useUpper = bound1;
+      } else {
+        if (bound1 <= Integer.MIN_VALUE) {
+          throw new IllegalArgumentException(//
+              "Exclusive upper bound for ints cannot be " //$NON-NLS-1$
+                  + bound1);
+        }
+        useUpper = (bound1 - 1);
+      }
+    }
+
+    return IntRandomization.randomNumberBetween(useLower, useUpper,
+        fullRange, random);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final Integer randomNumberBetween(final Number bound1,
+      final boolean bound1Inclusive, final Number bound2,
+      final boolean bound2Inclusive, final boolean fullRange,
+      final Random random) {
+    return Integer.valueOf(//
+        IntRandomization.randomNumberBetween(bound1.intValue(),
+            bound1Inclusive, bound2.intValue(), bound2Inclusive, fullRange,
+            random));
+  }
+
   /** {@inheritDoc} */
   @Override
   public final Integer randomValue(final boolean fullRange,

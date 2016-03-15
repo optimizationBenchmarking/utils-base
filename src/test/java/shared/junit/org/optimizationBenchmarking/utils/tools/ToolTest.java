@@ -26,10 +26,10 @@ public abstract class ToolTest<T extends ITool> extends InstanceTest<T> {
     super(null, tool, true, false);
   }
 
-  /** test whether the tool can be used */
+  /** test whether the {@code canUse()} can safely be invoked */
   @Test(timeout = 3600000)
   public void testToolCanUse() {
-    Assert.assertTrue(this.getInstance().canUse());
+    this.getInstance().canUse();
   }
 
   /**
@@ -41,9 +41,17 @@ public abstract class ToolTest<T extends ITool> extends InstanceTest<T> {
     final T instance;
     instance = this.getInstance();
     Assert.assertNotNull(instance);
-    if (instance.canUse()) {
+
+    try {
       instance.checkCanUse();
+    } catch (final Throwable error) {
+      if (instance.canUse()) {
+        throw new AssertionError("Can use, but fails checkCanUse().", //$NON-NLS-1$
+            error);
+      }
+      return;
     }
+    Assert.assertTrue(instance.canUse());
   }
 
   /** test whether the tool returns a non-{@code null} tool job builder */

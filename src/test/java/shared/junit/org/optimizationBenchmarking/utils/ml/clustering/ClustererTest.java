@@ -183,157 +183,157 @@ public abstract class ClustererTest<CT extends IClusterer>
 
   /** cluster two random elements into one cluster */
   @Test(timeout = 3600000)
-  public void testCluster2RandomElements1Cluster() {
+  public void testCluster2RandomElementsInto1Cluster() {
     this.__testClusterRandomData(2, 1);
   }
 
   /** cluster two random elements into two clusters */
   @Test(timeout = 3600000)
-  public void testCluster2RandomElements2Cluster() {
+  public void testCluster2RandomElementsInto2Clusters() {
     this.__testClusterRandomData(2, 2);
   }
 
   /** cluster two random elements into an arbitrary number of clusters */
   @Test(timeout = 3600000)
-  public void testCluster2RandomElementsXCluster() {
+  public void testCluster2RandomElementsIntoArbitrarilyManyCluster() {
     this.__testClusterRandomData(2, -1);
   }
 
   /** cluster three random elements into one cluster */
   @Test(timeout = 3600000)
-  public void testCluster3RandomElements1Cluster() {
+  public void testCluster3RandomElementsInto1Cluster() {
     this.__testClusterRandomData(3, 1);
   }
 
   /** cluster three random elements into two clusters */
   @Test(timeout = 3600000)
-  public void testCluster3RandomElements2Cluster() {
+  public void testCluster3RandomElementsInto2Clusters() {
     this.__testClusterRandomData(3, 2);
   }
 
   /** cluster three random elements into three clusters */
   @Test(timeout = 3600000)
-  public void testCluster3RandomElements3Cluster() {
+  public void testCluster3RandomElementsInto3Clusters() {
     this.__testClusterRandomData(3, 3);
   }
 
   /** cluster three random elements into an arbitrary number of clusters */
   @Test(timeout = 3600000)
-  public void testCluster3RandomElementsXCluster() {
+  public void testCluster3RandomElementsIntoArbitrarilyManyCluster() {
     this.__testClusterRandomData(3, -1);
   }
 
   /** cluster four random elements into one cluster */
   @Test(timeout = 3600000)
-  public void testCluster4RandomElements1Cluster() {
+  public void testCluster4RandomElementsInto1Cluster() {
     this.__testClusterRandomData(4, 1);
   }
 
   /** cluster four random elements into two clusters */
   @Test(timeout = 3600000)
-  public void testCluster4RandomElements2Cluster() {
+  public void testCluster4RandomElementsInto2Clusters() {
     this.__testClusterRandomData(4, 2);
   }
 
   /** cluster four random elements into three clusters */
   @Test(timeout = 3600000)
-  public void testCluster4RandomElements3Cluster() {
+  public void testCluster4RandomElementsInto3Clusters() {
     this.__testClusterRandomData(4, 3);
   }
 
   /** cluster four random elements into four clusters */
   @Test(timeout = 3600000)
-  public void testCluster4RandomElements4Cluster() {
+  public void testCluster4RandomElementsInto4Clusters() {
     this.__testClusterRandomData(4, 4);
   }
 
   /** cluster four random elements into an arbitrary number of clusters */
   @Test(timeout = 3600000)
-  public void testCluster4RandomElementsXCluster() {
+  public void testCluster4RandomElementsIntoArbitrarilyManyCluster() {
     this.__testClusterRandomData(4, -1);
   }
 
   /** cluster five random elements into one cluster */
   @Test(timeout = 3600000)
-  public void testCluster5RandomElements1Cluster() {
+  public void testCluster5RandomElementsInto1Cluster() {
     this.__testClusterRandomData(5, 1);
   }
 
   /** cluster five random elements into two clusters */
   @Test(timeout = 3600000)
-  public void testCluster5RandomElements2Cluster() {
+  public void testCluster5RandomElementsInto2Clusters() {
     this.__testClusterRandomData(5, 2);
   }
 
   /** cluster five random elements into three clusters */
   @Test(timeout = 3600000)
-  public void testCluster5RandomElements3Cluster() {
+  public void testCluster5RandomElementsInto3Clusters() {
     this.__testClusterRandomData(5, 3);
   }
 
   /** cluster five random elements into four clusters */
   @Test(timeout = 3600000)
-  public void testCluster5RandomElements4Cluster() {
+  public void testCluster5RandomElementsInto4Clusters() {
     this.__testClusterRandomData(5, 4);
   }
 
   /** cluster five random elements into five clusters */
   @Test(timeout = 3600000)
-  public void testCluster5RandomElements5Cluster() {
+  public void testCluster5RandomElementsInto5Clusters() {
     this.__testClusterRandomData(5, 5);
   }
 
   /** cluster five random elements into an arbitrary number of clusters */
   @Test(timeout = 3600000)
-  public void testCluster5RandomElementsXCluster() {
+  public void testCluster5RandomElementsIntoArbitrarilyManyCluster() {
     this.__testClusterRandomData(5, -1);
   }
 
   /** cluster one hundred random elements into one cluster */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElements1Cluster() {
+  public void testCluster100RandomElementsInto1Cluster() {
     this.__testClusterRandomData(100, 1);
   }
 
   /** cluster one hundred random elements into two clusters */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElements2Cluster() {
+  public void testCluster100RandomElementsInto2Clusters() {
     this.__testClusterRandomData(100, 2);
   }
 
   /** cluster one hundred random elements into three clusters */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElements3Cluster() {
+  public void testCluster100RandomElementsInto3Clusters() {
     this.__testClusterRandomData(100, 3);
   }
 
   /** cluster one hundred random elements into four clusters */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElements4Cluster() {
+  public void testCluster100RandomElementsInto4Clusters() {
     this.__testClusterRandomData(100, 4);
   }
 
   /** cluster one hundred random elements into five clusters */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElements5Cluster() {
+  public void testCluster100RandomElementsInto5Clusters() {
     this.__testClusterRandomData(100, 5);
   }
 
   /** cluster one hundred random elements into 50 clusters */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElements50Cluster() {
+  public void testCluster100RandomElementsInto50Clusters() {
     this.__testClusterRandomData(100, 50);
   }
 
   /** cluster one hundred random elements into 99 clusters */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElements99Cluster() {
+  public void testCluster100RandomElementsInto99Clusters() {
     this.__testClusterRandomData(100, 99);
   }
 
   /** cluster one hundred random elements into one hundred clusters */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElements100Cluster() {
+  public void testCluster100RandomElementsInto100Clusters() {
     this.__testClusterRandomData(100, 100);
   }
 
@@ -342,7 +342,7 @@ public abstract class ClustererTest<CT extends IClusterer>
    * clusters
    */
   @Test(timeout = 3600000)
-  public void testCluster100RandomElementsXCluster() {
+  public void testCluster100RandomElementsIntoArbitrarilyManyCluster() {
     this.__testClusterRandomData(100, -1);
   }
 }

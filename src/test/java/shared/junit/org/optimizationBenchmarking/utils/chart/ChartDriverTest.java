@@ -21,9 +21,14 @@ import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 @Ignore
 public abstract class ChartDriverTest extends ToolTest<IChartDriver> {
 
-  /** create */
-  public ChartDriverTest() {
-    super();
+  /**
+   * create
+   *
+   * @param driver
+   *          the chart driver
+   */
+  public ChartDriverTest(final IChartDriver driver) {
+    super(driver);
   }
 
   /**

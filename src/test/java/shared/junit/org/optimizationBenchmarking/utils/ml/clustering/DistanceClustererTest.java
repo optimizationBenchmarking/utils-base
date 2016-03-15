@@ -11,9 +11,14 @@ import org.optimizationBenchmarking.utils.ml.clustering.spec.IDistanceClustering
 public abstract class DistanceClustererTest
     extends ClustererTest<IDistanceClusterer> {
 
-  /** create the test */
-  protected DistanceClustererTest() {
-    super();
+  /**
+   * create the test
+   *
+   * @param clusterer
+   *          the clusterer
+   */
+  protected DistanceClustererTest(final IDistanceClusterer clusterer) {
+    super(clusterer);
   }
 
   /**

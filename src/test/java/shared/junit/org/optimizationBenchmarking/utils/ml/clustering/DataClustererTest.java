@@ -10,9 +10,14 @@ import org.optimizationBenchmarking.utils.ml.clustering.spec.IDataClusteringJobB
 public abstract class DataClustererTest
     extends ClustererTest<IDataClusterer> {
 
-  /** create the test */
-  protected DataClustererTest() {
-    super();
+  /**
+   * create the test
+   *
+   * @param clusterer
+   *          the clusterer
+   */
+  protected DataClustererTest(final IDataClusterer clusterer) {
+    super(clusterer);
   }
 
   /** {@inheritDoc} */

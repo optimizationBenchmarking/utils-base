@@ -13,12 +13,6 @@ public class ProcessExecutorTest
 
   /** create */
   public ProcessExecutorTest() {
-    super();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  protected ExternalProcessExecutor getInstance() {
-    return ExternalProcessExecutor.getInstance();
+    super(ExternalProcessExecutor.getInstance());
   }
 }

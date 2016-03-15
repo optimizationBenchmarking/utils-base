@@ -24,9 +24,14 @@ import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 public abstract class AbstractGraphicDriverTest
     extends ToolTest<IGraphicDriver> {
 
-  /** create */
-  protected AbstractGraphicDriverTest() {
-    super();
+  /**
+   * create
+   *
+   * @param driver
+   *          the driver
+   */
+  protected AbstractGraphicDriverTest(final IGraphicDriver driver) {
+    super(driver);
   }
 
   /**

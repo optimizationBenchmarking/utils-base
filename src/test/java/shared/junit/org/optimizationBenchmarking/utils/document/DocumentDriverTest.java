@@ -295,7 +295,7 @@ public abstract class DocumentDriverTest<ConfigType>
    */
   @Test(timeout = 3600000)
   public void testDocumentDriverAsTool() {
-    new ToolTest<IDocumentDriver>() {
+    new ToolTest<IDocumentDriver>(null) {
       @Override
       protected IDocumentDriver getInstance() {
         return DocumentDriverTest.this._getDriver();

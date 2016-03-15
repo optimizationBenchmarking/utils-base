@@ -16,18 +16,15 @@ import shared.junit.InstanceTest;
 @Ignore
 public abstract class ToolTest<T extends ITool> extends InstanceTest<T> {
 
-  /** create */
-  public ToolTest() {
-    super(null, null, true, false);
-  }
-
   /**
-   * get the tool to test
+   * create
    *
-   * @return the tool to test
+   * @param tool
+   *          the tool
    */
-  @Override
-  protected abstract T getInstance();
+  public ToolTest(final T tool) {
+    super(null, tool, true, false);
+  }
 
   /** test whether the tool can be used */
   @Test(timeout = 3600000)
@@ -41,13 +38,23 @@ public abstract class ToolTest<T extends ITool> extends InstanceTest<T> {
    */
   @Test(timeout = 3600000)
   public void testToolCheckCanUse() {
-    this.getInstance().checkCanUse();
+    final T instance;
+    instance = this.getInstance();
+    Assert.assertNotNull(instance);
+    if (instance.canUse()) {
+      instance.checkCanUse();
+    }
   }
 
   /** test whether the tool returns a non-{@code null} tool job builder */
   @Test(timeout = 3600000)
   public void testToolCanCreateToolJobBuilder() {
-    Assert.assertNotNull(this.getInstance().use());
+    final T instance;
+    instance = this.getInstance();
+    Assert.assertNotNull(instance);
+    if (instance.canUse()) {
+      Assert.assertNotNull(instance.use());
+    }
   }
 
   /** {@inheritDoc} */

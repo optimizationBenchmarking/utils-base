@@ -16,13 +16,7 @@ public class JavaCompilerToolTest extends ToolTest<JavaCompilerTool> {
 
   /** create */
   public JavaCompilerToolTest() {
-    super();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  protected JavaCompilerTool getInstance() {
-    return JavaCompilerTool.getInstance();
+    super(JavaCompilerTool.getInstance());
   }
 
   /** test whether an empty class can be compiled */

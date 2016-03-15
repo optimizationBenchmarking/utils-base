@@ -6,12 +6,14 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.optimizationBenchmarking.utils.math.MathUtils;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusterer;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusteringJob;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusteringJobBuilder;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusteringResult;
 
+import shared.junit.CategorySlowTests;
 import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 
 /**
@@ -237,6 +239,7 @@ public abstract class ClustererTest<CT extends IClusterer>
 
   /** cluster four random elements into three clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster4RandomElementsInto3Clusters() {
     this.__testClusterRandomData(4, 3);
   }
@@ -261,18 +264,21 @@ public abstract class ClustererTest<CT extends IClusterer>
 
   /** cluster five random elements into two clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster5RandomElementsInto2Clusters() {
     this.__testClusterRandomData(5, 2);
   }
 
   /** cluster five random elements into three clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster5RandomElementsInto3Clusters() {
     this.__testClusterRandomData(5, 3);
   }
 
   /** cluster five random elements into four clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster5RandomElementsInto4Clusters() {
     this.__testClusterRandomData(5, 4);
   }
@@ -303,24 +309,28 @@ public abstract class ClustererTest<CT extends IClusterer>
 
   /** cluster one hundred random elements into three clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster100RandomElementsInto3Clusters() {
     this.__testClusterRandomData(100, 3);
   }
 
   /** cluster one hundred random elements into four clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster100RandomElementsInto4Clusters() {
     this.__testClusterRandomData(100, 4);
   }
 
   /** cluster one hundred random elements into five clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster100RandomElementsInto5Clusters() {
     this.__testClusterRandomData(100, 5);
   }
 
   /** cluster one hundred random elements into 50 clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster100RandomElementsInto50Clusters() {
     this.__testClusterRandomData(100, 50);
   }

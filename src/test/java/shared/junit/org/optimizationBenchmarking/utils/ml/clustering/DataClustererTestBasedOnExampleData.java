@@ -5,10 +5,10 @@ import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusteringResult;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IDataClusterer;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IDataClusteringJobBuilder;
 
-/** A test for data clusterers */
+/** A test for data clusterers based on example data */
 @Ignore
-public abstract class DataClustererTest
-    extends ClustererTest<IDataClusterer> {
+public abstract class DataClustererTestBasedOnExampleData
+    extends ClustererTestBasedOnExampleData<IDataClusterer> {
 
   /**
    * create the test
@@ -16,7 +16,8 @@ public abstract class DataClustererTest
    * @param clusterer
    *          the clusterer
    */
-  protected DataClustererTest(final IDataClusterer clusterer) {
+  protected DataClustererTestBasedOnExampleData(
+      final IDataClusterer clusterer) {
     super(clusterer);
   }
 

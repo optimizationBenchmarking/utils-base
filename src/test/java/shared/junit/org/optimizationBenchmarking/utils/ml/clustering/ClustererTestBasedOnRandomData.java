@@ -1,30 +1,27 @@
 package shared.junit.org.optimizationBenchmarking.utils.ml.clustering;
 
-import java.util.HashSet;
 import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.optimizationBenchmarking.utils.math.MathUtils;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusterer;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusteringJob;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusteringJobBuilder;
 import org.optimizationBenchmarking.utils.ml.clustering.spec.IClusteringResult;
 
 import shared.junit.CategorySlowTests;
-import shared.junit.org.optimizationBenchmarking.utils.tools.ToolTest;
 
 /**
- * A test for clusterers
+ * A test for clusterers based on random data
  *
  * @param <CT>
  *          the clusterer
  */
 @Ignore
-public abstract class ClustererTest<CT extends IClusterer>
-    extends ToolTest<CT> {
+public abstract class ClustererTestBasedOnRandomData<CT extends IClusterer>
+    extends BasicClustererTest<CT> {
 
   /**
    * create the test
@@ -32,94 +29,8 @@ public abstract class ClustererTest<CT extends IClusterer>
    * @param clusterer
    *          the clusterer
    */
-  protected ClustererTest(final CT clusterer) {
+  protected ClustererTestBasedOnRandomData(final CT clusterer) {
     super(clusterer);
-  }
-
-  /**
-   * cluster a data example
-   *
-   * @param clusterer
-   *          the clusterer
-   * @param dataset
-   *          the data set
-   * @param useNumber
-   *          should the cluster number be used ({@code true}) or
-   *          automatically detected ({@code false})
-   * @return the clustering result
-   */
-  abstract IClusteringResult _doDataClusterExample(final CT clusterer,
-      final ClusteringExampleDataset dataset, final boolean useNumber);
-
-  /**
-   * validate the result
-   *
-   * @param result
-   *          the result
-   * @param dataset
-   *          the data set
-   */
-  private final void __validateResult(final IClusteringResult result,
-      final ClusteringExampleDataset dataset) {
-    Assert.assertNotNull(dataset);
-    this.__validateResult(result, dataset.data.m(), -1);
-  }
-
-  /**
-   * validate the result
-   *
-   * @param elementCount
-   *          the number of elements to create
-   * @param clusterCount
-   *          the number of clusters, {@code -1} for free choice
-   * @param result
-   *          the result
-   */
-  private final void __validateResult(final IClusteringResult result,
-      final int elementCount, final int clusterCount) {
-    final int[] clusters;
-    final HashSet<Integer> hash;
-
-    Assert.assertNotNull(result);
-
-    clusters = result.getClustersRef();
-    Assert.assertEquals(clusters.length, elementCount);
-
-    hash = new HashSet<>();
-    for (final int i : clusters) {
-      hash.add(Integer.valueOf(i));
-    }
-    Assert.assertTrue(hash.size() > 0);
-    Assert.assertFalse(hash.size() > clusters.length);
-    if (clusterCount > 0) {
-      Assert.assertEquals(clusterCount, hash.size());
-    }
-
-    Assert.assertTrue(result.getQuality() >= 0d);
-    Assert.assertTrue(MathUtils.isFinite(result.getQuality()));
-  }
-
-  /**
-   * cluster a data example
-   *
-   * @param dataset
-   *          the data set
-   * @param useNumber
-   *          should the cluster number be used ({@code true}) or
-   *          automatically detected ({@code false})
-   */
-  protected final void dataClusterExample(
-      final ClusteringExampleDataset dataset, final boolean useNumber) {
-    final CT engine;
-
-    Assert.assertNotNull(dataset);
-    engine = this.getInstance();
-    Assert.assertNotNull(engine);
-    if (engine.canUse()) {
-      this.__validateResult(//
-          this._doDataClusterExample(engine, dataset, useNumber), //
-          dataset);
-    }
   }
 
   /**
@@ -166,7 +77,7 @@ public abstract class ClustererTest<CT extends IClusterer>
       builder = null;
       result = job.call();
       job = null;
-      this.__validateResult(result, elementCount, clusterCount);
+      this._validateResult(result, elementCount, clusterCount);
       result = null;
     }
   }

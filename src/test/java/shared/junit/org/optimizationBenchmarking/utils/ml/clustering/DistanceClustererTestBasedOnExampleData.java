@@ -8,8 +8,8 @@ import org.optimizationBenchmarking.utils.ml.clustering.spec.IDistanceClustering
 
 /** A test for distance clusterers */
 @Ignore
-public abstract class DistanceClustererTest
-    extends ClustererTest<IDistanceClusterer> {
+public abstract class DistanceClustererTestBasedOnExampleData
+    extends ClustererTestBasedOnExampleData<IDistanceClusterer> {
 
   /**
    * create the test
@@ -17,7 +17,8 @@ public abstract class DistanceClustererTest
    * @param clusterer
    *          the clusterer
    */
-  protected DistanceClustererTest(final IDistanceClusterer clusterer) {
+  protected DistanceClustererTestBasedOnExampleData(
+      final IDistanceClusterer clusterer) {
     super(clusterer);
   }
 

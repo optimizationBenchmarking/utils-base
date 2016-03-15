@@ -258,6 +258,7 @@ public abstract class ClustererTest<CT extends IClusterer>
 
   /** cluster five random elements into one cluster */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster5RandomElementsInto1Cluster() {
     this.__testClusterRandomData(5, 1);
   }
@@ -285,12 +286,14 @@ public abstract class ClustererTest<CT extends IClusterer>
 
   /** cluster five random elements into five clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster5RandomElementsInto5Clusters() {
     this.__testClusterRandomData(5, 5);
   }
 
   /** cluster five random elements into an arbitrary number of clusters */
   @Test(timeout = 3600000)
+  @Category(CategorySlowTests.class)
   public void testCluster5RandomElementsIntoArbitrarilyManyCluster() {
     this.__testClusterRandomData(5, -1);
   }

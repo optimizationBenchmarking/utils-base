@@ -102,22 +102,34 @@ public final class DoubleRandomization
               ',') + ' ') + upperBound + "] is not."); //$NON-NLS-1$
     }
 
-    if (lowerBound <= Double.NEGATIVE_INFINITY) {
-      if (fullRange && (random.nextInt(1000) <= 0)) {
-        return Double.NEGATIVE_INFINITY;
+    if (fullRange) {
+      if (lowerBound <= Double.NEGATIVE_INFINITY) {
+        if (random.nextInt(1000) <= 0) {
+          return Double.NEGATIVE_INFINITY;
+        }
+        useLower = (-Double.MAX_VALUE);
+      } else {
+        useLower = lowerBound + 0d;
       }
-      useLower = (-Double.MAX_VALUE);
-    } else {
-      useLower = (lowerBound + 0d);
-    }
 
-    if (upperBound >= Double.POSITIVE_INFINITY) {
-      if (fullRange && (random.nextInt(1000) <= 0)) {
-        return Double.POSITIVE_INFINITY;
+      if (upperBound >= Double.POSITIVE_INFINITY) {
+        if (random.nextInt(1000) <= 0) {
+          return Double.POSITIVE_INFINITY;
+        }
+        useUpper = Double.MAX_VALUE;
+      } else {
+        useUpper = upperBound + 0d;
       }
-      useUpper = Double.MAX_VALUE;
     } else {
-      useUpper = (upperBound + 0d);
+      useLower = (((lowerBound < DoubleRandomization.SAFE_MIN)
+          && (DoubleRandomization.SAFE_MIN <= upperBound))
+              ? DoubleRandomization.SAFE_MIN : (lowerBound + 0d));
+      useUpper = (((upperBound > DoubleRandomization.SAFE_MAX)
+          && (DoubleRandomization.SAFE_MAX >= useLower))
+              ? DoubleRandomization.SAFE_MAX : (upperBound + 0d));
+    }
+    if (useLower >= useUpper) {
+      return useLower;
     }
 
     steps = MathUtils.numbersBetween(useLower, useUpper);

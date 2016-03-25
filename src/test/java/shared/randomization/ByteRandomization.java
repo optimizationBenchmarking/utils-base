@@ -73,6 +73,7 @@ public final class ByteRandomization extends NumberRandomization<Byte> {
   public static final byte randomNumberBetween(final byte lowerBound,
       final byte upperBound, final boolean fullRange,
       final Random random) {
+    final int useLower, useUpper;
 
     if (lowerBound >= upperBound) {
       if (lowerBound <= upperBound) {
@@ -82,8 +83,21 @@ public final class ByteRandomization extends NumberRandomization<Byte> {
           " is higher than upper bound ") + upperBound) + '.'); //$NON-NLS-1$
     }
 
-    return ((byte) (random.nextInt((1 + upperBound) - lowerBound)
-        + lowerBound));
+    if (fullRange) {
+      useLower = lowerBound;
+      useUpper = upperBound;
+    } else {
+      useLower = (((lowerBound < ByteRandomization.SAFE_MIN)
+          && (ByteRandomization.SAFE_MIN <= upperBound))
+              ? ByteRandomization.SAFE_MIN : lowerBound);
+      useUpper = (((upperBound > ByteRandomization.SAFE_MAX)
+          && (ByteRandomization.SAFE_MAX >= useLower))
+              ? ByteRandomization.SAFE_MAX : upperBound);
+      if (useLower >= useUpper) {
+        return ((byte) useLower);
+      }
+    }
+    return ((byte) (random.nextInt((1 + useUpper) - useLower) + useLower));
   }
 
   /**

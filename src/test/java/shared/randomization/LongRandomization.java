@@ -73,6 +73,7 @@ public final class LongRandomization extends NumberRandomization<Long> {
   public static final long randomNumberBetween(final long lowerBound,
       final long upperBound, final boolean fullRange,
       final Random random) {
+    final long useLower, useUpper;
     long difference, trial;
 
     if (lowerBound >= upperBound) {
@@ -83,20 +84,35 @@ public final class LongRandomization extends NumberRandomization<Long> {
           " is higher than upper bound ") + upperBound) + '.'); //$NON-NLS-1$
     }
 
-    difference = ((upperBound - lowerBound) + 1L);
+    if (fullRange) {
+      useLower = lowerBound;
+      useUpper = upperBound;
+    } else {
+      useLower = (((lowerBound < LongRandomization.SAFE_MIN)
+          && (LongRandomization.SAFE_MIN <= upperBound))
+              ? LongRandomization.SAFE_MIN : lowerBound);
+      useUpper = (((upperBound > LongRandomization.SAFE_MAX)
+          && (LongRandomization.SAFE_MAX >= useLower))
+              ? LongRandomization.SAFE_MAX : upperBound);
+      if (useLower >= useUpper) {
+        return useLower;
+      }
+    }
+
+    difference = ((useUpper - useLower) + 1L);
     if ((difference <= 0L) || (difference >= Long.MAX_VALUE)) {
       do {
         trial = random.nextLong();
-      } while ((trial < lowerBound) || (trial > upperBound));
+      } while ((trial < useLower) || (trial > useUpper));
       return trial;
     }
 
     if (difference < Integer.MAX_VALUE) {
-      return lowerBound + random.nextInt((int) difference);
+      return useLower + random.nextInt((int) difference);
     }
 
     // warning: this is not uniform distributed
-    return (lowerBound
+    return (useLower
         + ((random.nextLong() & 0x7fffffffffffffffL) % difference));
   }
 

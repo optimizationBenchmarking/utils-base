@@ -72,6 +72,7 @@ public final class IntRandomization extends NumberRandomization<Integer> {
    */
   public static final int randomNumberBetween(final int lowerBound,
       final int upperBound, final boolean fullRange, final Random random) {
+    final int useLower, useUpper;
     int difference, trial;
 
     if (lowerBound >= upperBound) {
@@ -82,14 +83,29 @@ public final class IntRandomization extends NumberRandomization<Integer> {
           " is higher than upper bound ") + upperBound) + '.'); //$NON-NLS-1$
     }
 
-    difference = (upperBound - lowerBound);
+    if (fullRange) {
+      useLower = lowerBound;
+      useUpper = upperBound;
+    } else {
+      useLower = (((lowerBound < IntRandomization.SAFE_MIN)
+          && (IntRandomization.SAFE_MIN <= upperBound))
+              ? IntRandomization.SAFE_MIN : lowerBound);
+      useUpper = (((upperBound > IntRandomization.SAFE_MAX)
+          && (IntRandomization.SAFE_MAX >= useLower))
+              ? IntRandomization.SAFE_MAX : upperBound);
+      if (useLower >= useUpper) {
+        return useLower;
+      }
+    }
+
+    difference = (useUpper - useLower);
     if ((difference >= 0) && (difference < Integer.MAX_VALUE)) {
-      return (lowerBound + random.nextInt(difference + 1));
+      return (useLower + random.nextInt(difference + 1));
     }
 
     do {
       trial = random.nextInt();
-    } while ((trial < lowerBound) || (trial > upperBound));
+    } while ((trial < useLower) || (trial > useUpper));
 
     return trial;
   }
@@ -125,7 +141,6 @@ public final class IntRandomization extends NumberRandomization<Integer> {
     final int useLower, useUpper;
 
     if (bound1 <= bound2) {
-
       if (bound1Inclusive) {
         useLower = bound1;
       } else {

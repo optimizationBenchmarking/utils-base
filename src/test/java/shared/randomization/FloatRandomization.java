@@ -82,11 +82,11 @@ public final class FloatRandomization extends NumberRandomization<Float> {
   public static final float randomNumberBetween(final float lowerBound,
       final float upperBound, final boolean fullRange,
       final Random random) {
-    final float useLower, useUpper;
     final boolean negative;
     final long steps;
     final int bits;
     final double difference;
+    final float useLower, useUpper;
     float trial;
     long offset;
     int looper;
@@ -104,22 +104,34 @@ public final class FloatRandomization extends NumberRandomization<Float> {
               ',') + ' ') + upperBound + "] is not."); //$NON-NLS-1$
     }
 
-    if (lowerBound <= Double.NEGATIVE_INFINITY) {
-      if (fullRange && (random.nextInt(1000) <= 0)) {
-        return Float.NEGATIVE_INFINITY;
+    if (fullRange) {
+      if (lowerBound <= Float.NEGATIVE_INFINITY) {
+        if (random.nextInt(1000) <= 0) {
+          return Float.NEGATIVE_INFINITY;
+        }
+        useLower = (-Float.MAX_VALUE);
+      } else {
+        useLower = lowerBound + 0f;
       }
-      useLower = (-Float.MAX_VALUE);
-    } else {
-      useLower = (lowerBound + 0f);
-    }
 
-    if (upperBound >= Float.POSITIVE_INFINITY) {
-      if (fullRange && (random.nextInt(1000) <= 0)) {
-        return Float.POSITIVE_INFINITY;
+      if (upperBound >= Float.POSITIVE_INFINITY) {
+        if (random.nextInt(1000) <= 0) {
+          return Float.POSITIVE_INFINITY;
+        }
+        useUpper = Float.MAX_VALUE;
+      } else {
+        useUpper = upperBound + 0f;
       }
-      useUpper = Float.MAX_VALUE;
     } else {
-      useUpper = (upperBound + 0f);
+      useLower = (((lowerBound < FloatRandomization.SAFE_MIN)
+          && (FloatRandomization.SAFE_MIN <= upperBound))
+              ? FloatRandomization.SAFE_MIN : (lowerBound + 0f));
+      useUpper = (((upperBound > FloatRandomization.SAFE_MAX)
+          && (FloatRandomization.SAFE_MAX >= useLower))
+              ? FloatRandomization.SAFE_MAX : (upperBound + 0f));
+    }
+    if (useLower >= useUpper) {
+      return useLower;
     }
 
     steps = MathUtils.numbersBetween(useLower, useUpper);
@@ -152,7 +164,9 @@ public final class FloatRandomization extends NumberRandomization<Float> {
 
     // ok, scale-uniformity not possible, attempt range uniformity
     difference = (useUpper - useLower);
-    if ((difference > 0d) && (difference < Double.POSITIVE_INFINITY)) {
+    if ((difference > 0d) && (difference < Double.POSITIVE_INFINITY))
+
+    {
       for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;) {
         trial = (float) (useLower + (random.nextDouble() * difference));
         if ((trial >= useLower) && (trial <= useUpper)) {
@@ -168,7 +182,9 @@ public final class FloatRandomization extends NumberRandomization<Float> {
     }
 
     // range too wide
-    for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;) {
+    for (looper = PrimitiveTypeRandomization.MAX_TRIALS; (--looper) >= 0;)
+
+    {
       trial = (float) (random.nextDouble() * Math.exp(random
           .nextInt(FloatRandomization.MAX_EXP - FloatRandomization.MIN_EXP)
           + FloatRandomization.MIN_EXP));
@@ -184,6 +200,7 @@ public final class FloatRandomization extends NumberRandomization<Float> {
     }
 
     return (random.nextBoolean() ? useLower : useUpper);
+
   }
 
   /**

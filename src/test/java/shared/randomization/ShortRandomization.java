@@ -73,6 +73,7 @@ public final class ShortRandomization extends NumberRandomization<Short> {
   public static final short randomNumberBetween(final short lowerBound,
       final short upperBound, final boolean fullRange,
       final Random random) {
+    final int useLower, useUpper;
 
     if (lowerBound >= upperBound) {
       if (lowerBound <= upperBound) {
@@ -82,8 +83,23 @@ public final class ShortRandomization extends NumberRandomization<Short> {
           " is higher than upper bound ") + upperBound) + '.'); //$NON-NLS-1$
     }
 
-    return ((short) (random.nextInt((1 + upperBound) - lowerBound)
-        + lowerBound));
+    if (fullRange) {
+      useLower = lowerBound;
+      useUpper = upperBound;
+    } else {
+      useLower = (((lowerBound < ShortRandomization.SAFE_MIN)
+          && (ShortRandomization.SAFE_MIN <= upperBound))
+              ? ShortRandomization.SAFE_MIN : lowerBound);
+      useUpper = (((upperBound > ShortRandomization.SAFE_MAX)
+          && (ShortRandomization.SAFE_MAX >= useLower))
+              ? ShortRandomization.SAFE_MAX : upperBound);
+      if (useLower >= useUpper) {
+        return ((short) useLower);
+      }
+    }
+
+    return ((short) (random.nextInt((1 + useUpper) - useLower)
+        + useLower));
   }
 
   /**

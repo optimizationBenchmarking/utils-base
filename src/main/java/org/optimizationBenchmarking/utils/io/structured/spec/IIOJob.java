@@ -1,12 +1,11 @@
 package org.optimizationBenchmarking.utils.io.structured.spec;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
-import org.optimizationBenchmarking.utils.tools.spec.IToolJob;
+import org.optimizationBenchmarking.utils.tools.spec.ICallableToolJob;
 
 /** A job of an I/O tool. */
-public interface IIOJob extends IToolJob, Callable<Void> {
+public interface IIOJob extends ICallableToolJob<Void> {
 
   /**
    * Perform the I/O operation.

@@ -259,6 +259,10 @@ public final class SimpleNumberAppender extends _PlainIntNumberAppender {
           while ((mantissaEnd > dot) && (data[mantissaEnd - 1] == '0')) {
             mantissaEnd--;
           }
+          if ((data[mantissaEnd] == '0') && (mantissaEnd >= (dot + 1))) {
+            mantissaEnd = dot;
+            dot = (-1);
+          }
         }
 
         this.m_mantissaDot = dot;

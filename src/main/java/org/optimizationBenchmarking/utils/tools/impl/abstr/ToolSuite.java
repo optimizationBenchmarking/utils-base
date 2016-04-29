@@ -7,6 +7,7 @@ import org.optimizationBenchmarking.utils.config.Configuration;
 import org.optimizationBenchmarking.utils.error.ErrorUtils;
 import org.optimizationBenchmarking.utils.error.RethrowMode;
 import org.optimizationBenchmarking.utils.text.TextUtils;
+import org.optimizationBenchmarking.utils.versioning.Version;
 
 /**
  * A tool which marks the entry point to a whole tool suite.
@@ -31,7 +32,7 @@ public abstract class ToolSuite extends Tool {
   private static final String CONTACT_URL = "contact.url";//$NON-NLS-1$
 
   /** the version */
-  private String m_projectVersion;
+  private Version m_projectVersion;
 
   /** the tool suite */
   private String m_projectName;
@@ -58,6 +59,7 @@ public abstract class ToolSuite extends Tool {
   private synchronized final void __loadProperties() {
     final Properties properties;
     final Class<?> clazz;
+    String version;
 
     properties = new Properties();
     clazz = this.getClass();
@@ -65,18 +67,17 @@ public abstract class ToolSuite extends Tool {
         clazz.getSimpleName() + ".properties")) { //$NON-NLS-1$
       properties.load(input);
     } catch (final Throwable error) {
-      ErrorUtils.logError(
-          Configuration.getGlobalLogger(),
+      ErrorUtils.logError(Configuration.getGlobalLogger(),
           (("Error while loading the properties of " + //$NON-NLS-1$
-          TextUtils.className(clazz)) + '.'), error, true,
-          RethrowMode.DONT_RETHROW);
+              TextUtils.className(clazz)) + '.'),
+          error, true, RethrowMode.DONT_RETHROW);
     }
 
-    this.m_projectVersion = TextUtils.prepare(properties.getProperty(//
+    version = TextUtils.prepare(properties.getProperty(//
         ToolSuite.PROJECT_VERSION));
-    if (this.m_projectVersion == null) {
-      this.m_projectVersion = ToolSuite.UNKNOWN;
-    }
+    this.m_projectVersion = ((version != null)
+        ? Version.parseVersion(version)
+        : new Version(0, 0, 0, null, null));
 
     this.m_projectName = TextUtils.prepare(properties.getProperty(//
         ToolSuite.PROJECT_NAME));
@@ -120,7 +121,7 @@ public abstract class ToolSuite extends Tool {
    *
    * @return the version of this tool suite
    */
-  public synchronized final String getProjectVersion() {
+  public synchronized final Version getProjectVersion() {
     if (this.m_projectVersion == null) {
       this.__loadProperties();
     }

@@ -11,4 +11,4 @@
 [<img alt="Drone IO Build Status" src="https://drone.io/github.com/optimizationBenchmarking/utils-base/status.png" height="20"/>](https://drone.io/github.com/optimizationBenchmarking/utils-base/latest)
 
 This library provides the basic utility classes used by the [optimizationBenchmarking](http://www.github.com/optimizationBenchmarking/) tool suite. They are licensed under the GNU General Public License Version 3 is provided in the file "[LICENSE.md](http://github.com/optimizationBenchmarking/utils-base/tree/master/LICENSE.md)" and can be found online at
-[http://www.gnu.org/meta/licenses/gpl-3.0.txt](http://www.gnu.org/meta/licenses/gpl-3.0.txt).
+[http://www.gnu.org/meta/licenses/gpl-3.0.txt](http://www.gnu.org/meta/licenses/gpl-3.0.txt). The GPL  holds for all components of this project except the file org.optimizationBenchmarking.utils.versioning.Version, which is under the MIT License and originally copyrighted by Simon Taddiken.

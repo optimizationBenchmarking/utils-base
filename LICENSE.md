@@ -1,3 +1,7 @@
+The following license holds for all components of this project except
+the file org.optimizationBenchmarking.utils.versioning.Version, which
+is under the MIT License and originally copyrighted by Simon Taddiken.
+
 # GNU GENERAL PUBLIC LICENSE
 ## Version 3, 29 June 2007
 

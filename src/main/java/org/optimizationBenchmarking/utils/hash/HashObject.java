@@ -8,7 +8,7 @@ package org.optimizationBenchmarking.utils.hash;
 public abstract class HashObject {
 
   /** the hash code */
-  private transient int m_hc;
+  private transient volatile int m_hc;
 
   /** create */
   protected HashObject() {

@@ -257,8 +257,8 @@ public final class NetworkUtils {
   private static final class __GlobalAddresses {
 
     /** the global addresses */
-    static final ArrayListView<InetAddress> GLOBAL_ADDRESSES = __GlobalAddresses
-        .__createGlobalAddresses();
+    static final ArrayListView<InetAddress> GLOBAL_ADDRESSES = //
+    __GlobalAddresses.__createGlobalAddresses();
 
     /**
      * Create the global addresses
@@ -277,9 +277,11 @@ public final class NetworkUtils {
       // http://stackoverflow.com/questions/2939218/
 
       addresses = new HashSet<>();
-      hosts = new String[] { "http://checkip.amazonaws.com/", //$NON-NLS-1$
+      hosts = new String[] { //
+          "http://checkip.amazonaws.com/", //$NON-NLS-1$
           "http://icanhazip.com/", //$NON-NLS-1$
-          "http://curlmyip.com/", //$NON-NLS-1$
+          // "http://curlmyip.com/", //$NON-NLS-1$ //seemingly doesn't work
+          "http://curlmyip.de/", //$NON-NLS-1$
           "http://ipecho.net/plain", //$NON-NLS-1$
           "http://wtfismyip.com/text", //$NON-NLS-1$
       };

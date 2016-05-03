@@ -23,6 +23,9 @@ public final class BrowserJob extends ToolJob implements Closeable {
    */
   private final boolean m_isWaitForReliable;
 
+  /** the time when the browser started */
+  private final long m_startupTime;
+
   /**
    * Create the browser job,
    *
@@ -49,6 +52,7 @@ public final class BrowserJob extends ToolJob implements Closeable {
     this.m_process = process;
     this.m_temp = temp;
     this.m_isWaitForReliable = isWaitForReliable;
+    this.m_startupTime = System.currentTimeMillis();
   }
 
   /**
@@ -95,6 +99,7 @@ public final class BrowserJob extends ToolJob implements Closeable {
   /** {@inheritDoc} */
   @Override
   public final void close() throws IOException {
+    final long wait;
     ExternalProcess proc;
     TempDir temp;
 
@@ -107,11 +112,32 @@ public final class BrowserJob extends ToolJob implements Closeable {
 
     try {
       if (proc != null) {
-        proc.close();
+        try {
+          // we give the browser 3s to start up before we close it
+          wait = ((3000L - System.currentTimeMillis())
+              + this.m_startupTime);
+          if (wait > 0L) {
+            Thread.sleep(wait);
+          }
+        } catch (@SuppressWarnings("unused") final Throwable error) {
+          // ignore
+        } finally {
+          try {
+            proc.close();
+          } finally {
+            proc = null;
+          }
+        }
       }
     } finally {
       if (temp != null) {
-        temp.close();
+        try {
+          Thread.sleep(100L);
+        } catch (@SuppressWarnings("unused") final Throwable error) {
+          // ignore
+        } finally {
+          temp.close();
+        }
       }
     }
   }

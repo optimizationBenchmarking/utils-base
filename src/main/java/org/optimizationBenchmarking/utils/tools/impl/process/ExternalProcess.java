@@ -181,8 +181,21 @@ public final class ExternalProcess extends _BasicProcess {
           }
 
           if (shouldKill) {
-            this.m_process.destroy();
             shouldMessage = true;
+            try {
+              // wait a bit in a last-ditch effort to let the process
+              // gracefully terminate
+              Thread.sleep(20L);
+            } catch (final InterruptedException ie) {
+              // ingore
+            }
+            this.m_process.destroy();
+            try {
+              // wait a bit in an effort to let destroy() work
+              Thread.sleep(20L);
+            } catch (final InterruptedException ie) {
+              // ingore
+            }
           }
         } catch (final Throwable t) {
           error = ErrorUtils.aggregateError(t, error);

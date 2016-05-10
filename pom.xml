@@ -4,7 +4,7 @@
 
 	<groupId>org.optimizationBenchmarking</groupId>
 	<artifactId>utils-base</artifactId>
-	<version>0.8.5-SNAPSHOT</version>
+	<version>0.8.5</version>
 	<packaging>jar</packaging>
 	<name>Base Utilities</name>
 	<description>This project holds the basic utilities used in all other projects of the Optimization Benchmarking Tool Suite.</description>

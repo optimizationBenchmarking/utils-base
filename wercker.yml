@@ -3,11 +3,10 @@
 ##
 ## https://app.wercker.com/#applications/567a005a13c2df2b623ee96c
 #
-box: optimizationbenchmarking/linux-evaluator-build
+box: optimizationbenchmarking/evaluator-build
 #
 build:
     steps:
         - script:
             name: Maven Build
-            code: |
-                  mvn compile test package install
+            code: mvn compile test package install

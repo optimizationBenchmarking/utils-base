@@ -292,7 +292,6 @@ public final class PathUtils {
       }
       before = p;
     }
-
   }
 
   /**

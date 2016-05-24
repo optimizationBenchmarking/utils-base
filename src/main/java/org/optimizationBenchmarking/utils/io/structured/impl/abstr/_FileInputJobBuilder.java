@@ -12,11 +12,13 @@ import org.optimizationBenchmarking.utils.config.Configuration;
 import org.optimizationBenchmarking.utils.io.EArchiveType;
 import org.optimizationBenchmarking.utils.io.encoding.StreamEncoding;
 import org.optimizationBenchmarking.utils.io.structured.spec.IFileInputJobBuilder;
+import org.optimizationBenchmarking.utils.io.structured.spec.IIOJob;
 
 /**
  * The class for building file input jobs
  *
- * @param <DT>
+ * @param
+ *          <DT>
  *          the source data type
  * @param <JBT>
  *          the job builder type
@@ -65,28 +67,30 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   /** {@inheritDoc} */
   @Override
   final void _setResource(final String clazz, final String resource,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     this.addResource(clazz, resource, encoding, archiveType);
   }
 
   /** {@inheritDoc} */
   @Override
   final void _setPath(final String path,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     this.addPath(path, encoding, archiveType);
   }
 
   /** {@inheritDoc} */
   @Override
-  final void _setURI(final String uri,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+  final void _setURI(final String uri, final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     this.addURI(uri, encoding, archiveType);
   }
 
   /** {@inheritDoc} */
   @Override
-  final void _setURL(final String url,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+  final void _setURL(final String url, final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     this.addURL(url, encoding, archiveType);
   }
 
@@ -96,7 +100,7 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
    * @param destination
    *          the destination data
    */
-  private static final void __validateDestination(final Object destination) {
+  static final void _validateDestination(final Object destination) {
     if (destination == null) {
       throw new IllegalArgumentException(
           "Destination data cannot be null."); //$NON-NLS-1$
@@ -107,7 +111,7 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   @SuppressWarnings("unchecked")
   @Override
   public final JBT setDestination(final DT destination) {
-    _FileInputJobBuilder.__validateDestination(destination);
+    _FileInputJobBuilder._validateDestination(destination);
     this.m_dest = destination;
     return ((JBT) this);
   }
@@ -116,7 +120,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   @SuppressWarnings("unchecked")
   @Override
   public final JBT addPath(final Path path,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
 
     if (path == null) {
       throw new IllegalArgumentException("Source Path cannot be null."); //$NON-NLS-1$
@@ -135,7 +140,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   @SuppressWarnings("unchecked")
   @Override
   public final JBT addFile(final File file,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     if (file == null) {
       throw new IllegalArgumentException(
           "Destination File cannot be null."); //$NON-NLS-1$
@@ -154,13 +160,14 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   @Override
   @SuppressWarnings("unchecked")
   public final JBT addPath(final String path,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     if (path == null) {
       throw new IllegalArgumentException(
           "Destination Path String cannot be null."); //$NON-NLS-1$
     }
-    this.m_sources.add(new _Location(path, Path.class, encoding,
-        archiveType));
+    this.m_sources
+        .add(new _Location(path, Path.class, encoding, archiveType));
     return ((JBT) this);
   }
 
@@ -174,13 +181,14 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   @Override
   @SuppressWarnings("unchecked")
   public final JBT addFile(final String file,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     if (file == null) {
       throw new IllegalArgumentException(
           "Destination File String cannot be null."); //$NON-NLS-1$
     }
-    this.m_sources.add(new _Location(file, File.class, encoding,
-        archiveType));
+    this.m_sources
+        .add(new _Location(file, File.class, encoding, archiveType));
     return ((JBT) this);
   }
 
@@ -193,7 +201,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   /** {@inheritDoc} */
   @Override
   public final JBT addArchiveStream(final InputStream stream,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     return this.addStream(stream, encoding, archiveType);
   }
 
@@ -237,7 +246,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   /** {@inheritDoc} */
   @Override
   public final JBT addArchiveURI(final URI uri,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     return this.addURI(uri, encoding, archiveType);
   }
 
@@ -251,7 +261,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   /** {@inheritDoc} */
   @Override
   public final JBT addArchiveURI(final String uri,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     return this.addURI(uri, encoding, archiveType);
   }
 
@@ -265,7 +276,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   /** {@inheritDoc} */
   @Override
   public final JBT addArchiveURL(final URL url,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     return this.addURL(url, encoding, archiveType);
   }
 
@@ -279,7 +291,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   /** {@inheritDoc} */
   @Override
   public final JBT addArchiveURL(final String url,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     return this.addURL(url, encoding, archiveType);
   }
 
@@ -305,7 +318,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
    */
   @SuppressWarnings("unchecked")
   JBT addStream(final InputStream stream,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     if (stream == null) {
       throw new IllegalArgumentException(
           "Source InputStream cannot be null."); //$NON-NLS-1$
@@ -330,7 +344,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
    */
   @SuppressWarnings("unchecked")
   JBT addResource(final Class<?> clazz, final String name,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     if (clazz == null) {
       throw new IllegalArgumentException(
           "Source Class for Resource cannot be null."); //$NON-NLS-1$
@@ -358,7 +373,8 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
    */
   @SuppressWarnings("unchecked")
   JBT addResource(final String clazz, final String name,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     if (clazz == null) {
       throw new IllegalArgumentException(
           "Source Class name for Resource cannot be null."); //$NON-NLS-1$
@@ -465,22 +481,13 @@ class _FileInputJobBuilder<DT, JBT extends _FileInputJobBuilder<DT, JBT>>
   /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
   @Override
-  final _InputJob _doCreate() {
-    _Location[] ar;
+  public final IIOJob create() {
+    final _Location[] ar;
+
     ar = this.m_sources.toArray(new _Location[this.m_sources.size()]);
     this.m_sources = null;
-    return new _InputJob(this.getLogger(),
-        ((FileInputTool) (this.m_tool)), this.m_dest, this.m_basePath, ar);
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  protected final void validate() {
-    super.validate();
-    _FileInputJobBuilder.__validateDestination(this.m_dest);
-    if (this.m_sources.isEmpty()) {
-      throw new IllegalArgumentException(//
-          "At least one source must be specified."); //$NON-NLS-1$
-    }
+    return new _InputJob(this.getLogger(), ((FileInputTool) (this.m_tool)),
+        this.m_dest, this.m_basePath, ar);
   }
 }

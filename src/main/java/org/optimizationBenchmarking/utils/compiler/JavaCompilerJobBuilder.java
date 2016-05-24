@@ -73,7 +73,6 @@ public final class JavaCompilerJobBuilder
    */
   @Override
   public final JavaCompilerJob create() {
-    this.validate();
     synchronized (this.m_files) {
       return new JavaCompilerJob(this.getLogger(), this.m_files.values());
     }

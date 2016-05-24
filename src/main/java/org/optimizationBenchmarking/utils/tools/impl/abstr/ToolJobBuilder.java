@@ -42,21 +42,7 @@ public abstract class ToolJobBuilder<J extends IToolJob, R extends ToolJobBuilde
   }
 
   /**
-   * Check whether all fields have been set correctly. This method must be
-   * called by {@link #create()}
-   *
-   * @throws IllegalArgumentException
-   *           otherwise
-   */
-  protected void validate() {
-    /** */
-  }
-
-  /**
-   * Create the job. Throw an exception if necessary. An implementation of
-   * this method should first call {@link #validate()} before doing
-   * anything else. If {@link #validate()} did not throw an error, it
-   * should create the job.
+   * Create the job. Throw an exception if necessary.
    *
    * @return the job
    * @throws Exception

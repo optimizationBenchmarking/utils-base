@@ -31,6 +31,8 @@ final class _InputJob extends _IOJob {
   _InputJob(final Logger logger, final FileInputTool<?> tool,
       final Object data, final Path basePath, final _Location[] sources) {
     super(logger, tool, basePath, data);
+
+    _FileInputJobBuilder._validateDestination(data);
     if ((sources == null) || (sources.length <= 0)) {
       throw new IllegalArgumentException(
           "Source list must not be null or empty."); //$NON-NLS-1$
@@ -53,10 +55,11 @@ final class _InputJob extends _IOJob {
       logger = this.getLogger();
     }
 
-    if ((logger != null) && (logger.isLoggable(IOTool.DEFAULT_LOG_LEVEL))) {
-      logger.log(IOTool.DEFAULT_LOG_LEVEL,//
+    if ((logger != null)
+        && (logger.isLoggable(IOTool.DEFAULT_LOG_LEVEL))) {
+      logger.log(IOTool.DEFAULT_LOG_LEVEL, //
           ("Begin loading data from " + sources.length + //$NON-NLS-1$
-          " sources."));//$NON-NLS-1$
+              " sources."));//$NON-NLS-1$
     }
 
     tool = ((FileInputTool) (this.m_tool));
@@ -68,10 +71,11 @@ final class _InputJob extends _IOJob {
     this.m_currentSource = null;
     this.m_id = null;
 
-    if ((logger != null) && (logger.isLoggable(IOTool.DEFAULT_LOG_LEVEL))) {
-      logger.log(IOTool.DEFAULT_LOG_LEVEL,//
+    if ((logger != null)
+        && (logger.isLoggable(IOTool.DEFAULT_LOG_LEVEL))) {
+      logger.log(IOTool.DEFAULT_LOG_LEVEL, //
           ("Finished loading data from " + sources.length + //$NON-NLS-1$
-          " sources."));//$NON-NLS-1$
+              " sources."));//$NON-NLS-1$
     }
   }
 

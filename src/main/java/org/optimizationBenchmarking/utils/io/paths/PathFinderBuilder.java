@@ -262,23 +262,13 @@ public final class PathFinderBuilder
 
   /** {@inheritDoc} */
   @Override
-  protected final void validate() {
-    super.validate();
-    if (this.m_attributePredicates.size() <= 0) {
-      throw new IllegalArgumentException(
-          "Must specify at least one path predicate."); //$NON-NLS-1$
-    }
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public final PathFinder create() {
     final Path[] first;
+    ArrayList<Path> firstList;
 
-    this.validate();
-    if (this.m_visitFirst != null) {
-      first = this.m_visitFirst.toArray(//
-          new Path[this.m_visitFirst.size()]);
+    firstList = this.m_visitFirst;
+    if (firstList != null) {
+      first = firstList.toArray(new Path[firstList.size()]);
     } else {
       first = null;
     }

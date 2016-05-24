@@ -23,18 +23,13 @@ public interface IDataClusteringJobBuilder extends IClusteringJobBuilder {
    */
   public abstract IDataClusteringJobBuilder setData(final IMatrix matrix);
 
-  /**
-   * Set the number of clusters. If this number is specified, the algorithm
-   * will attempt to divide the {@link #setData(IMatrix) data} into
-   * {@code number} clusters. If this method is not called, the clusterer
-   * may either use a reasonable default (such as {@code 2}) or attempt to
-   * find the optimal number of clusters according to some metric.
-   *
-   * @param number
-   *          the number of clusters
-   * @return the cluster job builder
-   */
+  /** {@inheritDoc} */
   @Override
-  public abstract IDataClusteringJobBuilder setClusterNumber(
-      final int number);
+  public abstract IDataClusteringJobBuilder setMinClusters(
+      final int minClusters);
+
+  /** {@inheritDoc} */
+  @Override
+  public abstract IDataClusteringJobBuilder setMaxClusters(
+      final int maxClusters);
 }

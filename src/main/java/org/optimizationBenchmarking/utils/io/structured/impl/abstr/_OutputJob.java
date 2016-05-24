@@ -37,7 +37,9 @@ final class _OutputJob extends _IOJob {
       final IFileProducerListener listener) {
     super(logger, tool, basePath, data);
 
-    if (dest == null) {
+    _FileOutputJobBuilder._validateSource(data);
+
+    if ((dest == null) || (dest.m_location1 == null)) {
       throw new IllegalArgumentException("Destination must not be null."); //$NON-NLS-1$
     }
     this.m_dest = dest;

@@ -12,17 +12,52 @@ public interface IClusteringJobBuilder extends IToolJobBuilder {
   public abstract IClusteringJobBuilder setLogger(final Logger logger);
 
   /**
-   * Set the number of clusters. If this number is specified, the algorithm
-   * will attempt to divide the data into {@code number} clusters. If this
-   * method is not called, the clusterer may either use a reasonable
-   * default (such as {@code 2}) or attempt to find the optimal number of
-   * clusters according to some metric.
+   * <p>
+   * Set the minimal number of clusters. If this number is specified, the
+   * algorithm will attempt to divide the data into at least {@code number}
+   * clusters.
+   * </p>
+   * <p>
+   * If the {@linkplain #setMinClusters(int) minimum} and
+   * {@linkplain #setMaxClusters(int) maximum} number of clusters is
+   * specified to be the same, the clusterer will attempt to produce
+   * exactly this many clusters. If a range is specified, it will attempt
+   * to find the best clustering within the range or use a default value.
+   * This also holds if only one end or neither end of the range is
+   * defined.
+   * </p>
    *
-   * @param number
-   *          the number of clusters
+   * @param minClusters
+   *          the minimum number of clusters
    * @return the cluster job builder
+   * @see #setMaxClusters(int)
    */
-  public abstract IClusteringJobBuilder setClusterNumber(final int number);
+  public abstract IClusteringJobBuilder setMinClusters(
+      final int minClusters);
+
+  /**
+   * <p>
+   * Set the maximum number of clusters. If this number is specified, the
+   * algorithm will attempt to divide the data into at most {@code number}
+   * clusters.
+   * </p>
+   * <p>
+   * If the {@linkplain #setMinClusters(int) minimum} and
+   * {@linkplain #setMaxClusters(int) maximum} number of clusters is
+   * specified to be the same, the clusterer will attempt to produce
+   * exactly this many clusters. If a range is specified, it will attempt
+   * to find the best clustering within the range or use a default value.
+   * This also holds if only one end or neither end of the range is
+   * defined.
+   * </p>
+   *
+   * @param maxClusters
+   *          the maximum number of clusters
+   * @return the cluster job builder
+   * @see #setMinClusters(int)
+   */
+  public abstract IClusteringJobBuilder setMaxClusters(
+      final int maxClusters);
 
   /** {@inheritDoc} */
   @Override

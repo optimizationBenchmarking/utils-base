@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 /**
  * A builder for text processes.
  */
-public final class TextProcessBuilder extends
-    _BasicProcessBuilder<TextProcess, TextProcessBuilder> {
+public final class TextProcessBuilder
+    extends _BasicProcessBuilder<TextProcess, TextProcessBuilder> {
 
   /** the external process builder */
   private final ExternalProcessBuilder m_builder;
@@ -128,13 +128,6 @@ public final class TextProcessBuilder extends
       final boolean merge) {
     this.m_builder.setMergeStdOutAndStdErr(merge);
     return this;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  protected final void validate() {
-    super.validate();
-    this.m_builder.validate();
   }
 
   /** {@inheritDoc} */

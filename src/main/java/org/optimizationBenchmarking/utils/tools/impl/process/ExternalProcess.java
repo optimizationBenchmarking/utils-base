@@ -81,6 +81,13 @@ public final class ExternalProcess extends _BasicProcess {
       final String name,
       final IProcessCloser<? super ExternalProcess> closer) {
     super(log, closer);
+
+    if (process == null) {
+      throw new IllegalArgumentException(((//
+      "Process cannot be null, but was for name '" //$NON-NLS-1$
+          + name) + '\'') + '.');
+    }
+
     this.m_process = process;
     this.m_name = name;
   }

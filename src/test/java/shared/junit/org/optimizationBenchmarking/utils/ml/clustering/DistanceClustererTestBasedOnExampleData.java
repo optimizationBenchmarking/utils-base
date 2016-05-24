@@ -42,7 +42,8 @@ public abstract class DistanceClustererTestBasedOnExampleData
     builder = clusterer.use().setDistanceMatrix(//
         this.dataMatrixToDistanceMatrix(dataset.data));
     if (useNumber) {
-      builder.setClusterNumber(dataset.classes);
+      builder.setMinClusters(dataset.classes);
+      builder.setMaxClusters(dataset.classes);
     }
     return builder.create().call();
   }

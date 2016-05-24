@@ -96,16 +96,33 @@ public abstract class DocumentProducerJobBuilder<J extends IToolJob, R extends D
   @SuppressWarnings("unchecked")
   @Override
   public final R setBasePath(final Path basePath) {
-    final Path p;
+    this.m_basePath = DocumentProducerJobBuilder.checkBasePath(basePath);
+    return ((R) this);
+  }
 
-    p = PathUtils.normalize(basePath);
-    if (p == null) {
+  /**
+   * Check a base path for a document producer job.
+   *
+   * @param basePath
+   *          the base path to set
+   * @return the normalized path
+   */
+  public static final Path checkBasePath(final Path basePath) {
+    final Path result;
+
+    if (basePath == null) {
+      throw new IllegalArgumentException(//
+          "The base path for a file producer cannot be set to null, but '" //$NON-NLS-1$
+              + basePath + "' is.");//$NON-NLS-1$
+    }
+
+    result = PathUtils.normalize(basePath);
+    if (result == null) {
       throw new IllegalArgumentException(//
           "The base path for a file producer cannot be set to something equivalent to null, but '" //$NON-NLS-1$
               + basePath + "' is.");//$NON-NLS-1$
     }
-    this.m_basePath = p;
-    return ((R) this);
+    return result;
   }
 
   /**
@@ -121,16 +138,35 @@ public abstract class DocumentProducerJobBuilder<J extends IToolJob, R extends D
   @SuppressWarnings("unchecked")
   @Override
   public final R setMainDocumentNameSuggestion(final String name) {
-    final String s;
+    this.m_mainDocumentNameSuggestion = DocumentProducerJobBuilder
+        .checkMainDocumentNameSuggestion(name);
+    return ((R) this);
+  }
 
-    s = TextUtils.normalize(name);
-    if (s == null) {
+  /**
+   * Check the main document name suggestion
+   *
+   * @param name
+   *          the name
+   * @return the normalized name
+   */
+  public static final String checkMainDocumentNameSuggestion(
+      final String name) {
+    final String result;
+
+    if (name == null) {
+      throw new IllegalArgumentException(//
+          "The main document name suggestion cannot be set to null.");//$NON-NLS-1$
+    }
+
+    result = TextUtils.normalize(name);
+    if (result == null) {
       throw new IllegalArgumentException(//
           "The main document name suggestion cannot be empty, but '" + //$NON-NLS-1$
               name + "' is equivalent to an empty name.");//$NON-NLS-1$
     }
-    this.m_mainDocumentNameSuggestion = s;
-    return ((R) this);
+
+    return result;
   }
 
   /**
@@ -140,18 +176,5 @@ public abstract class DocumentProducerJobBuilder<J extends IToolJob, R extends D
    */
   public final String getMainDocumentNameSuggestion() {
     return this.m_mainDocumentNameSuggestion;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  protected void validate() {
-    super.validate();
-    if (this.m_basePath == null) {
-      throw new IllegalArgumentException("The base path must be set.");//$NON-NLS-1$
-    }
-    if (this.m_mainDocumentNameSuggestion == null) {
-      throw new IllegalArgumentException(
-          "The main document name suggestion must be set.");//$NON-NLS-1$
-    }
   }
 }

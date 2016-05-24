@@ -30,7 +30,8 @@ public abstract class DataClustererTestBasedOnExampleData
 
     builder = clusterer.use().setData(dataset.data);
     if (useNumber) {
-      builder.setClusterNumber(dataset.classes);
+      builder.setMinClusters(dataset.classes);
+      builder.setMaxClusters(dataset.classes);
     }
     return builder.create().call();
   }

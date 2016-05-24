@@ -38,6 +38,10 @@ public final class PathFinder extends ToolJob implements Callable<Path> {
       final IPredicate<BasicFileAttributes> attsPredicate,
       final Path[] visitFirst) {
     super(logger);
+    if ((pathPredicate == null) && (attsPredicate == null)) {
+      throw new IllegalArgumentException(//
+          "You must specify at least one path or attribute predicate."); //$NON-NLS-1$
+    }
     this.m_pathPredicate = pathPredicate;
     this.m_attsPredicate = attsPredicate;
     this.m_visitFirst = visitFirst;

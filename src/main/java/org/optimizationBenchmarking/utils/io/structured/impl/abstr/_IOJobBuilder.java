@@ -212,18 +212,4 @@ abstract class _IOJobBuilder<JBT extends _IOJobBuilder<JBT>> extends
           tool.toString() + "' cannot be used."); //$NON-NLS-1$
     }
   }
-
-  /**
-   * create the job
-   *
-   * @return the job
-   */
-  abstract IIOJob _doCreate();
-
-  /** {@inheritDoc} */
-  @Override
-  public final IIOJob create() {
-    this.validate();
-    return this._doCreate();
-  }
 }

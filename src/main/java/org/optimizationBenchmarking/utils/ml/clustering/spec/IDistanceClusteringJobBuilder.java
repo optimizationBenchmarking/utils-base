@@ -30,6 +30,11 @@ public interface IDistanceClusteringJobBuilder
 
   /** {@inheritDoc} */
   @Override
-  public abstract IDistanceClusteringJobBuilder setClusterNumber(
-      final int number);
+  public abstract IDistanceClusteringJobBuilder setMinClusters(
+      final int minClusters);
+
+  /** {@inheritDoc} */
+  @Override
+  public abstract IDistanceClusteringJobBuilder setMaxClusters(
+      final int maxClusters);
 }

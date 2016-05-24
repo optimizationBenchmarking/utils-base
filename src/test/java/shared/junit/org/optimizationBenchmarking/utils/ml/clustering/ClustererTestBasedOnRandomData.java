@@ -71,7 +71,8 @@ public abstract class ClustererTestBasedOnRandomData<CT extends IClusterer>
       builder = clusterer.use();
       this.setRandomData(builder, elementCount, random);
       if (clusterCount > 0) {
-        builder.setClusterNumber(clusterCount);
+        builder.setMinClusters(clusterCount);
+        builder.setMaxClusters(clusterCount);
       }
       job = builder.create();
       builder = null;

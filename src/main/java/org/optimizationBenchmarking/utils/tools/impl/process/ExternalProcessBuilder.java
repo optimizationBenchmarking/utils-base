@@ -271,8 +271,20 @@ public final class ExternalProcessBuilder
 
   /** {@inheritDoc} */
   @Override
-  protected final void validate() {
-    super.validate();
+  @SuppressWarnings("fallthrough")
+  public final ExternalProcess create() throws IOException {
+    final Logger log;
+    final ExternalProcess external;
+    final Process process;
+    final boolean merge;
+    final String name, shortName;
+    File f;
+    MemoryTextOutput buffer;
+    int realStreams;
+    char append;
+
+    // checking validity
+
     if (this.m_command.size() <= 0) {
       throw new IllegalArgumentException(//
           "Must specify program to execute."); //$NON-NLS-1$
@@ -290,23 +302,8 @@ public final class ExternalProcessBuilder
           "Must select treatment for stderr."); //$NON-NLS-1$
     }
     this.__validateMerge(this.m_pb.redirectErrorStream());
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  @SuppressWarnings("fallthrough")
-  public final ExternalProcess create() throws IOException {
-    final Logger log;
-    final ExternalProcess external;
-    final Process process;
-    final boolean merge;
-    final String name, shortName;
-    File f;
-    MemoryTextOutput buffer;
-    int realStreams;
-    char append;
-
-    this.validate();
+    // ok, everything seems to be OK
 
     log = this.getLogger();
 

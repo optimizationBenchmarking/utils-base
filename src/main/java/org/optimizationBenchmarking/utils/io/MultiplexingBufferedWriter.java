@@ -18,8 +18,11 @@ public final class MultiplexingBufferedWriter extends BufferedWriter {
   /** the debug output */
   private final ITextOutput m_textOut;
 
-  /** should we close the text output too? */
-  private final boolean m_closeTextOutput;
+  /**
+   * another auto-closeable to close when the writer is closed,
+   * {@code null} if no such action is required
+   */
+  private final AutoCloseable m_closeOnClose;
 
   /**
    * Create the multiplexing buffered writer
@@ -28,16 +31,30 @@ public final class MultiplexingBufferedWriter extends BufferedWriter {
    *          the writer
    * @param textOutput
    *          the text output
-   * @param closeTextOutput
-   *          {@code true} if the {@code textOutput} should also be closed
-   *          when this writer is closed
+   * @param closeOnClose
+   *          another auto-closeable to close when the writer is closed,
+   *          {@code null} if no such action is required: this can be used
+   *          to close another writer backing {@code textOutput}
    */
   public MultiplexingBufferedWriter(final BufferedWriter writer,
-      final ITextOutput textOutput, final boolean closeTextOutput) {
+      final ITextOutput textOutput, final AutoCloseable closeOnClose) {
     super(writer);
     this.m_writer = writer;
     this.m_textOut = textOutput;
-    this.m_closeTextOutput = closeTextOutput;
+    this.m_closeOnClose = closeOnClose;
+  }
+
+  /**
+   * Create the multiplexing buffered writer
+   *
+   * @param writer
+   *          the writer
+   * @param textOutput
+   *          the text output
+   */
+  public MultiplexingBufferedWriter(final BufferedWriter writer,
+      final ITextOutput textOutput) {
+    this(writer, textOutput, null);
   }
 
   /** {@inheritDoc} */
@@ -158,17 +175,15 @@ public final class MultiplexingBufferedWriter extends BufferedWriter {
         this.m_writer.close();
       }
     } finally {
-      if (this.m_closeTextOutput) {
-        if (this.m_textOut instanceof AutoCloseable) {
-          try {
-            ((AutoCloseable) (this.m_textOut)).close();
-          } catch (final IOException ioe) {
-            throw ioe;
-          } catch (final Throwable error) {
-            throw new IOException(//
-                "Error while closing internal text output.", //$NON-NLS-1$
-                error);
-          }
+      if (this.m_closeOnClose != null) {
+        try {
+          this.m_closeOnClose.close();
+        } catch (final IOException ioe) {
+          throw ioe;
+        } catch (final Throwable error) {
+          throw new IOException(//
+              "Error while closing internal text output.", //$NON-NLS-1$
+              error);
         }
       }
     }

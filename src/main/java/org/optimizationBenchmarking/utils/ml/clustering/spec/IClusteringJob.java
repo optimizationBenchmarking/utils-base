@@ -1,12 +1,13 @@
 package org.optimizationBenchmarking.utils.ml.clustering.spec;
 
-import java.util.concurrent.Callable;
+import org.optimizationBenchmarking.utils.tools.spec.ICallableToolJob;
 
-import org.optimizationBenchmarking.utils.tools.spec.IToolJob;
-
-/** A job of the clusterer. */
+/**
+ * A job of the clusterer is a {@link java.util.concurrent.Callable} which
+ * returns a clustering result record.
+ */
 public interface IClusteringJob
-    extends IToolJob, Callable<IClusteringResult> {
+    extends ICallableToolJob<IClusteringResult> {
   /**
    * Perform the clustering of the data.
    *

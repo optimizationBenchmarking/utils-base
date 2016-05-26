@@ -63,7 +63,7 @@ public final class MultiplexingBufferedWriter extends BufferedWriter {
     try {
       this.m_writer.write(c);
     } finally {
-      this.m_textOut.append(c);
+      this.m_textOut.append((char)c);
     }
   }
 

@@ -1,5 +1,7 @@
 package org.optimizationBenchmarking.utils.ml.fitting.spec;
 
+import java.util.Random;
+
 /**
  * This interface can compute the fitting quality of a given set of model
  * parameters on a data set.
@@ -35,44 +37,21 @@ public interface IFittingQualityMeasure {
       final double[] parameters, final FittingEvaluation dest);
 
   /**
-   * Obtain the number of points underlying the fitting quality measure.
+   * Try to create a compatible quality measure based on a subset of the
+   * points backing this measure. Usually, {@code npoints} will be small,
+   * say 4 or 5. The returned measure should be a compact object which can
+   * be evaluated rather quickly, while the original quality measure may be
+   * backed by thousands of points and thus be rather slow to compute. By
+   * creating a subselected quality measure, we may be able to perform very
+   * quick optimization, at the cose of precision. The original measure
+   * then can be used to fine-tune.
    *
-   * @return the number of points underlying the fitting quality measure
+   * @param npoints
+   *          the suggested number of points to use
+   * @param random
+   *          a random number generator used for making the point selection
+   * @return the measure
    */
-  public abstract int getPointCount();
-
-  /**
-   * Compute the quality of the given model parameters by only considering
-   * the points at the specified indices.
-   *
-   * @param model
-   *          the model to be assessed
-   * @param parameters
-   *          the model parameters
-   * @param points
-   *          the points at which to evaluate the parameters
-   * @return the quality
-   */
-  public abstract double evaluateAt(final ParametricUnaryFunction model,
-      final double[] parameters, final int... points);
-
-  /**
-   * Compute the quality, Jacobian, residuals, root-mean-square error and
-   * root-square error of a given set of model parameters by only
-   * considering the points at the specified indices. The member variables
-   * of {@code dest} are re-used if they are not {@code null} and of the
-   * right dimension. Otherwise they may be overwritten.
-   *
-   * @param model
-   *          the model
-   * @param parameters
-   *          the model parameters
-   * @param dest
-   *          the destination record.
-   * @param points
-   *          the points at which to evaluate the parameters
-   */
-  public abstract void evaluateAt(final ParametricUnaryFunction model,
-      final double[] parameters, final FittingEvaluation dest,
-      final int... points);
+  public abstract IFittingQualityMeasure subselect(final int npoints,
+      final Random random);
 }

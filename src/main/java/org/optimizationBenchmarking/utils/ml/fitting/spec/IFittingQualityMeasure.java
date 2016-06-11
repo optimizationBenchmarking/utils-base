@@ -54,4 +54,15 @@ public interface IFittingQualityMeasure {
    */
   public abstract IFittingQualityMeasure subselect(final int npoints,
       final Random random);
+
+  /**
+   * The number of samples used by this quality measure, which is the
+   * number of residuals that will be provided and also the number of rows
+   * of the Jacobian if
+   * {@link #evaluate(ParametricUnaryFunction, double[], FittingEvaluation)}
+   * is called.
+   *
+   * @return the number of samples
+   */
+  public abstract int getSampleCount();
 }

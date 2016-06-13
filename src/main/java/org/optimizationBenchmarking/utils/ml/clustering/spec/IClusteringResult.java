@@ -22,4 +22,11 @@ public interface IClusteringResult {
    * @return the reference to the clustering results.
    */
   public abstract int[] getClustersRef();
+
+  /**
+   * The number of clusters in the result.
+   *
+   * @return the clustering quality
+   */
+  public abstract int getClusterCount();
 }

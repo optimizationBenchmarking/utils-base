@@ -56,8 +56,10 @@ public abstract class BasicClustererTest<CT extends IClusterer>
     }
     Assert.assertTrue(hash.size() > 0);
     Assert.assertFalse(hash.size() > clusters.length);
+    Assert.assertEquals(hash.size(), result.getClusterCount());
     if (clusterCount > 0) {
       Assert.assertEquals(clusterCount, hash.size());
+      Assert.assertEquals(clusterCount, result.getClusterCount());
     }
 
     Assert.assertTrue(result.getQuality() >= 0d);

@@ -2,6 +2,7 @@ package org.optimizationBenchmarking.utils.text.numbers;
 
 import java.text.DecimalFormat;
 
+import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
@@ -28,7 +29,7 @@ public class TruncatedNumberAppender extends NumberAppender {
   public TruncatedNumberAppender() {
     super();
 
-    this.m_format = new DecimalFormat("#.###E#"); //$NON-NLS-1$
+    this.m_format = new DecimalFormat("#.###E0"); //$NON-NLS-1$
   }
 
   /** {@inheritDoc} */
@@ -94,5 +95,19 @@ public class TruncatedNumberAppender extends NumberAppender {
       final ITextOutput textOut) {
     textOut.append(this.toString(v, textCase));
     return textCase.nextCase();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final boolean equals(final Object o) {
+    return ((o == this) || ((o instanceof TruncatedNumberAppender) && //
+        Compare.equals(this.m_format,
+            ((TruncatedNumberAppender) o).m_format)));
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final int hashCode() {
+    return (45674441 ^ this.m_format.hashCode());
   }
 }

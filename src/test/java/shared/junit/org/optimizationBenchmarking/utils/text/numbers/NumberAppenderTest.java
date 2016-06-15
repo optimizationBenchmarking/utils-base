@@ -30,7 +30,22 @@ public class NumberAppenderTest extends InstanceTest<NumberAppender> {
    */
   protected NumberAppenderTest(final NumberAppender instance,
       final boolean canParse) {
-    super(null, instance, true, false);
+    this(instance, canParse, true);
+  }
+
+  /**
+   * create the number appender test
+   *
+   * @param instance
+   *          the instance
+   * @param canParse
+   *          can we parse?
+   * @param isSingleton
+   *          is this a singleton
+   */
+  protected NumberAppenderTest(final NumberAppender instance,
+      final boolean canParse, final boolean isSingleton) {
+    super(null, instance, isSingleton, false);
     this.m_canParse = canParse;
   }
 

@@ -1,82 +1,195 @@
 package org.optimizationBenchmarking.utils.parallel;
 
-import java.util.Collection;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.optimizationBenchmarking.utils.collections.iterators.ArrayIterator;
 import org.optimizationBenchmarking.utils.error.ErrorUtils;
 
 /**
- * This class is a bridge from "normal" Java to code running in an
- * {@link java.util.concurrent.ExecutorService}. It allows you to execute
- * jobs (i.e., either {@link java.lang.Runnable}s or
- * {@link java.util.concurrent.Callable}s) in the current thread or
- * executor service according to some specific policy. The executor service
- * may be automatically detected and used if the current thread is inside
- * an executor service. In other words, this allows for transparent use of
- * parallelism. Currently, only {@link java.util.concurrent.ForkJoinPool}s
- * can be detected.
+ * <p>
+ * Here we provide a simple and efficient parallel task execution
+ * environment. You can submit arbitrarily many tasks which can spawn
+ * sub-tasks. The functionality is similar to
+ * {@link java.util.concurrent.ForkJoinPool}, but without several
+ * restrictions and problems with that class. It is still a bit incomplete,
+ * but can be improved in the future.
+ * </p>
+ * <p>
+ * Originally, this class was a wrapper to Java's
+ * {@link java.util.concurrent.ForkJoinPool}. But now it became a very
+ * light-weight implementation of parallel job execution. The jobs executed
+ * via {@link #parallel(Callable)} or {@link #parallel(Runnable)} can spawn
+ * new jobs if they wish. In other words, we have a behavior similar to
+ * ForkJoinPool, but in much clearer, much simpler, and, hopefully, much
+ * easier-to-understand implementation.
+ * </p>
+ * <p>
+ * The move to an own implementation was necessary, since the
+ * {@link java.util.concurrent.ForkJoinPool} is not designed for tasks
+ * which spawn other tasks and may wait for them in a way that does not
+ * form a nice tree. If you start many tasks and then wait for them in a
+ * different order, while these tasks may start sub-tasks and so on
+ * recursively, you may end up receiving
+ * {@link java.util.concurrent.RejectedExecutionException}s. My current
+ * method does not produce any such errors.
+ * </p>
  */
 public final class Execute {
+
+  /** the task has just been created */
+  static final int STATE_INITIALIZED = 0;
+  /** the task has been selected for out-of-order execution */
+  static final int STATE_SELECTED = (Execute.STATE_INITIALIZED + 1);
+  /** the task is running */
+  static final int STATE_RUNNING = (Execute.STATE_SELECTED + 1);
+  /** the task is done */
+  static final int STATE_DONE = (Execute.STATE_RUNNING + 1);
+  /** the task is canceled */
+  static final int STATE_CANCELED = (Execute.STATE_DONE + 1);
+
+  /** the synchronizer object */
+  private static final Object SYNCH = new Object();
+
+  /** the queue of tasks */
+  private static volatile __Task s_taskQueue = null;
+
+  static {
+    int numProc, index;
+
+    numProc = Runtime.getRuntime().availableProcessors();
+    for (index = 1; index <= numProc; index++) {
+      new __Worker(index).start();
+    }
+  }
+
+  /**
+   * enqueue a task into the queue
+   *
+   * @param task
+   *          the task
+   */
+  static final void _enqueue(final __Task task) {
+    __Task queue;
+    synchronized (Execute.SYNCH) {
+      if (!(task.m_inQueue)) {
+        queue = Execute.s_taskQueue;
+        Execute.s_taskQueue = task;
+        task.m_nextInQueue = queue;
+        if (queue != null) {
+          queue.m_prevInQueue = task;
+        }
+        task.m_inQueue = true;
+        Execute.SYNCH.notify();
+      }
+    }
+  }
+
+  /**
+   * delete a task from the queue
+   *
+   * @param task
+   *          the task
+   */
+  static final void _delete(final __Task task) {
+    __Task oldPrev, oldNext;
+
+    synchronized (Execute.SYNCH) {
+      if (task.m_inQueue) {
+        task.m_inQueue = false;
+        oldPrev = task.m_prevInQueue;
+        task.m_prevInQueue = null;
+        oldNext = task.m_nextInQueue;
+        task.m_nextInQueue = null;
+
+        if (oldPrev != null) {
+          oldPrev.m_nextInQueue = oldNext;
+        } else {
+          Execute.s_taskQueue = oldNext;
+        }
+
+        if (oldNext != null) {
+          oldNext.m_prevInQueue = oldPrev;
+        }
+      }
+    }
+  }
+
+  /**
+   * Move the given task to the front of the queue (unless it has already
+   * been extracted from the queue).
+   *
+   * @param task
+   *          the task
+   */
+  static final void _moveToFront(final __Task task) {
+    __Task oldPrev, oldNext, oldQueue;
+
+    synchronized (Execute.SYNCH) {
+      if (task.m_inQueue) {
+        oldPrev = task.m_prevInQueue;
+        if (oldPrev == null) {
+          return; // we are already at the start of the queue
+        }
+        oldNext = task.m_nextInQueue;
+        oldPrev.m_nextInQueue = oldNext;
+        if (oldNext != null) {
+          oldNext.m_prevInQueue = oldPrev;
+        }
+        oldQueue = Execute.s_taskQueue;
+        task.m_nextInQueue = oldQueue;
+        oldQueue.m_prevInQueue = task;
+        Execute.s_taskQueue = task;
+        // just in case
+        Execute.SYNCH.notify();
+      }
+    }
+  }
+
+  /**
+   * obtain the next task from the queue
+   *
+   * @param wait
+   *          should we wait for a task or return {@code null}?
+   * @return the next task from the queue, or {@code null} if the queue is
+   *         empty and {@code wait==false}
+   */
+  static final __Task _next(final boolean wait) {
+    __Task candidate, next;
+
+    for (;;) {
+      synchronized (Execute.SYNCH) {
+        candidate = Execute.s_taskQueue;
+        if (candidate != null) {
+          candidate.m_inQueue = false;
+          next = candidate.m_nextInQueue;
+          candidate.m_nextInQueue = null;
+          if (next != null) {
+            next.m_prevInQueue = null;
+          }
+          Execute.s_taskQueue = next;
+          return candidate;
+        }
+        if (wait) {
+          try {
+            Execute.SYNCH.wait();
+          } catch (@SuppressWarnings("unused") final InterruptedException iexp) {
+            /** ignore **/
+          }
+          continue;
+        }
+      }
+      return null;
+    }
+  }
 
   /** the forbidden constructor */
   private Execute() {
     ErrorUtils.doNotCall();
-  }
-
-  /**
-   * Submit a {@link java.lang.Runnable} to the common
-   * {@link java.util.concurrent.ForkJoinPool}.
-   *
-   * @param task
-   *          the task
-   * @param result
-   *          the result
-   * @return the {@link java.util.concurrent.Future} denoting the task's
-   *         completion
-   * @param <T>
-   *          the return type
-   */
-  public static final <T> Future<T> submitToCommonPool(final Runnable task,
-      final T result) {
-    return __CommonForkJoinPool.COMMON_POOL.submit(task, result);
-  }
-
-  /**
-   * Submit a {@link java.util.concurrent.Callable} to the common
-   * {@link java.util.concurrent.ForkJoinPool}.
-   *
-   * @param task
-   *          the task
-   * @return the {@link java.util.concurrent.Future} denoting the task's
-   *         completion
-   * @param <T>
-   *          the return type
-   */
-  public static final <T> Future<T> submitToCommonPool(
-      final Callable<T> task) {
-    return __CommonForkJoinPool.COMMON_POOL.submit(task);
-  }
-
-  /**
-   * Submit a {@link java.util.concurrent.ForkJoinTask} to the common
-   * {@link java.util.concurrent.ForkJoinPool}.
-   *
-   * @param task
-   *          the task
-   * @return the {@link java.util.concurrent.Future} denoting the task's
-   *         completion
-   * @param <T>
-   *          the return type
-   */
-  public static final <T> Future<T> submitToCommonPool(
-      final ForkJoinTask<T> task) {
-    return __CommonForkJoinPool.COMMON_POOL.submit(task);
   }
 
   /**
@@ -202,50 +315,6 @@ public final class Execute {
   }
 
   /**
-   * Execute a {@link java.lang.Runnable} immediately and wait for it to
-   * terminate.
-   *
-   * @param job
-   *          the job to run
-   * @param result
-   *          the result to be returned by the
-   *          {@link java.util.concurrent.Future} representing the job
-   * @return {@link java.util.concurrent.Future} representing the job in
-   *         execution
-   * @param <T>
-   *          the data type of the result
-   */
-  private static final <T> Future<T> __executeImmediately(final T result,
-      final Runnable job) {
-    try {
-      job.run();
-      return Execute.__createImmediateFuture(result);
-    } catch (final Throwable error) {
-      return new __ExceptionFuture<>(error);
-    }
-  }
-
-  /**
-   * Execute a {@link java.util.concurrent.Callable} immediately and wait
-   * for it to terminate.
-   *
-   * @param job
-   *          the job to run
-   * @return {@link java.util.concurrent.Future} representing the job in
-   *         execution
-   * @param <T>
-   *          the data type of the result
-   */
-  private static final <T> Future<T> __executeImmediately(
-      final Callable<T> job) {
-    try {
-      return Execute.__createImmediateFuture(job.call());
-    } catch (final Throwable error) {
-      return new __ExceptionFuture<>(error);
-    }
-  }
-
-  /**
    * Try to execute a {@link java.lang.Runnable} in parallel without
    * waiting for its termination. This method does not guarantee that the
    * task will actually be executed in parallel. If parallel execution is
@@ -255,20 +324,15 @@ public final class Execute {
    *
    * @param job
    *          the job to run
-   * @param result
-   *          the result to be returned by the
-   *          {@link java.util.concurrent.Future} representing the job
    * @return {@link java.util.concurrent.Future} representing the job in
    *         execution
-   * @param <T>
-   *          the data type of the result
    */
-  public static final <T> Future<T> parallel(final T result,
-      final Runnable job) {
-    if (ForkJoinTask.inForkJoinPool()) {
-      return ForkJoinTask.adapt(job, result).fork();
-    }
-    return Execute.__executeImmediately(result, job);
+  @SuppressWarnings("unchecked")
+  public static final Future<Void> parallel(final Runnable job) {
+    final __Task task;
+    task = new __Task(job);
+    Execute._enqueue(task);
+    return task;
   }
 
   /**
@@ -286,684 +350,320 @@ public final class Execute {
    * @param <T>
    *          the data type of the result
    */
+  @SuppressWarnings("unchecked")
   public static final <T> Future<T> parallel(final Callable<T> job) {
-    if (ForkJoinTask.inForkJoinPool()) {
-      return ForkJoinTask.adapt(job).fork();
-    }
-    return Execute.__executeImmediately(job);
+    final __Task task;
+    task = new __Task(job);
+    Execute._enqueue(task);
+    return task;
   }
 
   /**
-   * Execute a set of {@link java.lang.Runnable}s in parallel. No guarantee
-   * about the execution order is given. This method does not guarantee
-   * that the task will actually be executed in parallel. If parallel
-   * execution is not possible, because, e.g., no
-   * {@link java.util.concurrent.ForkJoinPool} could be detected, the task
-   * is directly executed.
-   *
-   * @param jobs
-   *          the jobs to run
-   * @param result
-   *          the result to be returned by the
-   *          {@link java.util.concurrent.Future}s representing the jobs
-   * @return {@link java.util.concurrent.Future} representing the jobs in
-   *         execution
-   * @param <T>
-   *          the data type of the result
+   * the internal task class wraps a runnable or a callable and provides
+   * the Future interface
    */
-  @SuppressWarnings("unchecked")
-  public static final <T> Future<T>[] parallel(final T result,
-      final Runnable... jobs) {
-    final ForkJoinTask<T>[] tasks;
-    int i;
+  @SuppressWarnings("rawtypes")
+  private static final class __Task implements Future {
 
-    i = jobs.length;
-    if (i <= 0) {// no tasks, we can quit directly
-      return new Future[0];
-    }
+    /** the thread type is unknown */
+    private static final int THREAD_TYPE_UNKNOWN = 0;
+    /** the thread is a worker */
+    private static final int THREAD_TYPE_WORKER = (__Task.THREAD_TYPE_UNKNOWN
+        + 1);
+    /** the thread is not a worker */
+    private static final int THREAD_TYPE_NO_WORKER = (__Task.THREAD_TYPE_WORKER
+        + 1);
 
-    if (ForkJoinTask.inForkJoinPool()) {
-      tasks = new ForkJoinTask[i];
-      for (; (--i) >= 0;) {
-        tasks[i] = ForkJoinTask.adapt(jobs[i], result).fork();
-      }
-      return tasks;
-    }
+    /** the next task in the queue */
+    __Task m_nextInQueue;
+    /** the previous task in the queue */
+    __Task m_prevInQueue;
+    /** is the task in the queue? */
+    volatile boolean m_inQueue;
 
-    // not in a fork-join pool: execute as is
-    return Execute.__executeImmediately(result, jobs);
-  }
-
-  /**
-   * Execute a {@link java.util.concurrent.Callable}s in parallel. No
-   * guarantee about the execution order is given. This method does not
-   * guarantee that the task will actually be executed in parallel. If
-   * parallel execution is not possible, because, e.g., no
-   * {@link java.util.concurrent.ForkJoinPool} could be detected, the task
-   * is directly executed.
-   *
-   * @param jobs
-   *          the jobs to run
-   * @return {@link java.util.concurrent.Future} representing the job in
-   *         execution
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  public static final <T> Future<T>[] parallel(final Callable<T>... jobs) {
-    final ForkJoinTask<T>[] tasks;
-    int i;
-
-    i = jobs.length;
-    if (i <= 0) {// no tasks, we can quit directly
-      return new Future[0];
-    }
-
-    if (ForkJoinTask.inForkJoinPool()) {
-      tasks = new ForkJoinTask[i];
-      for (; (--i) >= 0;) {
-        tasks[i] = ForkJoinTask.adapt(jobs[i]).fork();
-      }
-      return tasks;
-    }
-
-    // not in a fork-join pool: execute as is
-    return Execute.__executeImmediately(jobs);
-  }
-
-  /**
-   * Execute a set of {@link java.lang.Runnable}s in parallel and append
-   * the corresponding {@link java.util.concurrent.Future}s to a
-   * {@link java.util.Collection collection}. No guarantee about the
-   * execution order is given. This method does not guarantee that the task
-   * will actually be executed in parallel. If parallel execution is not
-   * possible, because, e.g., no {@link java.util.concurrent.ForkJoinPool}
-   * could be detected, the task is directly executed.
-   *
-   * @param dest
-   *          the collection to receive the
-   *          {@link java.util.concurrent.Future}s
-   * @param jobs
-   *          the jobs to run
-   * @param result
-   *          the result to be returned by the
-   *          {@link java.util.concurrent.Future}s representing the jobs
-   * @param <T>
-   *          the data type of the result
-   */
-  public static final <T> void parallel(
-      final Collection<Future<? super T>> dest, final T result,
-      final Runnable... jobs) {
-    int i;
-
-    i = jobs.length;
-    if (i > 0) {
-
-      if (ForkJoinTask.inForkJoinPool()) {
-        for (; (--i) >= 0;) {
-          dest.add(ForkJoinTask.adapt(jobs[i], result).fork());
-        }
-      }
-
-      // not in a fork-join pool: execute as is
-      Execute.__executeImmediately(dest, result, jobs);
-    }
-  }
-
-  /**
-   * Execute a {@link java.util.concurrent.Callable}s in parallel and
-   * append the corresponding {@link java.util.concurrent.Future}s to a
-   * {@link java.util.Collection collection}. No guarantee about the
-   * execution order is given. This method does not guarantee that the task
-   * will actually be executed in parallel. If parallel execution is not
-   * possible, because, e.g., no {@link java.util.concurrent.ForkJoinPool}
-   * could be detected, the task is directly executed.
-   *
-   * @param dest
-   *          the collection to receive the
-   *          {@link java.util.concurrent.Future}s
-   * @param jobs
-   *          the jobs to run
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  public static final <T> void parallel(
-      final Collection<Future<? super T>> dest,
-      final Callable<T>... jobs) {
-    int i;
-
-    i = jobs.length;
-    if (i > 0) {
-
-      if (ForkJoinTask.inForkJoinPool()) {
-        for (; (--i) >= 0;) {
-          dest.add(ForkJoinTask.adapt(jobs[i]).fork());
-        }
-      }
-
-      // not in a fork-join pool: execute as is
-      Execute.__executeImmediately(dest, jobs);
-    }
-  }
-
-  /**
-   * Execute a set of {@link java.lang.Runnable}s.
-   *
-   * @param jobs
-   *          the jobs to run
-   * @param result
-   *          the result to be returned by the
-   *          {@link java.util.concurrent.Future}s representing the jobs
-   * @return {@link java.util.concurrent.Future} representing the jobs in
-   *         execution
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  private static final <T> Future<T>[] __executeImmediately(final T result,
-      final Runnable... jobs) {
-    final Future<T>[] results;
-    final int length;
-    Future<T> success;
-    int i;
-
-    length = jobs.length;
-    results = new Future[length];
-
-    success = null;
-    for (i = 0; i < length; ++i) {
-      try {
-        jobs[i].run();
-        if (success == null) {
-          success = Execute.__createImmediateFuture(result);
-        }
-        results[i] = success;
-      } catch (final Throwable error) {
-        results[i] = new __ExceptionFuture<>(error);
-      }
-    }
-    return results;
-  }
-
-  /**
-   * Execute a {@link java.util.concurrent.Callable}s.
-   *
-   * @param jobs
-   *          the jobs to run
-   * @return {@link java.util.concurrent.Future} representing the job in
-   *         execution
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  private static final <T> Future<T>[] __executeImmediately(
-      final Callable<T>... jobs) {
-    final Future<T>[] results;
-    final int length;
-    int i;
-
-    length = jobs.length;
-    results = new Future[length];
-
-    for (i = 0; i < length; ++i) {
-      try {
-        results[i] = Execute.__createImmediateFuture(jobs[i].call());
-      } catch (final Throwable error) {
-        results[i] = new __ExceptionFuture<>(error);
-      }
-    }
-    return results;
-  }
-
-  /**
-   * Execute a set of {@link java.lang.Runnable}s and append the
-   * corresponding {@link java.util.concurrent.Future}s to a
-   * {@link java.util.Collection collection}.
-   *
-   * @param dest
-   *          the collection to receive the
-   *          {@link java.util.concurrent.Future}s
-   * @param jobs
-   *          the jobs to run
-   * @param result
-   *          the result to be returned by the
-   *          {@link java.util.concurrent.Future}s representing the jobs
-   * @param <T>
-   *          the data type of the result
-   */
-  private static final <T> void __executeImmediately(
-      final Collection<Future<? super T>> dest, final T result,
-      final Runnable... jobs) {
-    final int length;
-    Future<T> success;
-    int i;
-
-    length = jobs.length;
-
-    success = null;
-    for (i = 0; i < length; ++i) {
-      try {
-        jobs[i].run();
-        if (success == null) {
-          success = Execute.__createImmediateFuture(result);
-        }
-        dest.add(success);
-      } catch (final Throwable error) {
-        dest.add(new __ExceptionFuture<>(error));
-      }
-    }
-  }
-
-  /**
-   * Execute a {@link java.util.concurrent.Callable}s and append the
-   * corresponding {@link java.util.concurrent.Future}s to a
-   * {@link java.util.Collection collection}.
-   *
-   * @param dest
-   *          the collection to receive the
-   *          {@link java.util.concurrent.Future}s
-   * @param jobs
-   *          the jobs to run
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  private static final <T> void __executeImmediately(
-      final Collection<Future<? super T>> dest,
-      final Callable<T>... jobs) {
-    final int length;
-    int i;
-
-    length = jobs.length;
-
-    for (i = 0; i < length; ++i) {
-      try {
-        dest.add(Execute.__createImmediateFuture(jobs[i].call()));
-      } catch (final Throwable error) {
-        dest.add(new __ExceptionFuture<>(error));
-      }
-    }
-  }
-
-  /**
-   * Execute a set of {@link java.lang.Runnable}s in parallel and wait
-   * until all of them have terminated. No guarantee about the execution
-   * order is given. This method does not guarantee that the task will
-   * actually be executed in parallel. If parallel execution is not
-   * possible, because, e.g., no {@link java.util.concurrent.ForkJoinPool}
-   * could be detected, the task is directly executed.
-   *
-   * @param jobs
-   *          the jobs to run
-   * @param result
-   *          the result to be returned by the
-   *          {@link java.util.concurrent.Future}s representing the jobs
-   * @return {@link java.util.concurrent.Future} representing the jobs in
-   *         execution
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  public static final <T> Future<T>[] parallelAndWait(final T result,
-      final Runnable... jobs) {
-    final ForkJoinTask<T>[] tasks;
-    int i;
-
-    i = jobs.length;
-    switch (i) {
-
-      case 0: {// no tasks, we can quit directly
-        return new Future[0];
-      }
-      case 1: {// one task: execute directly
-        return new Future[] { //
-            Execute.__executeImmediately(result, jobs[0]) };
-      }
-      default: {// multiple tasks:let's see what to do
-        if (ForkJoinTask.inForkJoinPool()) {
-
-          tasks = new ForkJoinTask[i];
-          for (; (--i) >= 0;) {
-            tasks[i] = ForkJoinTask.adapt(jobs[i], result);
-          }
-          ForkJoinTask.invokeAll(tasks);
-          return tasks;
-        }
-
-        // not in a fork-join pool: execute as is
-        return Execute.__executeImmediately(result, jobs);
-      }
-    }
-  }
-
-  /**
-   * Execute the tasks if we are inside a
-   * {@link java.util.concurrent.ForkJoinPool}.
-   *
-   * @param tasks
-   *          the tasks
-   */
-  static final void _executeTasksInPool(final ForkJoinTask<?>[] tasks) {
-    if (tasks.length == 2) {
-      ForkJoinTask.invokeAll(tasks[0], tasks[1]);
-    } else {
-      ForkJoinTask.invokeAll(tasks);
-    }
-  }
-
-  /**
-   * Execute a {@link java.util.concurrent.Callable}s in parallel and wait
-   * until all of them have terminated. No guarantee about the execution
-   * order is given. This method does not guarantee that the task will
-   * actually be executed in parallel. If parallel execution is not
-   * possible, because, e.g., no {@link java.util.concurrent.ForkJoinPool}
-   * could be detected, the task is directly executed.
-   *
-   * @param jobs
-   *          the jobs to run
-   * @return {@link java.util.concurrent.Future} representing the job in
-   *         execution
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  public static final <T> Future<T>[] parallelAndWait(
-      final Callable<T>... jobs) {
-    final ForkJoinTask<T>[] tasks;
-    int i;
-
-    i = jobs.length;
-    switch (i) {
-
-      case 0: {// no tasks, we can quit directly
-        return new Future[0];
-      }
-      case 1: {// one task: execute directly
-        return new Future[] { //
-            Execute.__executeImmediately(jobs[0]) };
-      }
-      default: {// multiple tasks:let's see what to do
-        if (ForkJoinTask.inForkJoinPool()) {
-
-          tasks = new ForkJoinTask[i];
-          for (; (--i) >= 0;) {
-            tasks[i] = ForkJoinTask.adapt(jobs[i]);
-          }
-
-          ForkJoinTask.invokeAll(tasks);
-          return tasks;
-        }
-
-        // not in a fork-join pool: execute as is
-        return Execute.__executeImmediately(jobs);
-      }
-    }
-  }
-
-  /**
-   * Execute a set of {@link java.lang.Runnable}s in parallel and wait
-   * until all of them have terminated. Append the corresponding
-   * {@link java.util.concurrent.Future}s to a {@link java.util.Collection
-   * collection}. No guarantee about the execution order is given. This
-   * method does not guarantee that the task will actually be executed in
-   * parallel. If parallel execution is not possible, because, e.g., no
-   * {@link java.util.concurrent.ForkJoinPool} could be detected, the task
-   * is directly executed.
-   *
-   * @param dest
-   *          the collection to receive the
-   *          {@link java.util.concurrent.Future}s
-   * @param jobs
-   *          the jobs to run
-   * @param result
-   *          the result to be returned by the
-   *          {@link java.util.concurrent.Future}s representing the jobs
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  public static final <T> void parallelAndWait(
-      final Collection<Future<? super T>> dest, final T result,
-      final Runnable... jobs) {
-    final ForkJoinTask<T>[] tasks;
-    int i;
-
-    i = jobs.length;
-    switch (i) {
-      case 0: {// no tasks, we can quit directly
-        return;
-      }
-      case 1: {// one task: execute directly
-        dest.add(Execute.__executeImmediately(result, jobs[0]));
-        return;
-      }
-      default: {// multiple tasks:let's see what to do
-        if (ForkJoinTask.inForkJoinPool()) {
-
-          tasks = new ForkJoinTask[i];
-          for (; (--i) >= 0;) {
-            dest.add(tasks[i] = ForkJoinTask.adapt(jobs[i], result));
-          }
-
-          ForkJoinTask.invokeAll(tasks);
-          return;
-        }
-
-        // not in a fork-join pool: execute as is
-        Execute.__executeImmediately(dest, result, jobs);
-      }
-    }
-  }
-
-  /**
-   * Execute a {@link java.util.concurrent.Callable}s in parallel and wait
-   * until all of them have terminated. Append the corresponding
-   * {@link java.util.concurrent.Future}s to a {@link java.util.Collection
-   * collection}. No guarantee about the execution order is given. This
-   * method does not guarantee that the task will actually be executed in
-   * parallel. If parallel execution is not possible, because, e.g., no
-   * {@link java.util.concurrent.ForkJoinPool} could be detected, the task
-   * is directly executed.
-   *
-   * @param dest
-   *          the collection to receive the
-   *          {@link java.util.concurrent.Future}s
-   * @param jobs
-   *          the jobs to run
-   * @param <T>
-   *          the data type of the result
-   */
-  @SuppressWarnings("unchecked")
-  public static final <T> void parallelAndWait(
-      final Collection<Future<? super T>> dest,
-      final Callable<T>... jobs) {
-    final ForkJoinTask<T>[] tasks;
-    int i;
-
-    i = jobs.length;
-    switch (i) {
-      case 0: {// no tasks, we can quit directly
-        return;
-      }
-      case 1: {// one task: execute directly
-        dest.add(Execute.__executeImmediately(jobs[0]));
-        return;
-      }
-      default: {// multiple tasks:let's see what to do
-        if (ForkJoinTask.inForkJoinPool()) {
-
-          tasks = new ForkJoinTask[i];
-          for (; (--i) >= 0;) {
-            dest.add(tasks[i] = ForkJoinTask.adapt(jobs[i]));
-          }
-
-          ForkJoinTask.invokeAll(tasks);
-          return;
-        }
-
-        // not in a fork-join pool: execute as is
-        Execute.__executeImmediately(dest, jobs);
-      }
-    }
-  }
-
-  /**
-   * A {@link java.util.concurrent.Future future} representing an
-   * already-finished computation.
-   *
-   * @param <T>
-   *          the data type
-   * @param result
-   *          the result
-   * @return the future
-   */
-  static final <T> Future<T> __createImmediateFuture(final T result) {
-    return ((result == null) ? __ImmediateFuture.NULL_FUTURE
-        : new __ImmediateFuture<>(result));
-  }
-
-  /**
-   * A future which represents an error in execution.
-   *
-   * @param <T>
-   *          the result type
-   */
-  private static final class __ExceptionFuture<T> implements Future<T> {
-
-    /** the encountered error */
-    private final Throwable m_error;
+    /** the synchronizer */
+    private final Object m_synch;
+    /** the state */
+    private int m_state;
+    /** the runnable */
+    private Runnable m_runnable;
+    /** the callable */
+    private Callable m_callable;
+    /** the result object */
+    private Object m_result;
+    /** the caught exception */
+    private Throwable m_error;
 
     /**
-     * create the future
+     * create a task, which, in this case, is a wrapper for a runnable
      *
-     * @param error
-     *          the encountered error
+     * @param runnable
+     *          the runnable
      */
-    __ExceptionFuture(final Throwable error) {
+    __Task(final Runnable runnable) {
       super();
-      this.m_error = error;
+      if (runnable == null) {
+        throw new IllegalArgumentException(
+            "Runnable to execute must not be null."); //$NON-NLS-1$
+      }
+      this.m_synch = new Object();
+      this.m_runnable = runnable;
+    }
+
+    /**
+     * Create a task, which, in this case, is a wrapper for a callable
+     *
+     * @param callable
+     *          the callable
+     */
+    __Task(final Callable callable) {
+      super();
+      if (callable == null) {
+        throw new IllegalArgumentException(
+            "Callable to execute must not be null."); //$NON-NLS-1$
+      }
+      this.m_synch = new Object();
+      this.m_callable = callable;
+    }
+
+    /**
+     * Execute the task and store the result as well as any caught
+     * exception.
+     */
+    final void _run() {
+      Runnable runnable;
+      Callable callable;
+      Object result;
+      Throwable error;
+
+      synchronized (this.m_synch) {
+        if (this.m_state > Execute.STATE_SELECTED) {
+          return;
+        }
+        // If we get here, we are either in STATE_INITIALIZED or
+        // STATE_SELECTED. Extract all member variables necessary for
+        // execution and already set them to null.
+        this.m_state = Execute.STATE_RUNNING;
+        runnable = this.m_runnable;
+        this.m_runnable = null;
+        callable = this.m_callable;
+        this.m_callable = null;
+      }
+
+      result = null;
+      error = null;
+      try {
+        if (runnable != null) { // We execute a runnable.
+          runnable.run();
+          runnable = null;
+        } else {// No runnable, so it must be Callable.
+          result = callable.call();
+          callable = null;
+        }
+      } catch (final Throwable theError) {
+        error = theError;// Catch and store error.
+      }
+
+      synchronized (this.m_synch) {
+        // OK, execution is done, update member variables and notify
+        // waiting threads.
+        this.m_state = Execute.STATE_DONE;
+        this.m_result = result;
+        this.m_error = error;
+        this.m_synch.notifyAll();
+      }
     }
 
     /** {@inheritDoc} */
     @Override
     public final boolean cancel(final boolean mayInterruptIfRunning) {
-      return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final boolean isCancelled() {
-      return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final boolean isDone() {
+      synchronized (this.m_synch) {
+        if (this.m_state != Execute.STATE_INITIALIZED) {
+          return false;
+        }
+        this.m_state = Execute.STATE_CANCELED;
+        this.m_runnable = null;
+        this.m_callable = null;
+      }
+      Execute._delete(this);
       return true;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final T get() throws ExecutionException {
-      throw new ExecutionException(//
-          "An error was encountered while executing a task.", //$NON-NLS-1$
-          this.m_error);
+    public final boolean isCancelled() {
+      synchronized (this.m_synch) {
+        return (this.m_state == Execute.STATE_CANCELED);
+      }
     }
 
     /** {@inheritDoc} */
     @Override
-    public final T get(final long timeout, final TimeUnit unit)
-        throws ExecutionException {
+    public final boolean isDone() {
+      synchronized (this.m_synch) {
+        return (this.m_state >= Execute.STATE_DONE);
+      }
+    }
+
+    /**
+     * get the thread type
+     *
+     * @return the thread type
+     */
+    private static final int __threadType() {
+      return (Thread.currentThread() instanceof __Worker)
+          ? __Task.THREAD_TYPE_WORKER : __Task.THREAD_TYPE_NO_WORKER;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final Object get()
+        throws InterruptedException, ExecutionException {
+      __Task execute;
+      int threadType;
+
+      threadType = __Task.THREAD_TYPE_UNKNOWN;
+      looper: for (;;) {
+        synchronized (this.m_synch) {
+          switcher: switch (this.m_state) {
+
+            case STATE_INITIALIZED: {
+              // The task has been initialized but is not running. It must
+              // either be in the queue or has just been extracted by a
+              // worker thread from the queue and will be executed next.
+              if (((threadType == __Task.THREAD_TYPE_UNKNOWN)
+                  ? (threadType = __Task.__threadType())
+                  : threadType) != __Task.THREAD_TYPE_WORKER) {//
+                // If we are not a worker thread, we will simply have to
+                // wait for the task to complete and then check again.
+
+                // We therefore move the task to the head of the queue in
+                // order to get it done quicker. This method does nothing
+                // if the task has already been purged from the queue.
+                Execute._moveToFront(this);
+                // We will only wait for 1000ms. Afterwards, we move it
+                // again to the head of the queue if it was not yet
+                // executed.
+                this.m_synch.wait(1000L);
+                continue looper;
+              }
+              // If we are a worker thread, we can leave the synchronized
+              // block and execute the task directly. We therefore need to
+              // remove it from the queue.
+              this.m_state = Execute.STATE_SELECTED;
+              Execute._delete(this);
+              execute = this;
+              break switcher;
+            }
+
+            case STATE_SELECTED:
+            case STATE_RUNNING: {
+              // The task is either selected for out-of-order execution by
+              // another worker thread or is already running (in another
+              // worker thread).
+              try {
+                // The task is currently running. If we are a worker
+                // thread, we can execute another task in the meantime.
+                if (((threadType == __Task.THREAD_TYPE_UNKNOWN)
+                    ? (threadType = __Task.__threadType())
+                    : threadType) == __Task.THREAD_TYPE_WORKER) {//
+                  // If we are waiting for a task inside a worker thread,
+                  // then this worker thread might as well do another task
+                  // while waiting. In the worst case, we will wait a bit
+                  // longer. That's OK with me. Anyway, we try to obtain a
+                  // new task from the queue, but we don't wait for tasks
+                  // to arrive if the queue is empty.
+                  execute = Execute._next(false);
+                  if (execute != null) {
+                    // OK there was a new task. We leave the synchronized
+                    // block and execute it.
+                    break switcher;
+                  }
+                }
+                // If we get here, we are either a thread outside of the
+                // Execute environment, i.e., no worker thread, or we are a
+                // worker thread and the global task queue is empty. In
+                // both cases, we have to wait.
+
+                // We will wait for at most 1000ms if we are a worker
+                // thread and then try again. Reason: Maybe the task won't
+                // have finished yet after 1000ms if we did not get
+                // notified, but new, other tasks may have come in.
+                // Obviously, for non-worker threads, no such behavior is
+                // necessary and we can just wait.
+                this.m_synch.wait((threadType == 1) ? 1000L : 0L);
+              } catch (@SuppressWarnings("unused") final InterruptedException ie) {
+                /** ignore **/
+              }
+              continue looper;
+            }
+
+            case STATE_DONE: {
+              // The task has already been execute. This means that its
+              // error and result have been set.
+              if (this.m_error != null) {
+                // First, we check if there was an exception and if there
+                // was one, we try to re-throw it.
+                if (this.m_error instanceof RuntimeException) {
+                  throw ((RuntimeException) (this.m_error));
+                }
+                if (this.m_error instanceof Error) {
+                  throw ((Error) (this.m_error));
+                }
+                throw new ExecutionException(//
+                    "An error has happened while executing a parallel task via Execute.", //$NON-NLS-1$
+                    this.m_error);
+              }
+              return this.m_result;
+            }
+
+            default: { // case STATE_CANCELED:
+              // The task has been cancelled
+              throw new CancellationException(//
+                  "The task has been cancelled."); //$NON-NLS-1$
+            }
+          }
+        }
+
+        // OK, we are a worker thread and can execute a task. This is
+        // either this task here, which is in STATE_SELECTED, or another
+        // task that can be executed while waiting for the current task.
+        execute._run();
+      }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final Object get(final long timeout, final TimeUnit unit)
+        throws InterruptedException, ExecutionException, TimeoutException {
       return this.get();
     }
+
   }
 
-  /**
-   * A future which represents an immediate, successful execution.
-   *
-   * @param <T>
-   *          the result type
-   */
-  private static final class __ImmediateFuture<T> implements Future<T> {
-
-    /** a shared future with {@code null} result */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    static final __ImmediateFuture NULL_FUTURE = new __ImmediateFuture(
-        null);
-
-    /** the result */
-    private final T m_result;
+  /** the worker threads */
+  private static final class __Worker extends Thread {
 
     /**
-     * create the future
+     * create the worker
      *
-     * @param result
-     *          the result
+     * @param id
+     *          the worker's id
      */
-    __ImmediateFuture(final T result) {
-      super();
-      this.m_result = result;
+    __Worker(final int id) {
+      super("Executor#" + id); //$NON-NLS-1$
+      this.setDaemon(true);
     }
 
-    /** {@inheritDoc} */
+    /** run */
     @Override
-    public final boolean cancel(final boolean mayInterruptIfRunning) {
-      return false;
-    }
+    public final void run() {
+      __Task task;
 
-    /** {@inheritDoc} */
-    @Override
-    public final boolean isCancelled() {
-      return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final boolean isDone() {
-      return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final T get() {
-      return this.m_result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final T get(final long timeout, final TimeUnit unit) {
-      return this.m_result;
-    }
-  }
-
-  /** a class holding the common fork-join pool */
-  private static final class __CommonForkJoinPool {
-
-    /** the common fork-join pool */
-    static final ForkJoinPool COMMON_POOL = __CommonForkJoinPool
-        .__getCommonPool();
-
-    /**
-     * get the common fork-join pool
-     *
-     * @return the common pool
-     */
-    private static final ForkJoinPool __getCommonPool() {
-      ForkJoinPool pool;
-
-      try {
-        pool = ((ForkJoinPool) (ForkJoinPool.class.getMethod("commonPool") //$NON-NLS-1$
-            .invoke(null)));
-        if (pool != null) {
-          return pool;
-        }
-      } catch (@SuppressWarnings("unused") final Throwable error) {
-        // can be ignored
+      while ((task = Execute._next(true)) != null) {
+        task._run();
       }
-
-      return new ForkJoinPool();
     }
-
   }
+
 }

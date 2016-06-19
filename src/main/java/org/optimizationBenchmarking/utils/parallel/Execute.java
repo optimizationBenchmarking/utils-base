@@ -68,7 +68,9 @@ public final class Execute {
   }
 
   /**
-   * enqueue a task into the queue
+   * Add a task to the queue. Actually: Put it at the front of the queue,
+   * as our queue is more something like a stack represented as linked list
+   * of {@link __Task} objects.
    *
    * @param task
    *          the task
@@ -77,14 +79,18 @@ public final class Execute {
     __Task queue;
     synchronized (Execute.SYNCH) {
       if (!(task.m_inQueue)) {
+        // extract and replace old head of queue
         queue = Execute.s_taskQueue;
         Execute.s_taskQueue = task;
+
+        // re-wire pointers in linked list
         task.m_nextInQueue = queue;
         if (queue != null) {
           queue.m_prevInQueue = task;
         }
-        task.m_inQueue = true;
-        Execute.SYNCH.notify();
+
+        task.m_inQueue = true; // mark the task as enqueued
+        Execute.SYNCH.notify(); // wake waiting worker
       }
     }
   }
@@ -100,19 +106,27 @@ public final class Execute {
 
     synchronized (Execute.SYNCH) {
       if (task.m_inQueue) {
-        task.m_inQueue = false;
+        task.m_inQueue = false;// mark task as de-queued
+
+        // remember old previous and next pointers and null them for GC
         oldPrev = task.m_prevInQueue;
         task.m_prevInQueue = null;
         oldNext = task.m_nextInQueue;
         task.m_nextInQueue = null;
 
         if (oldPrev != null) {
+          // we were not the first element in the queue, let our
+          // predecessor link to the successor task
           oldPrev.m_nextInQueue = oldNext;
         } else {
+          // we were the first element in the queue, queue now points to
+          // next
           Execute.s_taskQueue = oldNext;
         }
 
         if (oldNext != null) {
+          // there was a successor task behind us, connect to the
+          // predecessor task, if any
           oldNext.m_prevInQueue = oldPrev;
         }
       }
@@ -131,21 +145,26 @@ public final class Execute {
 
     synchronized (Execute.SYNCH) {
       if (task.m_inQueue) {
+
         oldPrev = task.m_prevInQueue;
         if (oldPrev == null) {
           return; // we are already at the start of the queue
         }
+        task.m_prevInQueue = null;
+
+        // re-connect previous and next task
         oldNext = task.m_nextInQueue;
         oldPrev.m_nextInQueue = oldNext;
         if (oldNext != null) {
           oldNext.m_prevInQueue = oldPrev;
         }
+
+        // re-insert task at head of queue
         oldQueue = Execute.s_taskQueue;
         task.m_nextInQueue = oldQueue;
         oldQueue.m_prevInQueue = task;
         Execute.s_taskQueue = task;
-        // just in case
-        Execute.SYNCH.notify();
+
       }
     }
   }

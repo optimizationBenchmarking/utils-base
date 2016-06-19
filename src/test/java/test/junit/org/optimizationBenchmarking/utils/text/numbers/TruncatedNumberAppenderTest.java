@@ -9,12 +9,6 @@ public class TruncatedNumberAppenderTest extends NumberAppenderTest {
 
   /** create */
   public TruncatedNumberAppenderTest() {
-    super(null, false, false);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  protected final TruncatedNumberAppender getInstance() {
-    return new TruncatedNumberAppender();
+    super(TruncatedNumberAppender.INSTANCE, false);
   }
 }

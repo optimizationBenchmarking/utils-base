@@ -2,7 +2,6 @@ package org.optimizationBenchmarking.utils.text.numbers;
 
 import java.text.DecimalFormat;
 
-import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
@@ -17,19 +16,20 @@ import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
  * {@link java.text.DecimalFormat}!.
  * </p>
  */
-public class TruncatedNumberAppender extends NumberAppender {
+public final class TruncatedNumberAppender extends NumberAppender {
 
   /** the serial version uid */
   private static final long serialVersionUID = 1L;
 
-  /** the fallback decimal format */
-  private final DecimalFormat m_format;
+  /** the globally shared instance of the truncated number appender */
+  public static final TruncatedNumberAppender INSTANCE = new TruncatedNumberAppender();
+
+  /** the shared instance of the format holder */
+  private static final __Local LOCAL = new __Local();
 
   /** create */
-  public TruncatedNumberAppender() {
+  private TruncatedNumberAppender() {
     super();
-
-    this.m_format = new DecimalFormat("#.###E0"); //$NON-NLS-1$
   }
 
   /** {@inheritDoc} */
@@ -41,7 +41,8 @@ public class TruncatedNumberAppender extends NumberAppender {
     best = SimpleNumberAppender.INSTANCE.toString(v, textCase);
     if ((best == null) || ((length = best.length()) <= 0)
         || (length > ((best.charAt(0) == '-') ? 4 : 5))) {
-      return this.m_format.format(v);
+      return TruncatedNumberAppender.LOCAL.get().m_scientificFormat
+          .format(v);
     }
     return best;
   }
@@ -50,6 +51,7 @@ public class TruncatedNumberAppender extends NumberAppender {
   @Override
   public final String toString(final double v, final ETextCase textCase) {
     final String best;
+    final __FormatHolder holder;
     int length;
 
     best = SimpleNumberAppender.INSTANCE.toString(v, textCase);
@@ -78,7 +80,21 @@ public class TruncatedNumberAppender extends NumberAppender {
       return best;
     }
 
-    return this.m_format.format(v);
+    holder = TruncatedNumberAppender.LOCAL.get();
+
+    if ((v > (-10d)) && (v < 10d)) {
+      return holder.m_normalFormat1.format(v);
+    }
+    if ((v > (-100d)) && (v < 100d)) {
+      return holder.m_normalFormat2.format(v);
+    }
+    if ((v > (-1000d)) && (v < 1000d)) {
+      return holder.m_normalFormat3.format(v);
+    }
+    if ((v > (-9999.5d)) && (v < 9999.5d)) {
+      return String.valueOf(Math.round(v));
+    }
+    return holder.m_scientificFormat.format(v);
   }
 
   /** {@inheritDoc} */
@@ -97,17 +113,57 @@ public class TruncatedNumberAppender extends NumberAppender {
     return textCase.nextCase();
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public final boolean equals(final Object o) {
-    return ((o == this) || ((o instanceof TruncatedNumberAppender) && //
-        Compare.equals(this.m_format,
-            ((TruncatedNumberAppender) o).m_format)));
+  /**
+   * read-resolve this object
+   *
+   * @return the resolved object
+   */
+  private final Object readResolve() {
+    return TruncatedNumberAppender.INSTANCE;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public final int hashCode() {
-    return (45674441 ^ this.m_format.hashCode());
+  /**
+   * write-replace this object
+   *
+   * @return the replace object
+   */
+  private final Object writeReplace() {
+    return TruncatedNumberAppender.INSTANCE;
+  }
+
+  /** a class holding the formats */
+  private static final class __FormatHolder {
+
+    /** the fallback decimal format */
+    final DecimalFormat m_scientificFormat;
+    /** the normal decimal format 1 */
+    final DecimalFormat m_normalFormat1;
+    /** the normal decimal format 2 */
+    final DecimalFormat m_normalFormat2;
+    /** the normal decimal format 3 */
+    final DecimalFormat m_normalFormat3;
+
+    /** create */
+    __FormatHolder() {
+      super();
+      this.m_scientificFormat = new DecimalFormat("#.###E0"); //$NON-NLS-1$
+      this.m_normalFormat1 = new DecimalFormat("#.###"); //$NON-NLS-1$
+      this.m_normalFormat2 = new DecimalFormat("##.##"); //$NON-NLS-1$
+      this.m_normalFormat3 = new DecimalFormat("###.#"); //$NON-NLS-1$
+    }
+  }
+
+  /** the thread-local supplier for formats */
+  private static final class __Local extends ThreadLocal<__FormatHolder> {
+    /** create */
+    __Local() {
+      super();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected final __FormatHolder initialValue() {
+      return new __FormatHolder();
+    }
   }
 }

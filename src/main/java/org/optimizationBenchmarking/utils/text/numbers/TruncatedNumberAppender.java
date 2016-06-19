@@ -82,7 +82,7 @@ public final class TruncatedNumberAppender extends NumberAppender {
 
     holder = TruncatedNumberAppender.LOCAL.get();
 
-    if ((v <= 1e-3d) || (v >= 1e-3d)) {
+    if ((v <= -1e-3d) || (v >= 1e-3d)) {
       if ((v > (-10d)) && (v < 10d)) {
         return holder.m_normalFormat1.format(v);
       }

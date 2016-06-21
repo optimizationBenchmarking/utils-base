@@ -11,7 +11,7 @@ import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.optimizationBenchmarking.utils.collections.maps.StringMapCI;
+import org.optimizationBenchmarking.utils.collections.maps.StringMap;
 import org.optimizationBenchmarking.utils.config.Configuration;
 import org.optimizationBenchmarking.utils.config.ConfigurationBuilder;
 import org.optimizationBenchmarking.utils.config.ConfigurationXMLInput;
@@ -108,7 +108,7 @@ public class ConfigurationTest extends TestBase {
       }
     }
 
-    sb.append(ConfigurationTest.__makeKey(key, r));
+    sb.append(key);
 
     if (r.nextBoolean()) {
       sb.append(':');
@@ -120,61 +120,12 @@ public class ConfigurationTest extends TestBase {
     return sb.toString();
   }
 
-  /**
-   * make a key
-   *
-   * @param key
-   *          the key
-   * @param random
-   *          the randomizer
-   * @return the return value
-   */
-  private static final String __makeKey(final String key,
-      final Random random) {
-    final StringBuilder sb;
-    char ch;
-    int i;
-
-    switch (random.nextInt(4)) {
-      case 0: {
-        return key;
-      }
-      case 1: {
-        return TextUtils.toLowerCase(key);
-      }
-      case 2: {
-        return TextUtils.toUpperCase(key);
-      }
-      default: {
-        sb = new StringBuilder();
-        for (i = 0; i < key.length(); i++) {
-          ch = key.charAt(i);
-          switch (random.nextInt(3)) {
-            case 0: {
-              sb.append(ch);
-              break;
-            }
-            case 1: {
-              sb.append(TextUtils.toUpperCase(ch));
-              break;
-            }
-            default: {
-              sb.append(TextUtils.toLowerCase(ch));
-              break;
-            }
-          }
-        }
-        return sb.toString();
-      }
-    }
-  }
-
   /** test whether setting the xml serialization line works */
   @Test(timeout = 3600000)
   public void testXMLSerializationRandomStrings() {
     final Configuration inst, b;
     final Random r;
-    final StringMapCI<String> data;
+    final StringMap<String> data;
     final ConfigurationXMLInput input;
     final ConfigurationXMLOutput output;
     String x, y;
@@ -190,7 +141,7 @@ public class ConfigurationTest extends TestBase {
     r = new Random();
 
     try (final ConfigurationBuilder cb = new ConfigurationBuilder()) {
-      data = new StringMapCI<>();
+      data = new StringMap<>();
       do {
         do {
           x = RandomUtils.longToString(ConfigurationTest.KEY_CHARS,
@@ -232,7 +183,7 @@ public class ConfigurationTest extends TestBase {
   public void testPropertiesSerializationRandomStrings() {
     final Configuration inst, b;
     final Random r;
-    final StringMapCI<String> data;
+    final StringMap<String> data;
     final ConfigurationXMLInput input;
     final ConfigurationXMLOutput output;
     String x, y;
@@ -248,7 +199,7 @@ public class ConfigurationTest extends TestBase {
     r = new Random();
 
     try (final ConfigurationBuilder cb = new ConfigurationBuilder()) {
-      data = new StringMapCI<>();
+      data = new StringMap<>();
       do {
         do {
           x = RandomUtils.longToString(ConfigurationTest.KEY_CHARS,
@@ -326,7 +277,7 @@ public class ConfigurationTest extends TestBase {
       }
 
       for (final Map.Entry<String, String> e : values.entrySet()) {
-        key = ConfigurationTest.__makeKey(e.getKey(), random);
+        key = e.getKey();
         value = e.getValue();
 
         def = RandomUtils.longToString(ConfigurationTest.VALUE_CHARS, ++v);
@@ -418,12 +369,9 @@ public class ConfigurationTest extends TestBase {
           def = RandomUtils.longToObject(random.nextLong(), false);
 
           p = ConfigurationTest.BASIC_PARSERS.get(def.getClass());
-          Assert.assertSame(def,
-              cfg.get(ConfigurationTest.__makeKey(key, random), p, def));
-          Assert.assertSame(def,
-              cfg.get(ConfigurationTest.__makeKey(key, random), p, def));
-          Assert.assertSame(def,
-              cfg.get(ConfigurationTest.__makeKey(key, random), p, null));
+          Assert.assertSame(def, cfg.get(key, p, def));
+          Assert.assertSame(def, cfg.get(key, p, def));
+          Assert.assertSame(def, cfg.get(key, p, null));
 
         } else {
           do {
@@ -434,19 +382,16 @@ public class ConfigurationTest extends TestBase {
           p = ConfigurationTest.BASIC_PARSERS.get(value.getClass());
           value2 = cfg.get(key, p, def);
           Assert.assertEquals(value, value2);
-          Assert.assertSame(value2,
-              cfg.get(ConfigurationTest.__makeKey(key, random), p, def));
-          Assert.assertSame(value2,
-              cfg.get(ConfigurationTest.__makeKey(key, random), p, null));
-          Assert.assertSame(value2,
-              cfg.get(ConfigurationTest.__makeKey(key, random), p, value));
+          Assert.assertSame(value2, cfg.get(key, p, def));
+          Assert.assertSame(value2, cfg.get(key, p, null));
+          Assert.assertSame(value2, cfg.get(key, p, value));
           Assert.assertSame(value2, //
-              cfg.get(ConfigurationTest.__makeKey(key, random), //
+              cfg.get(key, //
                   p, value2));
         }
 
         try {
-          cfg.get(ConfigurationTest.__makeKey(key, random), //
+          cfg.get(key, //
               ((p == ((Object) (LooseLongParser.INSTANCE)))
                   ? LooseIntParser.INSTANCE : LooseLongParser.INSTANCE),
               null);

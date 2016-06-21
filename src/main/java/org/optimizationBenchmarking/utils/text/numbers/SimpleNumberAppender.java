@@ -126,6 +126,21 @@ public final class SimpleNumberAppender extends _PlainIntNumberAppender {
     return best;
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(//
+        "numbers are printed normally", //$NON-NLS-1$
+        textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String toString() {
+    return "simple";//$NON-NLS-1$
+  }
+
   /**
    * read-resolve this object
    *

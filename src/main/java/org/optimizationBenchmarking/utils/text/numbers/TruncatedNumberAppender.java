@@ -133,6 +133,21 @@ public final class TruncatedNumberAppender extends NumberAppender {
     return TruncatedNumberAppender.INSTANCE;
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(//
+        "numbers are rounded to four significant digits", //$NON-NLS-1$
+        textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String toString() {
+    return "four digits";//$NON-NLS-1$
+  }
+
   /** a class holding the formats */
   private static final class __FormatHolder {
 

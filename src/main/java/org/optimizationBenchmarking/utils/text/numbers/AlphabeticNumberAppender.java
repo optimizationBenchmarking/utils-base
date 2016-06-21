@@ -135,4 +135,21 @@ public final class AlphabeticNumberAppender extends NumberAppender {
     return (this.m_lower ? AlphabeticNumberAppender.LOWER_CASE_INSTANCE
         : AlphabeticNumberAppender.UPPER_CASE_INSTANCE);
   }
+
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(//
+        "numbers are converted to base-26 and printed with alphabetic symbls in", //$NON-NLS-1$
+        textOut).appendWords(this.m_lower ? "lower" : "upper", textOut) //$NON-NLS-1$ //$NON-NLS-2$
+        .appendWord("case", textOut); //$NON-NLS-1$
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String toString() {
+    return (this.m_lower ? "alphbabetic (base26) lower case" //$NON-NLS-1$
+        : "alphbabetic (base26) upper case"); //$NON-NLS-1$
+  }
 }

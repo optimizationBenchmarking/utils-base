@@ -663,6 +663,21 @@ public final class TextNumberAppender extends NumberAppender {
     return status.m_case;
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(//
+        "numbers are printed in their textual representation", //$NON-NLS-1$
+        textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String toString() {
+    return "as text";//$NON-NLS-1$
+  }
+
   /**
    * read-resolve this object
    *

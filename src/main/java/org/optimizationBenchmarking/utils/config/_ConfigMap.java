@@ -1,13 +1,13 @@
 package org.optimizationBenchmarking.utils.config;
 
 import org.optimizationBenchmarking.utils.collections.maps.ObjectMapEntry;
-import org.optimizationBenchmarking.utils.collections.maps.StringMapCI;
+import org.optimizationBenchmarking.utils.collections.maps.StringMap;
 
 /**
  * A configuration map is a case-insensitive string map which allows
  * setting a type for an entry one time.
  */
-final class _ConfigMap extends StringMapCI<Object> {
+final class _ConfigMap extends StringMap<Object> {
   /** the serial version uid */
   private static final long serialVersionUID = 1L;
 

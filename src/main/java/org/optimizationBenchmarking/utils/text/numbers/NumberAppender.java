@@ -2,6 +2,7 @@ package org.optimizationBenchmarking.utils.text.numbers;
 
 import java.io.Serializable;
 
+import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
 import org.optimizationBenchmarking.utils.math.NumericalTypes;
 import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
@@ -10,7 +11,8 @@ import org.optimizationBenchmarking.utils.text.textOutput.MemoryTextOutput;
 /**
  * A class that can format numbers.
  */
-public abstract class NumberAppender implements Serializable {
+public abstract class NumberAppender
+    implements Serializable, ISemanticComponent {
 
   /** the serial version uid */
   private static final long serialVersionUID = 1L;
@@ -178,5 +180,36 @@ public abstract class NumberAppender implements Serializable {
     m = new MemoryTextOutput();
     this.appendTo(v, textCase, m);
     return m.toString();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public ETextCase printShortName(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(this.toString(), textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public ETextCase printLongName(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return this.printShortName(textOut, textCase);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public abstract ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase);
+
+  /** {@inheritDoc} */
+  @Override
+  public String getPathComponentSuggestion() {
+    return this.toString();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String toString() {
+    return this.getClass().getSimpleName();
   }
 }

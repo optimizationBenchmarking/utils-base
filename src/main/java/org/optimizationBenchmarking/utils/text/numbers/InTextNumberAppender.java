@@ -120,6 +120,21 @@ public final class InTextNumberAppender extends NumberAppender {
     return SimpleNumberAppender.INSTANCE.appendTo(v, textCase, textOut);
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(//
+        "numbers between 0 and 12 (inclusively) are printed as text, the rest are printed normally", //$NON-NLS-1$
+        textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String toString() {
+    return "in-text";//$NON-NLS-1$
+  }
+
   /**
    * read-resolve this object
    *

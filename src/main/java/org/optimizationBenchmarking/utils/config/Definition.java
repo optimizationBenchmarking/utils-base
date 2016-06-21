@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.Map;
 
 import org.optimizationBenchmarking.utils.collections.ImmutableAssociation;
-import org.optimizationBenchmarking.utils.collections.maps.StringMapCI;
+import org.optimizationBenchmarking.utils.collections.maps.StringMap;
 
 /**
  * A configuration definition specifies which parameters an implementation
@@ -40,7 +40,7 @@ public final class Definition extends _DefSet<Parameter<?>> {
   public final Dump dump(final Configuration config) {
     final boolean allowsMore;
     ImmutableAssociation<Parameter<?>, Object>[] known, copy;
-    StringMapCI<Object> map;
+    StringMap<Object> map;
     Parameter<?> param;
     int paramSize, mapSize, index, origLen;
 
@@ -61,7 +61,7 @@ public final class Definition extends _DefSet<Parameter<?>> {
               if (mapSize <= 0) {// Or empty?
                 break goodDump;
               }
-              map = ((StringMapCI) (map.clone()));
+              map = ((StringMap) (map.clone()));
             }
 
             // If we get here, the configuration has at least one parameter

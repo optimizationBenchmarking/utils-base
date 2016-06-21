@@ -103,4 +103,19 @@ public final class NoExponentNumberAppender
   private final Object writeReplace() {
     return NoExponentNumberAppender.INSTANCE;
   }
+
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(//
+        "numbers are printed in normal form, but never in scientific notation", //$NON-NLS-1$
+        textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String toString() {
+    return "normal without exponent";//$NON-NLS-1$
+  }
 }

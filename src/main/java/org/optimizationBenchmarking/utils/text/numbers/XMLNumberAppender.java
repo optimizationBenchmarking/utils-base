@@ -43,6 +43,21 @@ public final class XMLNumberAppender extends _PlainIntNumberAppender {
     return SimpleNumberAppender._simplify(v, String.valueOf(v)).m_string;
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(//
+        "numbers are printed in an XML-compatible form", //$NON-NLS-1$
+        textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String toString() {
+    return "xml";//$NON-NLS-1$
+  }
+
   /**
    * read-resolve this object
    *

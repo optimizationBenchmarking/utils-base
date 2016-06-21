@@ -1,5 +1,8 @@
 package org.optimizationBenchmarking.utils.text.numbers;
 
+import org.optimizationBenchmarking.utils.text.ETextCase;
+import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
+
 /**
  * A number appender which, well, directly appends the numbers to the
  * output.
@@ -17,19 +20,20 @@ public final class DirectNumberAppender extends _PlainIntNumberAppender {
     super();
   }
 
-  // /** {@inheritDoc} */
-  // @Override
-  // public final void appendTo(final double v, final ETextCase textCase,
-  // final ITextOutput textOut) {
-  // textOut.append(v);
-  // }
-  //
-  // /** {@inheritDoc} */
-  // @Override
-  // public final String toString(final double v, final ETextCase textCase)
-  // {
-  // return Double.toString(v);
-  // }
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(//
+        "numbers are printed in their raw form", //$NON-NLS-1$
+        textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final String toString() {
+    return "direct";//$NON-NLS-1$
+  }
 
   /**
    * read-resolve this object

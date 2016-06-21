@@ -2,6 +2,7 @@ package org.optimizationBenchmarking.utils.text.numbers;
 
 import java.text.DecimalFormat;
 
+import org.optimizationBenchmarking.utils.math.MathUtils;
 import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
@@ -111,7 +112,11 @@ public final class TruncatedNumberAppender extends NumberAppender {
   @Override
   public final ETextCase appendTo(final double v, final ETextCase textCase,
       final ITextOutput textOut) {
-    textOut.append(this.toString(v, textCase));
+    if (MathUtils.isFinite(v)) {
+      textOut.append(this.toString(v, textCase));
+    } else {
+      textOut.append(v);
+    }
     return textCase.nextCase();
   }
 

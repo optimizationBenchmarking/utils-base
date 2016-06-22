@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.optimizationBenchmarking.utils.collections.lists.ArraySetView;
+import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /** The set of sequence types. */
@@ -92,6 +93,11 @@ public enum ESequenceMode {
 
     if (o instanceof ISequenceable) {
       ((ISequenceable) o).toSequence(first, last, textCase, dest);
+      return;
+    }
+
+    if (o instanceof ISemanticComponent) {
+      ((ISemanticComponent) o).printShortName(dest, textCase);
       return;
     }
 

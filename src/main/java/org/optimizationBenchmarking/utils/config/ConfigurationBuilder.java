@@ -169,11 +169,18 @@ public class ConfigurationBuilder extends BuilderFSM<Configuration> {
     final _ConfigMapEntry entry;
     final boolean isLocked;
     final _ConfigMap map;
+    final String useKey;
+
+    if (Configuration.PARAM_PATH.equalsIgnoreCase(key)) {
+      useKey = Configuration.PARAM_PATH;
+    } else {
+      useKey = key;
+    }
 
     map = this.m_data.m_data;
     this.fsmFlagsSet(ConfigurationBuilder.FLAG_DATA_HAS_BEEN_SET);
     synchronized (map) {
-      entry = ((_ConfigMapEntry) (map.getEntry(key, true)));
+      entry = ((_ConfigMapEntry) (map.getEntry(useKey, true)));
       isLocked = entry.m_isLocked;
       if (!isLocked) {
         entry.setValue(value);

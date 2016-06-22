@@ -26,47 +26,49 @@ final class _ConfigurationLoader
   /** {@inheritDoc} */
   @Override
   public final Configuration run() {
-    final _ConfigMap cm;
-    String q;
-    char a, b;
-    Object o;
+    final _ConfigMap configMap;
+    String string;
+    char firstChar, secondChar;
+    Object object;
 
-    try (final ConfigurationBuilder cb = new ConfigurationBuilder(null,
-        false)) {
+    try (
+        final ConfigurationBuilder configurationBuilder = new ConfigurationBuilder(
+            null, false)) {
 
-      cb.putMap(System.getenv());
-      cb.putMap(System.getProperties());
+      configurationBuilder.putMap(System.getenv());
+      configurationBuilder.putMap(System.getProperties());
 
       try {
-        cm = cb.m_data.m_data;
+        configMap = configurationBuilder.m_data.m_data;
 
-        findEnv: if (!(cm.containsKey(Configuration.PARAM_PATH))) {
-          for (a = '!'; a <= '&'; a++) {
-            for (b = '!'; b <= '&'; b++) {
-              q = Configuration.PARAM_PATH;
-              if (a != '"') {
-                q = (a + q);
+        findEnv: if (!(configMap.containsKey(Configuration.PARAM_PATH))) {
+          for (firstChar = '!'; firstChar <= '&'; firstChar++) {
+            for (secondChar = '!'; secondChar <= '&'; secondChar++) {
+              string = Configuration.PARAM_PATH;
+              if (firstChar != '"') {
+                string = (firstChar + string);
               }
-              if (b != '"') {
-                q = (q + b);
+              if (secondChar != '"') {
+                string = (string + secondChar);
               }
-              o = cm.remove(q);
-              if (o != null) {
-                cm.put(Configuration.PARAM_PATH, o);
+              object = configMap.remove(string);
+              if (object != null) {
+                configMap.put(Configuration.PARAM_PATH, object);
                 break findEnv;
               }
             }
           }
         }
 
-        cb._configure(this.m_args);
+        configurationBuilder._configure(this.m_args);
       } catch (final Throwable tt) {
         ErrorUtils.logError(
-            cb.m_data.getLogger(Configuration.PARAM_LOGGER, null), //
+            configurationBuilder.m_data
+                .getLogger(Configuration.PARAM_LOGGER, null), //
             "Severe error during setup.", //$NON-NLS-1$
             tt, false, RethrowMode.AS_RUNTIME_EXCEPTION);
       }
-      return cb.compile();
+      return configurationBuilder.compile();
     }
   }
 }

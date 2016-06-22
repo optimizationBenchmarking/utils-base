@@ -1180,6 +1180,7 @@ public final class PathUtils {
           Configuration.PARAM_PATH, // PATH
           "java.class.path", // class path //$NON-NLS-1$
           "classpath", // environment class path //$NON-NLS-1$
+          "CLASSPATH", // environment class path //$NON-NLS-1$
           "java.library.path",// path to native libraries//$NON-NLS-1$
       }) {
         path = config.get(key, lister, null);

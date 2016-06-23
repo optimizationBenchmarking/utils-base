@@ -1,8 +1,9 @@
-package org.optimizationBenchmarking.utils.document.impl.optional;
+package org.optimizationBenchmarking.utils.document.impl;
 
 import org.optimizationBenchmarking.utils.document.spec.IComplexText;
 import org.optimizationBenchmarking.utils.document.spec.ILabel;
 import org.optimizationBenchmarking.utils.document.spec.ILabelBuilder;
+import org.optimizationBenchmarking.utils.document.spec.IOptionalSection;
 import org.optimizationBenchmarking.utils.document.spec.ISectionBody;
 
 /** an abstract optional section */

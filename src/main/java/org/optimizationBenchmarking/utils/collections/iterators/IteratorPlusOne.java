@@ -21,14 +21,14 @@ public final class IteratorPlusOne<T> extends BasicIterator<T> {
 
   /**
    * Create the iterator with one additional element
-   * 
+   *
    * @param iterator1
    *          the first iterator
    * @param additional
    *          the additional element
    */
   public IteratorPlusOne(final Iterator<? extends T> iterator1,
-      T additional) {
+      final T additional) {
     super();
     if (iterator1 == null) {
       throw new IllegalArgumentException("First iterator cannot be null."); //$NON-NLS-1$
@@ -47,6 +47,7 @@ public final class IteratorPlusOne<T> extends BasicIterator<T> {
           this.m_state = 2;
           return true;
         }
+        this.m_iterator1 = null;
         this.m_state = 3;
       }
       case 2:
@@ -62,13 +63,17 @@ public final class IteratorPlusOne<T> extends BasicIterator<T> {
   /** {@inheritDoc} */
   @Override
   public final T next() {
+    final T additional;
     switch (this.m_state) {
       case 0: {
         if (this.m_iterator1.hasNext()) {
           return this.m_iterator1.next();
         }
+        this.m_iterator1 = null;
         this.m_state = 4;
-        return this.m_additional;
+        additional = this.m_additional;
+        this.m_additional = null;
+        return additional;
       }
       case 2: {
         this.m_state = 0;
@@ -76,7 +81,9 @@ public final class IteratorPlusOne<T> extends BasicIterator<T> {
       }
       case 3: {
         this.m_state = 4;
-        return this.m_additional;
+        additional = this.m_additional;
+        this.m_additional = null;
+        return additional;
       }
       default: {
         return super.next();

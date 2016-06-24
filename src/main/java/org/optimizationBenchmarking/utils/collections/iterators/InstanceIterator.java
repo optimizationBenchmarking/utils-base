@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 public final class InstanceIterator<T> extends BasicIterator<T> {
 
   /** the instance */
-  private final T m_instance;
+  private T m_instance;
   /** was the has not yet been returned */
   private boolean m_has;
 
@@ -36,9 +36,12 @@ public final class InstanceIterator<T> extends BasicIterator<T> {
   /** {@inheritDoc} */
   @Override
   public final T next() throws NoSuchElementException {
+    final T instance;
     if (this.m_has) {
       this.m_has = false;
-      return this.m_instance;
+      instance = this.m_instance;
+      this.m_instance = null;
+      return instance;
     }
     throw new NoSuchElementException(//
         "The only element in this iterator has already been seen."); //$NON-NLS-1$

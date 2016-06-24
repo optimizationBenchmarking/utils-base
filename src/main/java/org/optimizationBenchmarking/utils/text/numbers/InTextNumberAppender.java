@@ -37,87 +37,96 @@ public final class InTextNumberAppender extends NumberAppender {
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final long v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    if ((v >= 0) && (v < InTextNumberAppender.SMALL_NUMBERS.length)) {
+  public final ETextCase appendTo(final long value,
+      final ETextCase textCase, final ITextOutput textOut) {
+    if ((value >= 0)
+        && (value < InTextNumberAppender.SMALL_NUMBERS.length)) {
       return textCase.appendWord(
-          InTextNumberAppender.SMALL_NUMBERS[(int) v], textOut);
+          InTextNumberAppender.SMALL_NUMBERS[(int) value], textOut);
     }
-    textOut.append(v);
+    textOut.append(value);
     return textCase.nextCase();
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final long v, final ETextCase textCase) {
+  public final String toString(final long value,
+      final ETextCase textCase) {
     final String str;
-    if ((v >= 0) && (v < InTextNumberAppender.SMALL_NUMBERS.length)) {
-      str = InTextNumberAppender.SMALL_NUMBERS[(int) v];
+    if ((value >= 0)
+        && (value < InTextNumberAppender.SMALL_NUMBERS.length)) {
+      str = InTextNumberAppender.SMALL_NUMBERS[(int) value];
       if (textCase == ETextCase.IN_SENTENCE) {
         return str;
       }
       return (textCase.adjustCaseOfFirstCharInWord(str.charAt(0))//
           + str.substring(1));
     }
-    return Long.toString(v);
+    return Long.toString(value);
   }
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final int v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    if ((v >= 0) && (v < InTextNumberAppender.SMALL_NUMBERS.length)) {
+  public final ETextCase appendTo(final int value,
+      final ETextCase textCase, final ITextOutput textOut) {
+    if ((value >= 0)
+        && (value < InTextNumberAppender.SMALL_NUMBERS.length)) {
       return textCase.appendWord(//
-          InTextNumberAppender.SMALL_NUMBERS[v], textOut);
+          InTextNumberAppender.SMALL_NUMBERS[value], textOut);
     }
-    textOut.append(v);
+    textOut.append(value);
     return textCase.nextCase();
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final int v, final ETextCase textCase) {
+  public final String toString(final int value, final ETextCase textCase) {
     final String str;
-    if ((v >= 0) && (v < InTextNumberAppender.SMALL_NUMBERS.length)) {
-      str = InTextNumberAppender.SMALL_NUMBERS[v];
+    if ((value >= 0)
+        && (value < InTextNumberAppender.SMALL_NUMBERS.length)) {
+      str = InTextNumberAppender.SMALL_NUMBERS[value];
       if (textCase == ETextCase.IN_SENTENCE) {
         return str;
       }
       return (textCase.adjustCaseOfFirstCharInWord(str.charAt(0))//
           + str.substring(1));
     }
-    return Integer.toString(v);
+    return Integer.toString(value);
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final double v, final ETextCase textCase) {
+  public final String toString(final double value,
+      final ETextCase textCase) {
     final int l;
 
-    if ((v >= 0) && (v < InTextNumberAppender.SMALL_NUMBERS.length)) {
-      l = ((int) v);
-      if (l == v) {
+    if ((value >= 0)
+        && (value < InTextNumberAppender.SMALL_NUMBERS.length)) {
+      l = ((int) value);
+      if (l == value) {
         return this.toString(l, textCase);
       }
     }
 
-    return SimpleNumberAppender.INSTANCE.toString(v, textCase);
+    return SimpleNumberAppender.INSTANCE.toString(value, textCase);
   }
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final double v, final ETextCase textCase,
-      final ITextOutput textOut) {
+  public final ETextCase appendTo(final double value,
+      final ETextCase textCase, final ITextOutput textOut) {
     final int l;
 
-    if ((v >= 0) && (v < InTextNumberAppender.SMALL_NUMBERS.length)) {
-      l = ((int) v);
-      if (l == v) {
+    if ((value >= 0)
+        && (value < InTextNumberAppender.SMALL_NUMBERS.length)) {
+      l = ((int) value);
+      if (l == value) {
         return this.appendTo(l, textCase, textOut);
       }
     }
 
-    return SimpleNumberAppender.INSTANCE.appendTo(v, textCase, textOut);
+    return SimpleNumberAppender.INSTANCE.appendTo(value, textCase,
+        textOut);
   }
 
   /** {@inheritDoc} */

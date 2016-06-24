@@ -41,15 +41,15 @@ public final class AlphabeticNumberAppender extends NumberAppender {
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final long v, final ETextCase textCase,
-      final ITextOutput textOut) {
+  public final ETextCase appendTo(final long value,
+      final ETextCase textCase, final ITextOutput textOut) {
     final char[] buf;
     final ETextCase use;
     long x;
     int addend, its, plus, len;
 
-    x = v;
-    if (v < 0) {
+    x = value;
+    if (value < 0) {
       its = 13;
       plus = (this.m_lower ? 0x7b : 0x5b);
     } else {
@@ -81,14 +81,14 @@ public final class AlphabeticNumberAppender extends NumberAppender {
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final int v, final ETextCase textCase,
-      final ITextOutput textOut) {
+  public final ETextCase appendTo(final int value,
+      final ETextCase textCase, final ITextOutput textOut) {
     final ETextCase use;
     final char[] buf;
     int x, addend, its, plus, len;
 
-    x = v;
-    if (v < 0) {
+    x = value;
+    if (value < 0) {
       its = 6;
       plus = (this.m_lower ? 0x7b : 0x5b);
     } else {

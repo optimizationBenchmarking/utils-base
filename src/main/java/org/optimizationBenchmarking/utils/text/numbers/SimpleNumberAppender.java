@@ -1,6 +1,7 @@
 package org.optimizationBenchmarking.utils.text.numbers;
 
 import org.optimizationBenchmarking.utils.error.RethrowMode;
+import org.optimizationBenchmarking.utils.math.MathUtils;
 import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
@@ -35,35 +36,41 @@ public final class SimpleNumberAppender extends _PlainIntNumberAppender {
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final double v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    textOut.append(this.toString(v, textCase));
+  public final ETextCase appendTo(final double value,
+      final ETextCase textCase, final ITextOutput textOut) {
+    if ((!(MathUtils.isFinite(value)))
+        && NumberAppender.shouldTextOutputHandleNonFiniteValues(textOut)) {
+      textOut.append(value);
+    } else {
+      textOut.append(this.toString(value, textCase));
+    }
     return textCase.nextCase();
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final double v, final ETextCase textCase) {
+  public final String toString(final double value,
+      final ETextCase textCase) {
     final long l;
     String s;
 
-    if ((v >= Long.MIN_VALUE) && (v <= Long.MAX_VALUE)) {
-      l = ((long) v);
-      if (l == v) {
+    if ((value >= Long.MIN_VALUE) && (value <= Long.MAX_VALUE)) {
+      l = ((long) value);
+      if (l == value) {
         s = Long.toString(l);
-        if (Double.parseDouble(s) == v) {// this should always be true
+        if (Double.parseDouble(s) == value) {// this should always be true
           return s; // but let's better check it out
         }
       }
     }
 
-    s = Double.toString(v);
-    if ((v != v) || (v <= Double.NEGATIVE_INFINITY)
-        || (v >= Double.POSITIVE_INFINITY)) {
+    s = Double.toString(value);
+    if ((value != value) || (value <= Double.NEGATIVE_INFINITY)
+        || (value >= Double.POSITIVE_INFINITY)) {
       return s;
     }
 
-    return SimpleNumberAppender._simplify(v, s).m_string;
+    return SimpleNumberAppender._simplify(value, s).m_string;
   }
 
   /**

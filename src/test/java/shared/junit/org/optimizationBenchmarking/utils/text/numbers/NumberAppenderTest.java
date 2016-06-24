@@ -114,38 +114,41 @@ public class NumberAppenderTest extends InstanceTest<NumberAppender> {
   /** test the int output */
   @Test(timeout = 3600000)
   public void testIntDet() {
-    final MemoryTextOutput m;
-    final NumberAppender n;
-    String s;
-    int i;
+    final MemoryTextOutput memoryTextOutput;
+    final NumberAppender numberAppender;
+    String string;
+    int integer;
 
-    n = this.getInstance();
-    m = new MemoryTextOutput();
+    numberAppender = this.getInstance();
+    memoryTextOutput = new MemoryTextOutput();
 
-    for (final ETextCase c : ETextCase.values()) {
+    for (final ETextCase textCase : ETextCase.values()) {
 
-      m.clear();
-      i = Integer.MIN_VALUE;
-      n.appendTo(i, c, m);
-      Assert.assertEquals(n.toString(i, c), s = m.toString());
+      memoryTextOutput.clear();
+      integer = Integer.MIN_VALUE;
+      numberAppender.appendTo(integer, textCase, memoryTextOutput);
+      Assert.assertEquals(numberAppender.toString(integer, textCase),
+          string = memoryTextOutput.toString());
       if (this.m_canParse) {
-        Assert.assertEquals(this.parseLong(s), i);
+        Assert.assertEquals(this.parseLong(string), integer);
       }
 
-      m.clear();
-      i = Integer.MAX_VALUE;
-      n.appendTo(i, c, m);
-      Assert.assertEquals(n.toString(i, c), s = m.toString());
+      memoryTextOutput.clear();
+      integer = Integer.MAX_VALUE;
+      numberAppender.appendTo(integer, textCase, memoryTextOutput);
+      Assert.assertEquals(numberAppender.toString(integer, textCase),
+          string = memoryTextOutput.toString());
       if (this.m_canParse) {
-        Assert.assertEquals(this.parseLong(s), i);
+        Assert.assertEquals(this.parseLong(string), integer);
       }
 
-      for (int l = -1000; l <= 1000; l++) {
-        m.clear();
-        n.appendTo(l, c, m);
-        Assert.assertEquals(n.toString(l, c), s = m.toString());
+      for (int longValue = -1000; longValue <= 1000; longValue++) {
+        memoryTextOutput.clear();
+        numberAppender.appendTo(longValue, textCase, memoryTextOutput);
+        Assert.assertEquals(numberAppender.toString(longValue, textCase),
+            string = memoryTextOutput.toString());
         if (this.m_canParse) {
-          Assert.assertEquals(l, this.parseLong(s));
+          Assert.assertEquals(longValue, this.parseLong(string));
         }
       }
     }
@@ -154,94 +157,109 @@ public class NumberAppenderTest extends InstanceTest<NumberAppender> {
   /** test the double output */
   @Test(timeout = 3600000)
   public void testDoubleDet() {
-    final MemoryTextOutput m;
-    final NumberAppender n;
-    double v;
-    String s;
+    final MemoryTextOutput memoryTextOutput;
+    final NumberAppender numberAppender;
+    double value;
+    String string;
 
-    n = this.getInstance();
-    m = new MemoryTextOutput();
+    numberAppender = this.getInstance();
+    memoryTextOutput = new MemoryTextOutput();
 
-    for (final ETextCase c : ETextCase.values()) {
+    for (final ETextCase textCase : ETextCase.values()) {
 
-      m.clear();
-      n.appendTo(v = Double.MIN_VALUE, c, m);
-      Assert.assertEquals(n.toString(v, c), s = m.toString());
+      memoryTextOutput.clear();
+      numberAppender.appendTo(value = Double.MIN_VALUE, textCase,
+          memoryTextOutput);
+      Assert.assertEquals(numberAppender.toString(value, textCase),
+          string = memoryTextOutput.toString());
       if (this.m_canParse) {
-        Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+        Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
       }
 
-      m.clear();
-      n.appendTo(v = Double.MAX_VALUE, c, m);
-      Assert.assertEquals(n.toString(v, c), s = m.toString());
+      memoryTextOutput.clear();
+      numberAppender.appendTo(value = Double.MAX_VALUE, textCase,
+          memoryTextOutput);
+      Assert.assertEquals(numberAppender.toString(value, textCase),
+          string = memoryTextOutput.toString());
       if (this.m_canParse) {
-        Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+        Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
       }
 
-      m.clear();
-      n.appendTo(v = Double.POSITIVE_INFINITY, c, m);
-      Assert.assertEquals(n.toString(v, c), s = m.toString());
+      memoryTextOutput.clear();
+      numberAppender.appendTo(value = Double.POSITIVE_INFINITY, textCase,
+          memoryTextOutput);
+      Assert.assertEquals(numberAppender.toString(value, textCase),
+          string = memoryTextOutput.toString());
       if (this.m_canParse) {
-        Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+        Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
       }
 
-      m.clear();
-      n.appendTo(v = Double.NEGATIVE_INFINITY, c, m);
-      Assert.assertEquals(n.toString(v, c), s = m.toString());
+      memoryTextOutput.clear();
+      numberAppender.appendTo(value = Double.NEGATIVE_INFINITY, textCase,
+          memoryTextOutput);
+      Assert.assertEquals(numberAppender.toString(value, textCase),
+          string = memoryTextOutput.toString());
       if (this.m_canParse) {
-        Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+        Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
       }
 
-      m.clear();
-      n.appendTo(v = Double.NaN, c, m);
-      Assert.assertEquals(n.toString(v, c), s = m.toString());
+      memoryTextOutput.clear();
+      numberAppender.appendTo(value = Double.NaN, textCase,
+          memoryTextOutput);
+      Assert.assertEquals(numberAppender.toString(value, textCase),
+          string = memoryTextOutput.toString());
       if (this.m_canParse) {
-        v = this.parseDouble(s);
-        Assert.assertTrue(v != v);
+        value = this.parseDouble(string);
+        Assert.assertTrue(value != value);
       }
 
-      for (double l = -100; l <= 100; l++) {
-        if (l >= 0) {
-          m.clear();
-          v = Math.sqrt(l);
-          n.appendTo(v, c, m);
-          Assert.assertEquals(n.toString(v, c), s = m.toString());
+      for (double longValue = -100; longValue <= 100; longValue++) {
+        if (longValue >= 0) {
+          memoryTextOutput.clear();
+          value = Math.sqrt(longValue);
+          numberAppender.appendTo(value, textCase, memoryTextOutput);
+          Assert.assertEquals(numberAppender.toString(value, textCase),
+              string = memoryTextOutput.toString());
           if (this.m_canParse) {
-            Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+            Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
           }
 
-          m.clear();
-          v = Math.log(l);
-          n.appendTo(v, c, m);
-          Assert.assertEquals(n.toString(v, c), s = m.toString());
+          memoryTextOutput.clear();
+          value = Math.log(longValue);
+          numberAppender.appendTo(value, textCase, memoryTextOutput);
+          Assert.assertEquals(numberAppender.toString(value, textCase),
+              string = memoryTextOutput.toString());
           if (this.m_canParse) {
-            Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+            Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
           }
         }
 
-        m.clear();
-        v = Math.exp(l);
-        n.appendTo(v, c, m);
-        Assert.assertEquals(n.toString(v, c), s = m.toString());
+        memoryTextOutput.clear();
+        value = Math.exp(longValue);
+        numberAppender.appendTo(value, textCase, memoryTextOutput);
+        Assert.assertEquals(numberAppender.toString(value, textCase),
+            string = memoryTextOutput.toString());
         if (this.m_canParse) {
-          Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+          Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
         }
 
         for (double z = -100; z <= 100; z++) {
-          m.clear();
-          v = (l / z);
-          n.appendTo(v, c, m);
-          Assert.assertEquals(n.toString(v, c), s = m.toString());
+          memoryTextOutput.clear();
+          value = (longValue / z);
+          numberAppender.appendTo(value, textCase, memoryTextOutput);
+          Assert.assertEquals(numberAppender.toString(value, textCase),
+              string = memoryTextOutput.toString());
           if (this.m_canParse) {
-            Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+            Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
           }
 
-          m.clear();
-          v = Math.exp(l);
-          n.appendTo(v, c, m);
-          Assert.assertEquals(n.toString(v, c), s = m.toString());
+          memoryTextOutput.clear();
+          value = Math.exp(longValue);
+          numberAppender.appendTo(value, textCase, memoryTextOutput);
+          Assert.assertEquals(numberAppender.toString(value, textCase),
+              string = memoryTextOutput.toString());
           if (this.m_canParse) {
-            Assert.assertEquals(this.parseDouble(s), v, 1e-15d);
+            Assert.assertEquals(this.parseDouble(string), value, 1e-15d);
           }
         }
       }

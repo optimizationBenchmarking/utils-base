@@ -21,26 +21,28 @@ public final class XMLNumberAppender extends _PlainIntNumberAppender {
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final double v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    textOut.append(this.toString(v, textCase));
+  public final ETextCase appendTo(final double value,
+      final ETextCase textCase, final ITextOutput textOut) {
+    textOut.append(this.toString(value, textCase));
     return textCase.nextCase();
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final double v, final ETextCase textCase) {
-    if (v != v) {
+  public final String toString(final double value,
+      final ETextCase textCase) {
+    if (value != value) {
       return "NaN"; //$NON-NLS-1$
     }
-    if (v <= Double.NEGATIVE_INFINITY) {
+    if (value <= Double.NEGATIVE_INFINITY) {
       return "-INF"; //$NON-NLS-1$
     }
-    if (v >= Double.POSITIVE_INFINITY) {
+    if (value >= Double.POSITIVE_INFINITY) {
       return "+INF"; //$NON-NLS-1$
     }
 
-    return SimpleNumberAppender._simplify(v, String.valueOf(v)).m_string;
+    return SimpleNumberAppender._simplify(value,
+        String.valueOf(value)).m_string;
   }
 
   /** {@inheritDoc} */

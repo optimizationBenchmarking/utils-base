@@ -35,27 +35,29 @@ public final class TruncatedNumberAppender extends NumberAppender {
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final long v, final ETextCase textCase) {
+  public final String toString(final long value,
+      final ETextCase textCase) {
     final String best;
     final int length;
 
-    best = SimpleNumberAppender.INSTANCE.toString(v, textCase);
+    best = SimpleNumberAppender.INSTANCE.toString(value, textCase);
     if ((best == null) || ((length = best.length()) <= 0)
         || (length > ((best.charAt(0) == '-') ? 4 : 5))) {
       return TruncatedNumberAppender.LOCAL.get().m_scientificFormat
-          .format(v);
+          .format(value);
     }
     return best;
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final double v, final ETextCase textCase) {
+  public final String toString(final double value,
+      final ETextCase textCase) {
     final String best;
     final __FormatHolder holder;
     int length;
 
-    best = SimpleNumberAppender.INSTANCE.toString(v, textCase);
+    best = SimpleNumberAppender.INSTANCE.toString(value, textCase);
 
     isOK: {
 
@@ -83,39 +85,41 @@ public final class TruncatedNumberAppender extends NumberAppender {
 
     holder = TruncatedNumberAppender.LOCAL.get();
 
-    if ((v <= -1e-3d) || (v >= 1e-3d)) {
-      if ((v > (-10d)) && (v < 10d)) {
-        return holder.m_normalFormat1.format(v);
+    if ((value <= -1e-3d) || (value >= 1e-3d)) {
+      if ((value > (-10d)) && (value < 10d)) {
+        return holder.m_normalFormat1.format(value);
       }
-      if ((v > (-100d)) && (v < 100d)) {
-        return holder.m_normalFormat2.format(v);
+      if ((value > (-100d)) && (value < 100d)) {
+        return holder.m_normalFormat2.format(value);
       }
-      if ((v > (-1000d)) && (v < 1000d)) {
-        return holder.m_normalFormat3.format(v);
+      if ((value > (-1000d)) && (value < 1000d)) {
+        return holder.m_normalFormat3.format(value);
       }
-      if ((v > (-9999.5d)) && (v < 9999.5d)) {
-        return String.valueOf(Math.round(v));
+      if ((value > (-9999.5d)) && (value < 9999.5d)) {
+        return String.valueOf(Math.round(value));
       }
     }
-    return holder.m_scientificFormat.format(v);
+    return holder.m_scientificFormat.format(value);
   }
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final long v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    textOut.append(this.toString(v, textCase));
+  public final ETextCase appendTo(final long value,
+      final ETextCase textCase, final ITextOutput textOut) {
+    textOut.append(this.toString(value, textCase));
     return textCase.nextCase();
   }
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final double v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    if (MathUtils.isFinite(v)) {
-      textOut.append(this.toString(v, textCase));
+  public final ETextCase appendTo(final double value,
+      final ETextCase textCase, final ITextOutput textOut) {
+
+    if ((!(MathUtils.isFinite(value)))
+        && NumberAppender.shouldTextOutputHandleNonFiniteValues(textOut)) {
+      textOut.append(value);
     } else {
-      textOut.append(v);
+      textOut.append(this.toString(value, textCase));
     }
     return textCase.nextCase();
   }

@@ -3,6 +3,7 @@ package org.optimizationBenchmarking.utils.text.numbers;
 import java.math.BigDecimal;
 
 import org.optimizationBenchmarking.utils.comparison.Compare;
+import org.optimizationBenchmarking.utils.math.MathUtils;
 import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
@@ -28,47 +29,55 @@ public final class NoExponentNumberAppender
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final double v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    textOut.append(this.toString(v, textCase));
+  public final ETextCase appendTo(final double value,
+      final ETextCase textCase, final ITextOutput textOut) {
+    if ((!(MathUtils.isFinite(value)))
+        && NumberAppender.shouldTextOutputHandleNonFiniteValues(textOut)) {
+      textOut.append(value);
+    } else {
+      textOut.append(this.toString(value, textCase));
+    }
     return textCase.nextCase();
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final double v, final ETextCase textCase) {
+  public final String toString(final double value,
+      final ETextCase textCase) {
     final long l;
     int compareChoices;
-    String s;
+    String string;
     _NumberString numberString1, numberString2;
     BigDecimal choice1, choice2;
 
-    if ((v >= Long.MIN_VALUE) && (v <= Long.MAX_VALUE)) {
-      l = ((long) v);
-      if (l == v) {
-        s = Long.toString(l);
-        if (Double.parseDouble(s) == v) {// this should always be true
-          return s; // but let's better check it out
+    if ((value >= Long.MIN_VALUE) && (value <= Long.MAX_VALUE)) {
+      l = ((long) value);
+      if (l == value) {
+        string = Long.toString(l);
+        if (Double.parseDouble(string) == value) {// this should always be
+                                                  // true
+          return string; // but let'string better check it out
         }
       }
     }
 
-    s = Double.toString(v);
-    if ((v != v) || (v <= Double.NEGATIVE_INFINITY)
-        || (v >= Double.POSITIVE_INFINITY)) {
-      return s;
+    string = Double.toString(value);
+    if ((value != value) || (value <= Double.NEGATIVE_INFINITY)
+        || (value >= Double.POSITIVE_INFINITY)) {
+      return string;
     }
 
-    numberString1 = SimpleNumberAppender._simplify(v, s);
+    numberString1 = SimpleNumberAppender._simplify(value, string);
     if (!(numberString1.m_hasE)) {
       return numberString1.m_string;
     }
 
-    choice1 = new BigDecimal(v);
+    choice1 = new BigDecimal(value);
     choice2 = new BigDecimal(numberString1.m_string);
 
-    compareChoices = Compare.compare(Math.abs(choice1.doubleValue() - v),
-        Math.abs(choice2.doubleValue() - v));
+    compareChoices = Compare.compare(
+        Math.abs(choice1.doubleValue() - value),
+        Math.abs(choice2.doubleValue() - value));
 
     if (compareChoices < 0) {
       return choice1.toPlainString();

@@ -21,30 +21,30 @@ abstract class _PlainIntNumberAppender extends NumberAppender
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final long v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    textOut.append(v);
+  public final ETextCase appendTo(final long value,
+      final ETextCase textCase, final ITextOutput textOut) {
+    textOut.append(value);
     return textCase.nextCase();
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final long v, final ETextCase textCase) {
-    return Long.toString(v);
+  public final String toString(final long value,
+      final ETextCase textCase) {
+    return Long.toString(value);
   }
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final int v, final ETextCase textCase,
-      final ITextOutput textOut) {
-    textOut.append(v);
+  public final ETextCase appendTo(final int value,
+      final ETextCase textCase, final ITextOutput textOut) {
+    textOut.append(value);
     return textCase.nextCase();
   }
 
   /** {@inheritDoc} */
   @Override
-  public final String toString(final int v, final ETextCase textCase) {
-    return Integer.toString(v);
+  public final String toString(final int value, final ETextCase textCase) {
+    return Integer.toString(value);
   }
-
 }

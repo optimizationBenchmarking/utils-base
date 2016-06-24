@@ -448,55 +448,55 @@ public final class TextNumberAppender extends NumberAppender {
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final double v, final ETextCase textCase,
-      final ITextOutput textOut) {
+  public final ETextCase appendTo(final double value,
+      final ETextCase textCase, final ITextOutput textOut) {
     long num;
-    double value, d;
+    double dvalue, d;
     int power, k;
     String t;
     _NumberStatus status;
 
-    if (v < 0d) {
-      if (v <= Double.NEGATIVE_INFINITY) {
+    if (value < 0d) {
+      if (value <= Double.NEGATIVE_INFINITY) {
         return textCase.appendWords(//
             LooseDoubleParser.NEGATIVE_INFINITY, textOut);
       }
 
       status = new _NumberStatus(textCase);
-      if (v == Long.MIN_VALUE) {
+      if (value == Long.MIN_VALUE) {
         TextNumberAppender.__appendLongAsText(Long.MIN_VALUE, textOut, 0,
             status);
         return status.m_case;
       }
       TextNumberAppender.__appendToken(TextNumberAppender.MINUS, textOut,
           status);
-      value = (-v);
+      dvalue = (-value);
     } else {
-      if (v == 0d) {
+      if (value == 0d) {
         return textCase.appendWord(TextNumberAppender.C_0, textOut);
       }
-      if (v >= Double.POSITIVE_INFINITY) {
+      if (value >= Double.POSITIVE_INFINITY) {
         return textCase.appendWords(LooseDoubleParser.POSITIVE_INFINITY,
             textOut);
       }
-      if (v != v) {
+      if (value != value) {
         return textCase.appendWord(LooseDoubleParser.NOT_A_NUMBER,
             textOut);
       }
-      value = v;
+      dvalue = value;
       status = new _NumberStatus(textCase);
     }
 
-    if ((value >= Long.MIN_VALUE) && (value <= Long.MAX_VALUE)) {
-      // we can directly access the value as a long, but need to take care
+    if ((dvalue >= Long.MIN_VALUE) && (dvalue <= Long.MAX_VALUE)) {
+      // we can directly access the dvalue as a long, but need to take care
       // of the things after the comma
 
-      num = ((long) value);
+      num = ((long) dvalue);
       if (num > 0L) {// stuff before the comma
         TextNumberAppender.__appendLongAsText(num, textOut, 0, status);
       }
 
-      if (num == value) {
+      if (num == dvalue) {
         return status.m_case;
       }
 
@@ -505,21 +505,21 @@ public final class TextNumberAppender extends NumberAppender {
       // errors such as that 3.141592d - 3d = 0.1415920...016 or something,
       // instead of 0.141592. If that does not work, we try to get the
       // fraction part by multiplying with powers of 10.
-      t = String.valueOf(value);
+      t = String.valueOf(dvalue);
       if (t.indexOf('E') >= 0) {
         // ok, no easy fallback
         t = null;
 
-        value -= num;
+        dvalue -= num;
 
         // ok, the scale of the double is larger that what fits into a
         // long, so we need to adjust it
 
         findPower: {
           easy: {
-            power = ((int) (-Math.log10(value)));
+            power = ((int) (-Math.log10(dvalue)));
             for (;;) {
-              d = (value * Math.pow(10d, power));
+              d = (dvalue * Math.pow(10d, power));
               if ((d != d) || (d > Double.MAX_VALUE)) {
                 break easy;
               }
@@ -531,8 +531,8 @@ public final class TextNumberAppender extends NumberAppender {
             }
           }
 
-          power = ((int) (-Math.log10(value)));
-          d = value;
+          power = ((int) (-Math.log10(dvalue)));
+          d = dvalue;
           for (k = 1; k <= power; k++) {
             d *= 10d;
           }
@@ -562,8 +562,8 @@ public final class TextNumberAppender extends NumberAppender {
 
       if ((power / 3) >= TextNumberAppender.SCALES.length) {
         // This should never happen: The power is too large for our list,
-        // fall back to normal v representation
-        throw new IllegalArgumentException(("The value " + v) + //$NON-NLS-1$
+        // fall back to normal value representation
+        throw new IllegalArgumentException(("The dvalue " + value) + //$NON-NLS-1$
             " is out of the range of numbers we can deal with. Odd."); //$NON-NLS-1$
       }
 
@@ -627,9 +627,9 @@ public final class TextNumberAppender extends NumberAppender {
 
     // ok, the scale of the double is larger that what fits into a long, so
     // we need to adjust it
-    power = ((int) (Math.log10(value)));
+    power = ((int) (Math.log10(dvalue)));
     for (;;) {
-      d = (value * Math.pow(10d, -power));
+      d = (dvalue * Math.pow(10d, -power));
       num = ((long) d);
       if (num == d) {
         break;
@@ -643,23 +643,23 @@ public final class TextNumberAppender extends NumberAppender {
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final long v, final ETextCase textCase,
-      final ITextOutput textOut) {
+  public final ETextCase appendTo(final long value,
+      final ETextCase textCase, final ITextOutput textOut) {
     final _NumberStatus status;
 
     status = new _NumberStatus(textCase);
-    TextNumberAppender.__appendLongAsText(v, textOut, 0, status);
+    TextNumberAppender.__appendLongAsText(value, textOut, 0, status);
     return status.m_case;
   }
 
   /** {@inheritDoc} */
   @Override
-  public final ETextCase appendTo(final int v, final ETextCase textCase,
-      final ITextOutput textOut) {
+  public final ETextCase appendTo(final int value,
+      final ETextCase textCase, final ITextOutput textOut) {
     final _NumberStatus status;
 
     status = new _NumberStatus(textCase);
-    TextNumberAppender.__appendLongAsText(v, textOut, 0, status);
+    TextNumberAppender.__appendLongAsText(value, textOut, 0, status);
     return status.m_case;
   }
 

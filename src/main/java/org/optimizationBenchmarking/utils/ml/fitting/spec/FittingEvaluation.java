@@ -7,6 +7,9 @@ public class FittingEvaluation {
   public double[][] jacobian;
   /** the residuals */
   public double[] residuals;
+  /** the gradient */
+  public double[] gradient;
+
   /** the root of the sum of the squared errors */
   public double rsError;
   /** the root of the mean of the squared errors */

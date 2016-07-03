@@ -9,7 +9,17 @@ import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /**
  * A base class for representing a real function that depends on one
- * independent variable plus some extra parameters.
+ * independent variable plus some extra parameters. It represents a
+ * <a href="https://en.wikipedia.org/wiki/Family_of_curves">family of
+ * curves</a> over a single parameter {@code x} and a set of
+ * {@link #getParameterCount() m} parameters.
+ * <blockquote cite="https://en.wikipedia.org/wiki/Family_of_curves">A
+ * family of curves is a set of curves, each of which is given by a
+ * function or parametrization in which one or more of the parameters is
+ * variable. In general, the parameter(s) influence the shape of the curve
+ * in a way that is more complicated than a simple linear transformation.
+ * Sets of curves given by an implicit relation may also represent families
+ * of curves.</blockquote>
  */
 public abstract class ParametricUnaryFunction implements IMathRenderable {
 
@@ -19,41 +29,49 @@ public abstract class ParametricUnaryFunction implements IMathRenderable {
   }
 
   /**
-   * Compute the value of the function.
+   * Compute the value of the function defined by the given
+   * {@code parameters} at a given {@code x}-coordinate.
    *
    * @param x
-   *          Point for which the function value should be computed.
+   *          the point for which the function value should be computed
    * @param parameters
-   *          function parameters.
-   * @return the value.
+   *          the parameters which specify the shape of the function
+   * @return the value of this function at {@code x}
    */
-  public abstract double value(double x, double[] parameters);
+  public abstract double value(final double x, final double[] parameters);
 
   /**
-   * Compute the gradient of the function with respect to its parameters.
+   * Compute the gradient of the function with respect to its
+   * {@code parameters} at a given {@code x}-coordinate. {@code gradient}
+   * is the destination array which must have length
+   * {@link #getParameterCount() m}. For each parameter {@code P_1..P_m}
+   * the array will be filled with {@code df/dP_1}, {@code df/dP_2},
+   * {@code ..}, {@code df/dP_m} at {@code x}.
    *
    * @param x
-   *          Point for which the function value should be computed.
+   *          the point for which the function gradients should be computed
    * @param parameters
-   *          Function parameters.
+   *          the parameters which specify the shape of the function
    * @param gradient
-   *          the variable to receive the gradient
+   *          the variables to receive the gradients
    */
-  public abstract void gradient(double x, double[] parameters,
+  public abstract void gradient(final double x, final double[] parameters,
       final double[] gradient);
 
   /**
    * Create a unary function representing a specific configuration of this
-   * parametric unary function.
+   * parametric unary function. This will be a {@link UnaryFunction} which
+   * has the {@code parameters} stored inside and (probably) delegates its
+   * {@code compute} calls to {@link #value(double, double[])}.
    *
    * @param parameters
-   *          the parameter configuration
+   *          the parameters which specify the shape of the function
    * @return the unary function
    */
   public abstract UnaryFunction toUnaryFunction(final double[] parameters);
 
   /**
-   * Get the number of parameters
+   * Get the number of parameters of this family of curves.
    *
    * @return the number of parameters
    */

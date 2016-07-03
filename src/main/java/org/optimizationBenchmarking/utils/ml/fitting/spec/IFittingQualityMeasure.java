@@ -57,8 +57,9 @@ public interface IFittingQualityMeasure {
 
   /**
    * The number of samples used by this quality measure, which is the
-   * number of residuals that will be provided and also the number of rows
-   * of the Jacobian if
+   * number of {@linkplain FittingEvaluation#residuals residuals} that will
+   * be provided and also the number of rows of the
+   * {@linkplain FittingEvaluation#jacobian Jacobian} if
    * {@link #evaluate(ParametricUnaryFunction, double[], FittingEvaluation)}
    * is called.
    *

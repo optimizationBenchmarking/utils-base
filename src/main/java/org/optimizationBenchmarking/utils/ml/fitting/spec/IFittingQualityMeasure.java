@@ -30,11 +30,20 @@ public interface IFittingQualityMeasure {
    *          the model
    * @param parameters
    *          the model parameters
+   * @param computeResiduals
+   *          should we compute the {@link FittingEvaluation#residuals} (
+   *          {@code true}) or leave that variable unchanged ({@code false}
+   *          )?
+   * @param computeJacobinian
+   *          should we compute the {@link FittingEvaluation#jacobian} (
+   *          {@code true}) or leave that variable unchanged ({@code false}
+   *          )?
    * @param dest
    *          the destination record.
    */
   public abstract void evaluate(final ParametricUnaryFunction model,
-      final double[] parameters, final FittingEvaluation dest);
+      final double[] parameters, final boolean computeResiduals,
+      final boolean computeJacobinian, final FittingEvaluation dest);
 
   /**
    * Try to create a compatible quality measure based on a subset of the
@@ -60,7 +69,7 @@ public interface IFittingQualityMeasure {
    * number of {@linkplain FittingEvaluation#residuals residuals} that will
    * be provided and also the number of rows of the
    * {@linkplain FittingEvaluation#jacobian Jacobian} if
-   * {@link #evaluate(ParametricUnaryFunction, double[], FittingEvaluation)}
+   * {@link #evaluate(ParametricUnaryFunction, double[],boolean,boolean, FittingEvaluation)}
    * is called.
    *
    * @return the number of samples

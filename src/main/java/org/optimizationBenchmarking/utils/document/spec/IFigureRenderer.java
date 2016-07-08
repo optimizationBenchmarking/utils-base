@@ -17,7 +17,7 @@ public interface IFigureRenderer {
    *
    * @return the path component of the figure
    */
-  public abstract String getFigurePath();
+  public abstract String getFigurePathComponentSuggestion();
 
   /**
    * Get the size of the figure

@@ -164,38 +164,46 @@ public final class Renderers {
       final Collection<ILabel> labelCollection, final ISectionBody body,
       final IFigureSeries series) {
     final boolean isPartOfSeries;
+    final FigureRenderer renderer;
     final ILabel label;
 
     isPartOfSeries = (series != null);
     if (figureRenderer instanceof FigureRenderer) {
-      ((FigureRenderer) figureRenderer).m_isPartOfSeries = isPartOfSeries;
-    }
-
-    label = figureRenderer.createFigureLabel(body);
-    if ((label != null) && (labelCollection != null)) {
-      labelCollection.add(label);
-    }
-
-    if (isPartOfSeries) {
-      try (@SuppressWarnings("null")
-      final IFigure figure = series.figure(label,
-          figureRenderer.getFigurePath())) {
-        figureRenderer.renderFigure(figure);
-      }
+      renderer = ((FigureRenderer) figureRenderer);
+      renderer.m_isPartOfSeries = isPartOfSeries;
     } else {
-      try (final IFigure figure = body.figure(label,
-          figureRenderer.getFigureSize(),
-          figureRenderer.getFigurePath())) {
-        figureRenderer.renderFigure(figure);
+      renderer = null;
+    }
+
+    try {
+      label = figureRenderer.createFigureLabel(body);
+      if ((label != null) && (labelCollection != null)) {
+        labelCollection.add(label);
+      }
+
+      if (isPartOfSeries) {
+        try (@SuppressWarnings("null")
+        final IFigure figure = series.figure(label,
+            figureRenderer.getFigurePathComponentSuggestion())) {
+          figureRenderer.renderFigure(figure);
+        }
+      } else {
+        try (final IFigure figure = body.figure(label,
+            figureRenderer.getFigureSize(),
+            figureRenderer.getFigurePathComponentSuggestion())) {
+          figureRenderer.renderFigure(figure);
+        }
+      }
+    } finally {
+      if (renderer != null) {
+        renderer.m_isPartOfSeries = false;
       }
     }
   }
 
   /**
-   * Render a series of figures
+   * Render a series of figures.
    *
-   * @param figureRenderers
-   *          the figure renderers
    * @param figureSeriesRenderer
    *          the figure series renderer
    * @param labelCollection
@@ -204,18 +212,16 @@ public final class Renderers {
    *          the section body to use
    */
   public static final void renderFigures(
-      final Iterator<? extends IFigureRenderer> figureRenderers,
       final IFigureSeriesRenderer figureSeriesRenderer,
       final Collection<ILabel> labelCollection, final ISectionBody body) {
-    IFigureRenderer cached, current;
+    IFigureRenderer cached;
     IFigureSeries series;
     ILabel label;
 
-    if (figureRenderers != null) {
+    if (figureSeriesRenderer != null) {
       series = null;
       cached = null;
-      while (figureRenderers.hasNext()) {
-        current = figureRenderers.next();
+      for (final IFigureRenderer current : figureSeriesRenderer) {
         if (current == null) {
           continue;
         }
@@ -233,7 +239,10 @@ public final class Renderers {
         }
         series = body.figureSeries(label,
             figureSeriesRenderer.getFigureSize(),
-            figureSeriesRenderer.getFigureSeriesPath());
+            figureSeriesRenderer.getFigureSeriesPathComponentSuggestion());
+        try (final IComplexText caption = series.caption()) {
+          figureSeriesRenderer.renderFigureSeriesCaption(caption);
+        }
         Renderers.renderFigure(cached, labelCollection, body, series);
         Renderers.renderFigure(current, labelCollection, body, series);
         cached = null;

@@ -78,9 +78,11 @@ public abstract class FileProducerExample<FP extends IFileProducerTool>
    *         plus a unique ID
    */
   protected final String getMainDocumentNameSuggestion() {
-    return PathUtils.sanitizePathComponent(//
-        ((this.getMainDocumentNameSuggestionBase() + '_')//
-            + FileProducerExample.UNIQUE_IDS.incrementAndGet()));
+    return PathUtils
+        .sanitizePathComponent(//
+            ((this.getMainDocumentNameSuggestionBase() + '_')//
+                + FileProducerExample.UNIQUE_IDS.incrementAndGet()),
+            false);
   }
 
   /**

@@ -59,12 +59,16 @@ public final class PathUtils {
    *
    * @param component
    *          the path component
+   * @param allowSlash
+   *          are slashes inside the path (but not at the beginning)
+   *          allowed?
    * @return the sanitized component
    */
-  public static final String sanitizePathComponent(
-      final String component) {
+  public static final String sanitizePathComponent(final String component,
+      final boolean allowSlash) {
     final char[] data;
     final String normalized;
+    int slashCheck;
     int index, codepoint, size;
     boolean changed, useChange;
 
@@ -83,12 +87,14 @@ public final class PathUtils {
     useChange = true;
     changed = false;
     size = data.length;
+    slashCheck = (allowSlash ? 0x2e // forbid everything up to '.'
+        : 0x2f);// forbid everything up to '/'
 
     outer: for (index = data.length; (--index) >= 0;) {
       codepoint = data[index];
 
       checkNeedsChange: {
-        if (codepoint <= 0x2f) { // includes everything to "/"
+        if (codepoint <= slashCheck) { // includes everything to "/" or '.'
           break checkNeedsChange;
         }
         if (codepoint <= 0x39) {// "0".."9"
@@ -128,12 +134,20 @@ public final class PathUtils {
       useChange = true;
     }
 
-    if (data[0] == '_') {
-      size--;
-      index = 1;
-      changed = true;
-    } else {
-      index = 0;
+    index = 0;
+    loop: while (size > 0) {
+      switch (data[index]) {
+        case '/':
+        case '_': {
+          ++index;
+          --size;
+          changed = true;
+          continue loop;
+        }
+        default: {
+          break loop;
+        }
+      }
     }
 
     if (changed) {

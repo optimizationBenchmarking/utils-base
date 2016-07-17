@@ -180,7 +180,9 @@ public final class PathFinderBuilder
    * one line of output.
    *
    * @param arguments
+   *          the arguments for the process to be executed
    * @param contains
+   *          the strings to be found in the output of the process
    * @return this builder
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })

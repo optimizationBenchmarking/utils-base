@@ -13,13 +13,16 @@ import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
  * <a href="https://en.wikipedia.org/wiki/Family_of_curves">family of
  * curves</a> over a single parameter {@code x} and a set of
  * {@link #getParameterCount() m} parameters.
- * <blockquote cite="https://en.wikipedia.org/wiki/Family_of_curves">A
- * family of curves is a set of curves, each of which is given by a
+ * <p>
+ * A family of curves is a set of curves, each of which is given by a
  * function or parametrization in which one or more of the parameters is
  * variable. In general, the parameter(s) influence the shape of the curve
  * in a way that is more complicated than a simple linear transformation.
  * Sets of curves given by an implicit relation may also represent families
- * of curves.</blockquote>
+ * of curves.
+ * <sup><a href="https://en.wikipedia.org/wiki/Family_of_curves">citation
+ * </a></sup>
+ * </p>
  */
 public abstract class ParametricUnaryFunction implements IMathRenderable {
 

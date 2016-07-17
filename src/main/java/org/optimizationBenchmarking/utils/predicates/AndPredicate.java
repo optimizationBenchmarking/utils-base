@@ -88,6 +88,8 @@ public final class AndPredicate<T> extends HashObject
    *          the list of predicates
    * @return the predicate representing the list, or {@code null} if no
    *         predicate is contained or {@code list==null}.
+   * @param <T>
+   *          the predicate input element type
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public static final <T> IPredicate<T> and(
@@ -109,6 +111,8 @@ public final class AndPredicate<T> extends HashObject
    *          the inclusive end index
    * @return the predicate representing the list, or {@code null} if no
    *         predicate is contained or {@code list==null}.
+   * @param <T>
+   *          the predicate input element type
    */
   private static final <T> IPredicate<T> __and(
       final List<IPredicate<T>> list, final int startInclusive,

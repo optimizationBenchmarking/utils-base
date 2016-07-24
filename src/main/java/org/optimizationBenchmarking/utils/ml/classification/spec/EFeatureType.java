@@ -1,4 +1,4 @@
-package org.optimizationBenchmarking.utils.ml.classifcation.spec;
+package org.optimizationBenchmarking.utils.ml.classification.spec;
 
 /** The different types of features. */
 public enum EFeatureType {

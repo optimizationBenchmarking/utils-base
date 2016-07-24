@@ -1,4 +1,4 @@
-package org.optimizationBenchmarking.utils.ml.classifcation.spec;
+package org.optimizationBenchmarking.utils.ml.classification.spec;
 
 /**
  * A classification quality measure allows us to judge the quality of a

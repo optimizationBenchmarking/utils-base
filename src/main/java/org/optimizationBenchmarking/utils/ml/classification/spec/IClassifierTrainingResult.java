@@ -1,4 +1,4 @@
-package org.optimizationBenchmarking.utils.ml.classifcation.spec;
+package org.optimizationBenchmarking.utils.ml.classification.spec;
 
 /** The result record of a classification job. */
 public interface IClassifierTrainingResult {

@@ -358,7 +358,7 @@ public enum EComparison {
 
   /** an array set view of the comparison instances */
   public static final ArraySetView<EComparison> INSTANCES = new ArraySetView<>(
-      EComparison.values());
+      EComparison.values(), false);
 
   /** the name */
   private final String m_name;

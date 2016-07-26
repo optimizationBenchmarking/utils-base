@@ -79,7 +79,7 @@ public enum EMathComparison {
 
   /** all instances of the math comparison */
   public static final ArraySetView<EMathComparison> INSTANCES = new ArraySetView<>(
-      EMathComparison.values());
+      EMathComparison.values(), false);
 
   /** the operator */
   private final char m_operatorChar;

@@ -38,13 +38,39 @@ public class ArrayListView<DT> extends BasicList<DT>
    *          directly
    */
   public ArrayListView(final DT[] data) {
+    this(data, true);
+  }
+
+  /**
+   * instantiate
+   *
+   * @param data
+   *          the data of the set - will not be copied or cloned, but used
+   *          directly
+   * @param isNullPermitted
+   *          are {@code null} values permitted?
+   */
+  public ArrayListView(final DT[] data, final boolean isNullPermitted) {
     super();
+
+    int index;
 
     if (data == null) {
       throw new IllegalArgumentException(//
           "Data (element array) passed to the constructor of " + //$NON-NLS-1$
               TextUtils.className(this.getClass()) + //
               " must not be null."); //$NON-NLS-1$
+    }
+    if (!isNullPermitted) {
+      for (index = data.length; (--index) >= 0;) {
+        if (data[index] == null) {
+          throw new IllegalArgumentException(//
+              "Data element at index "//$NON-NLS-1$
+                  + index + //
+                  " is null, but null elements are not permitted in instances of "//$NON-NLS-1$
+                  + TextUtils.className(this.getClass()) + '.');
+        }
+      }
     }
 
     this.m_data = data;
@@ -57,7 +83,20 @@ public class ArrayListView<DT> extends BasicList<DT>
    *          the other list view
    */
   protected ArrayListView(final ArrayListView<? extends DT> copy) {
-    this(copy.m_data);
+    this(copy, true);
+  }
+
+  /**
+   * copy another list view
+   *
+   * @param copy
+   *          the other list view
+   * @param isNullPermitted
+   *          are {@code null} values permitted?
+   */
+  protected ArrayListView(final ArrayListView<? extends DT> copy,
+      final boolean isNullPermitted) {
+    this(copy.m_data, isNullPermitted);
   }
 
   /** {@inheritDoc} */
@@ -354,7 +393,7 @@ public class ArrayListView<DT> extends BasicList<DT>
       return ((ArrayListView) (ArraySetView.EMPTY_SET_VIEW));
     }
 
-    return new ArrayListView<>(Arrays.copyOf(data, s));
+    return new ArrayListView<>(Arrays.copyOf(data, s), false);
   }
 
   /** {@inheritDoc} */
@@ -437,9 +476,29 @@ public class ArrayListView<DT> extends BasicList<DT>
    * @param <T>
    *          the data type
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   public static final <T> ArrayListView<T> collectionToView(
       final Collection<? extends T> collection) {
+    return ArrayListView.collectionToView(collection, true);
+  }
+
+  /**
+   * Take the data from a given collection to fill an array list view. If
+   * the collection is {@code null} or empty,
+   * {@link org.optimizationBenchmarking.utils.collections.lists.ArraySetView#EMPTY_SET_VIEW}
+   * will be returned.
+   *
+   * @param collection
+   *          the collection
+   * @param isNullPermitted
+   *          are {@code null} values permitted?
+   * @return the list view
+   * @param <T>
+   *          the data type
+   */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public static final <T> ArrayListView<T> collectionToView(
+      final Collection<? extends T> collection,
+      final boolean isNullPermitted) {
     final int s;
     final ArrayListView<T> l;
 
@@ -451,7 +510,8 @@ public class ArrayListView<DT> extends BasicList<DT>
       return ((ArrayListView) collection);
     }
 
-    l = new ArrayListView(collection.toArray(new Object[s]));
+    l = new ArrayListView(collection.toArray(new Object[s]),
+        isNullPermitted);
     return l;
   }
 

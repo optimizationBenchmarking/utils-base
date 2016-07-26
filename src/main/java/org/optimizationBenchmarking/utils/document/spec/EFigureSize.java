@@ -54,7 +54,7 @@ public enum EFigureSize {
 
   /** the set of all figure sizes */
   public static final ArraySetView<EFigureSize> INSTANCES = //
-  new ArraySetView<>(EFigureSize.values());
+  new ArraySetView<>(EFigureSize.values(), false);
 
   /**
    * multiplying a number {@code s} by {@value #GOLDEN_RATIO} will give you

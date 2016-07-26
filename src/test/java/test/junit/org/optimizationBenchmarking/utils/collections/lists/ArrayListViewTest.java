@@ -15,6 +15,6 @@ public class ArrayListViewTest
   @Override
   public ArrayListView<Object> getInstance() {
     return new ArrayListView<>(//
-        ArrayListViewTestBase._randomList());
+        ArrayListViewTestBase._randomList(), false);
   }
 }

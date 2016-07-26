@@ -18,6 +18,36 @@ public enum EFeatureType {
    * magnitude of the numbers (i.e., encoded, feature values) is assumed to
    * not hold any information.
    */
-  NOMINAL;
+  NOMINAL {
+    /** {@inheritDoc} */
+    @Override
+    public final void checkFeatureValue(final double value,
+        final int index) {
+      super.checkFeatureValue(value, index);
+      if (value != ((int) (value))) {
+        throw new IllegalArgumentException(
+            "Values of nominal features must be integer numbers, but " //$NON-NLS-1$
+                + value + " at index " + index + //$NON-NLS-1$
+                " is not."); //$NON-NLS-1$
+      }
+    }
+  };
+
+  /**
+   * Check a feature value whether it is acceptable for the given type of
+   * feature. If not, throw an {@link IllegalArgumentException}.
+   *
+   * @param value
+   *          the value
+   * @param index
+   *          the index of this feature
+   */
+  public void checkFeatureValue(final double value, final int index) {
+    if (value != value) {
+      throw new IllegalArgumentException(//
+          "Feature at index " //$NON-NLS-1$
+              + index + " is NaN.");//$NON-NLS-1$
+    }
+  }
 
 }

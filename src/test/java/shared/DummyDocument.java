@@ -522,7 +522,7 @@ public class DummyDocument extends DummyGraphic implements IDocument,
   @Override
   public Collection<String> getFaceChoices() {
     return new ArrayListView<>(
-        new String[] { this.getFont().getFontName() });
+        new String[] { this.getFont().getFontName() }, false);
   }
 
   /** {@inheritDoc} */

@@ -24,7 +24,7 @@ public class ArraySetView<DT> extends ArrayListView<DT>
 
   /** the empty list view */
   public static final ArraySetView<Object> EMPTY_SET_VIEW = new ArraySetView<>(
-      EmptyUtils.EMPTY_OBJECTS);
+      EmptyUtils.EMPTY_OBJECTS, false);
 
   /**
    * instantiate
@@ -34,7 +34,20 @@ public class ArraySetView<DT> extends ArrayListView<DT>
    *          directly
    */
   public ArraySetView(final DT[] data) {
-    super(data);
+    this(data, true);
+  }
+
+  /**
+   * instantiate
+   *
+   * @param data
+   *          the data of the set - will not be copied or cloned, but used
+   *          directly
+   * @param isNullPermitted
+   *          are {@code null} values permitted?
+   */
+  public ArraySetView(final DT[] data, final boolean isNullPermitted) {
+    super(data, isNullPermitted);
   }
 
   /** {@inheritDoc} */

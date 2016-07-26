@@ -15,6 +15,6 @@ public class ArraySetViewTest
   @Override
   public ArraySetView<Object> getInstance() {
     return new ArraySetView<>(//
-        ArrayListViewTestBase._randomList());
+        ArrayListViewTestBase._randomList(), false);
   }
 }

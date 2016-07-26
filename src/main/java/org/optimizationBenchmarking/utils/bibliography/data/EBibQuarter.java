@@ -21,7 +21,7 @@ public enum EBibQuarter {
 
   /** the values */
   public static final ArraySetView<EBibQuarter> QUARTERS = new ArraySetView<>(
-      EBibQuarter.values());
+      EBibQuarter.values(), false);
 
   /** the shortcut */
   final String m_short;

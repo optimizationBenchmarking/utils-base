@@ -454,7 +454,7 @@ public final class Characters extends ArraySetView<Char> {
    *          the data
    */
   private Characters(final Char[] data) {
-    super(data);
+    super(data, false);
 
     int max;
 

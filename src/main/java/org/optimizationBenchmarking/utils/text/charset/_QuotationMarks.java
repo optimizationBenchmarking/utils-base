@@ -17,7 +17,7 @@ final class _QuotationMarks extends ArraySetView<QuotationMarks> {
    *          the data
    */
   _QuotationMarks(final QuotationMarks[] data) {
-    super(data);
+    super(data, false);
   }
 
   /**

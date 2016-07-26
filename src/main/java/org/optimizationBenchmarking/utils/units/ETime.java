@@ -268,7 +268,7 @@ public enum ETime implements IUnit {
 
   /** the instances */
   public static final ArraySetView<ETime> INSTANCES = new ArraySetView<>(
-      ETime.values());
+      ETime.values(), false);
 
   /** the name */
   private final String m_name;

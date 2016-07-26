@@ -48,7 +48,7 @@ public enum EBibMonth {
 
   /** the months */
   public static final ArraySetView<EBibMonth> MONTHS = new ArraySetView<>(
-      EBibMonth.values());
+      EBibMonth.values(), false);
 
   /** the maximum days */
   final int m_days;

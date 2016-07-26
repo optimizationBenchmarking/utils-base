@@ -345,7 +345,7 @@ public enum ELength implements IUnit {
 
   /** the instances */
   public static final ArraySetView<ELength> INSTANCES = new ArraySetView<>(
-      ELength.values());
+      ELength.values(), false);
 
   /** the name */
   private final String m_name;

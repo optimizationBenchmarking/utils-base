@@ -269,7 +269,7 @@ public enum EArchiveType implements IFileType {
   public void compressPathToStream(final Path sourcePath,
       final OutputStream destStream) throws IOException {
     this.compressPathsToStream(
-        new ArrayListView<>(new Path[] { sourcePath }), sourcePath,
+        new ArrayListView<>(new Path[] { sourcePath }, false), sourcePath,
         destStream);
   }
 

@@ -101,6 +101,6 @@ public class SemanticComponentSequenceable implements ISequenceable {
       wrapped[index++] = new SemanticComponentSequenceable(isc,
           printShortName, printLongName);
     }
-    return new ArrayListView<>(wrapped);
+    return new ArrayListView<>(wrapped, false);
   }
 }

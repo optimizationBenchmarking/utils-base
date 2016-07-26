@@ -1281,7 +1281,7 @@ public final class PathUtils {
       }
       PATH_ARRAY = array;
 
-      PATH = new ArrayListView<>(__PathLoader.PATH_ARRAY);
+      PATH = new ArrayListView<>(__PathLoader.PATH_ARRAY, false);
     }
   }
 

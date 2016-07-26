@@ -89,7 +89,7 @@ public final class FontFinder {
     Arrays.sort(ss);
     System.out.println("Found " + ss.length + //$NON-NLS-1$
         " font names on the system."); //$NON-NLS-1$
-    return new ArraySetView<>(ss);
+    return new ArraySetView<>(ss, false);
   }
 
   /**

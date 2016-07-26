@@ -19,5 +19,5 @@ public enum ETableCellDef {
 
   /** the values */
   public static final ArraySetView<ETableCellDef> INSTANCES = new ArraySetView<>(
-      ETableCellDef.values());
+      ETableCellDef.values(), false);
 }

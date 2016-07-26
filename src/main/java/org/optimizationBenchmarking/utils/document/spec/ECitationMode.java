@@ -21,7 +21,7 @@ public enum ECitationMode {
 
   /** the citation modes */
   public static final ArraySetView<ECitationMode> INSTANCES = new ArraySetView<>(
-      ECitationMode.values());
+      ECitationMode.values(), false);
 
   /** print the id */
   private transient final boolean m_id;

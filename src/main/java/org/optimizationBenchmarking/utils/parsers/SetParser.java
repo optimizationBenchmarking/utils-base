@@ -49,7 +49,7 @@ public class SetParser<ET> extends CollectionParser<ET, ArraySetView<ET>> {
       return ((ArraySetView) (ArraySetView.EMPTY_SET_VIEW));
     }
 
-    return new ArraySetView(lst);
+    return new ArraySetView(lst, false);
   }
 
   /** {@inheritDoc} */

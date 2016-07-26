@@ -47,7 +47,7 @@ public enum ETextCase {
 
   /** the instances */
   public static final ArraySetView<ETextCase> INSTANCES = new ArraySetView<>(
-      ETextCase.values());
+      ETextCase.values(), false);
 
   /**
    * Some words which should be ignored in title case, such as articles,

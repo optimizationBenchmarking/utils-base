@@ -49,7 +49,7 @@ public class ListParser<ET>
       return ((ArrayListView) (ArraySetView.EMPTY_SET_VIEW));
     }
 
-    return new ArrayListView(lst);
+    return new ArrayListView(lst, false);
   }
 
   /** {@inheritDoc} */

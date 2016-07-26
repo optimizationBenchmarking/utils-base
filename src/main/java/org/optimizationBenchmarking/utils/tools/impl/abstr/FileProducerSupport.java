@@ -162,7 +162,7 @@ public final class FileProducerSupport extends _FileSet implements IScope {
 
     if (this.m_single != null) {
       return (this.m_output = new ArraySetView(
-          new ImmutableAssociation[] { this.m_single }));
+          new ImmutableAssociation[] { this.m_single }, false));
     }
 
     if (this.m_files != null) {
@@ -191,7 +191,7 @@ public final class FileProducerSupport extends _FileSet implements IScope {
       entry = data[i];
       data[i] = new ImmutableAssociation(entry.getKey(), entry.getValue());
     }
-    return new ArrayListView(data);
+    return new ArrayListView(data, false);
   }
 
   /**
@@ -254,7 +254,7 @@ public final class FileProducerSupport extends _FileSet implements IScope {
 
     if (single != null) {
       listener.onFilesFinalized(
-          new ArraySetView(new ImmutableAssociation[] { single }));
+          new ArraySetView(new ImmutableAssociation[] { single }, false));
       return;
     }
 

@@ -331,7 +331,8 @@ public class BasicCompound<ET>
 
     return new ArrayListView(
         (i > 0) ? ((i < l.length) ? Arrays.copyOf(l, i) : l)
-            : EmptyUtils.EMPTY_OBJECTS);
+            : EmptyUtils.EMPTY_OBJECTS,
+        false);
   }
 
   /**

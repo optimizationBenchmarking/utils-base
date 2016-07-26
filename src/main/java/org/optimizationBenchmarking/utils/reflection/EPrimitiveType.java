@@ -59,7 +59,7 @@ public enum EPrimitiveType {
 
   /** create */
   public static final ArraySetView<EPrimitiveType> INSTANCES = new ArraySetView<>(
-      EPrimitiveType._TYPES);
+      EPrimitiveType._TYPES, false);
 
   /** the serial version uid */
   private static final long serialVersionUID = 1L;

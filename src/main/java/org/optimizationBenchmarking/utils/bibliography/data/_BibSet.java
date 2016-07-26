@@ -30,7 +30,7 @@ class _BibSet<DT extends _BibElement<? super DT>, CT extends _BibSet<DT, CT>>
    */
   _BibSet(final boolean cannotBeEmpty, final boolean check,
       final DT[] data) {
-    super(data);
+    super(data, false);
 
     DT el;
     int i, j;
@@ -42,11 +42,6 @@ class _BibSet<DT extends _BibElement<? super DT>, CT extends _BibSet<DT, CT>>
     if (check) {
       for (i = data.length; (--i) > 0;) {
         el = data[i];
-        if (el == null) {
-          throw new IllegalArgumentException(//
-              "Elements must not be null, but the one at index " //$NON-NLS-1$
-                  + i + " is."); //$NON-NLS-1$
-        }
         for (j = i; (--j) >= 0;) {
           if (el.equals(data[j])) {
             throw new IllegalArgumentException(//

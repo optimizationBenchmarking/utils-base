@@ -29,7 +29,7 @@ public final class FinishedPrinter extends AbstractFileProducerListener {
   public FinishedPrinter(final Object... src) {
     super();
     this.m_src = (((src != null) && (src.length > 0))
-        ? new ArrayListView<>(src.clone())
+        ? new ArrayListView<>(src.clone(), false)
         : ((ArrayListView) (ArraySetView.EMPTY_SET_VIEW)));
   }
 

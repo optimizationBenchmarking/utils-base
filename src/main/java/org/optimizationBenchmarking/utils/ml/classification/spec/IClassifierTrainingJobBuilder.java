@@ -13,6 +13,16 @@ public interface IClassifierTrainingJobBuilder extends IToolJobBuilder {
       final Logger logger);
 
   /**
+   * Set the quality measure to compute the classifier's quality.
+   *
+   * @param qualityMeasure
+   *          the quality measure
+   * @return this builder
+   */
+  public abstract IClassifierTrainingJobBuilder setQualityMeasure(
+      final IClassifierQualityMeasure qualityMeasure);
+
+  /**
    * Specify the types of the features. This method must be called before
    *
    * @param featureTypes
@@ -26,15 +36,16 @@ public interface IClassifierTrainingJobBuilder extends IToolJobBuilder {
    * Add a training sample. This method must be called after
    * {@literal #setFeatureTypes(EFeatureType...)}.
    *
+   * @param knownClass
+   *          the known class to which this sample belongs
    * @param trainingSample
    *          the training sample
    * @return this builder
    */
   public abstract IClassifierTrainingJobBuilder addTrainingSample(
-      final double... trainingSample);
+      final int knownClass, final double... trainingSample);
 
   /** {@inheritDoc} */
   @Override
   public abstract IClassifierTrainingJob create();
-
 }

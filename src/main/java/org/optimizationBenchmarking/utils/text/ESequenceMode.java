@@ -50,7 +50,7 @@ public enum ESequenceMode {
   static final char[] ET_AL_ = { ' ', 'e', 't', ' ', 'a', 'l', '.' };
   /** the sequence modes */
   public static final ArraySetView<ESequenceMode> INSTANCES = new ArraySetView<>(
-      ESequenceMode.values());
+      ESequenceMode.values(), false);
   /** the start string, or {@code null} if none is needed */
   private final char[] m_start;
   /** the end string, or {@code null} if none is needed */

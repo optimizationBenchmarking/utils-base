@@ -226,7 +226,8 @@ public final class SemanticComponentUtils {
           ((ISemanticComponent) (list[index])), //
           printShortName, printLongName);
     }
-    mode.appendSequence(textCase, new ArrayListView<>(list), false, dest);
+    mode.appendSequence(textCase, new ArrayListView<>(list, false), false,
+        dest);
   }
 
   /** the forbidden constructor */

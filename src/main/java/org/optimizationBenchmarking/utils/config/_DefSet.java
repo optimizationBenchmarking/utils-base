@@ -26,7 +26,7 @@ abstract class _DefSet<T> extends ArrayListView<T> {
    *          are more parameters allowed than defined here?
    */
   _DefSet(final T[] data, final boolean allowsMore) {
-    super(data);
+    super(data, false);
     this.m_allowsMore = allowsMore;
   }
 

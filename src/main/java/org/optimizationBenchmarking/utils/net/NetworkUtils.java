@@ -306,7 +306,7 @@ public final class NetworkUtils {
       }
       addrs = addresses.toArray(new InetAddress[size]);
       Arrays.sort(addrs, new __InetCmp());
-      return new ArrayListView<>(addrs);
+      return new ArrayListView<>(addrs, false);
     }
   }
 
@@ -366,7 +366,7 @@ public final class NetworkUtils {
       }
       if (addrs != null) {
         if (addrs.length > 0) {
-          return new ArrayListView<>(addrs);
+          return new ArrayListView<>(addrs, false);
         }
       }
       return ((ArrayListView) (ArraySetView.EMPTY_SET_VIEW));

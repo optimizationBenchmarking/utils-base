@@ -16,7 +16,7 @@ public enum EThesisType {
 
   /** get the types */
   public static final ArraySetView<EThesisType> TYPES = new ArraySetView<>(
-      EThesisType.values());
+      EThesisType.values(), false);
 
   /** the name */
   final String m_name;

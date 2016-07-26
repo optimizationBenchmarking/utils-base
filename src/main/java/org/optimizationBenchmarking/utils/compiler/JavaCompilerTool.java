@@ -91,7 +91,7 @@ public class JavaCompilerTool extends Tool {
         && ((optCount = options.size()) > 0)) {
       optArray = options.toArray(new String[optCount]);
       Arrays.sort(optArray);
-      this.m_options = new ArraySetView<>(optArray);
+      this.m_options = new ArraySetView<>(optArray, false);
     } else {
       this.m_options = null;
     }

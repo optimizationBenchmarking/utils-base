@@ -47,7 +47,7 @@ public class LooseDoubleParserTest extends ParserTest<Double> {
             Double.valueOf(Integer.MAX_VALUE)), //
         new ImmutableAssociation(Double.valueOf(Double.POSITIVE_INFINITY),
             Double.valueOf(Double.POSITIVE_INFINITY)),//
-    })));
+    }, false)));
   }
 
   /**
@@ -109,7 +109,7 @@ public class LooseDoubleParserTest extends ParserTest<Double> {
                 Character.toString((char) (0xb5)) + ']'),
         LooseDoubleParserTest.__entry(-0.3334d / 1e6d, "-<0.3334\\u00b5>"),//$NON-NLS-1$
 
-    })));
+    }, false)));
   }
 
   /**
@@ -140,7 +140,7 @@ public class LooseDoubleParserTest extends ParserTest<Double> {
     return new ArrayListView<>(new String[] { //
         "sohfsaflhsf", //$NON-NLS-1$
         "xcsf sfdsafd"//$NON-NLS-1$
-    });
+    }, false);
   }
 
   /**

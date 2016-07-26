@@ -17,7 +17,7 @@ final class _Braces extends ArraySetView<Braces> {
    *          the data
    */
   _Braces(final Braces[] data) {
-    super(data);
+    super(data, false);
   }
 
   /**

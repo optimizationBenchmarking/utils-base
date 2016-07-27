@@ -62,12 +62,16 @@ public class ArrayListView<DT> extends BasicList<DT>
               " must not be null."); //$NON-NLS-1$
     }
     if (!isNullPermitted) {
-      for (index = data.length; (--index) >= 0;) {
-        if (data[index] == null) {
+      index = (-1);
+      for (final DT dataElement : data) {
+        ++index;
+        if (dataElement == null) {
           throw new IllegalArgumentException(//
               "Data element at index "//$NON-NLS-1$
                   + index + //
-                  " is null, but null elements are not permitted in instances of "//$NON-NLS-1$
+                  " of " + //$NON-NLS-1$
+                  data.length + //
+                  " elements is null, but null elements are not permitted in this instance of "//$NON-NLS-1$
                   + TextUtils.className(this.getClass()) + '.');
         }
       }

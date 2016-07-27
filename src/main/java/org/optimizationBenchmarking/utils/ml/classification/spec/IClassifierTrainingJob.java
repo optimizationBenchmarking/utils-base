@@ -6,7 +6,7 @@ import org.optimizationBenchmarking.utils.tools.spec.ICallableToolJob;
 public interface IClassifierTrainingJob
     extends ICallableToolJob<IClassifierTrainingResult> {
 
-  /** {@inheritDoc *} */
+  /** {@inheritDoc} */
   @Override
   public abstract IClassifierTrainingResult call()
       throws IllegalArgumentException;

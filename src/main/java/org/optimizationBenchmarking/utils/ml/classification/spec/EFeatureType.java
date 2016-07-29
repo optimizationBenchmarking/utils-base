@@ -8,7 +8,18 @@ public enum EFeatureType {
    * magnitude and order of numbers is expected to hold meaningful
    * information.
    */
-  NUMERICAL,
+  NUMERICAL {
+
+    /** {@inheritDoc} */
+    @Override
+    public final void checkFeatureValue(final double value) {
+      if (value != value) {
+        throw new IllegalArgumentException(//
+            "Numerical feature value cannot be NaN."); //$NON-NLS-1$
+      }
+    }
+
+  },
 
   /**
    * The feature values represent names or other choices from a finite set.
@@ -21,33 +32,44 @@ public enum EFeatureType {
   NOMINAL {
     /** {@inheritDoc} */
     @Override
-    public final void checkFeatureValue(final double value,
-        final int index) {
-      super.checkFeatureValue(value, index);
-      if (value != ((int) (value))) {
-        throw new IllegalArgumentException(
-            "Values of nominal features must be integer numbers, but " //$NON-NLS-1$
-                + value + " at index " + index + //$NON-NLS-1$
-                " is not."); //$NON-NLS-1$
+    public final void checkFeatureValue(final double value) {
+      final int featureValue;
+
+      featureValue = ((int) value);
+      if ((value != featureValue) || (featureValue < 0)
+          || (featureValue > 1000)) {
+        throw new IllegalArgumentException(//
+            "Nominal feature values must an integer from 0...1000, but is " //$NON-NLS-1$
+                + value);
+      }
+    }
+  },
+
+  /**
+   * The feature values represent the {@code boolean} values {@code true}
+   * and {@code false}, where {@code true} is encoded as {@code 1.0d} and
+   * {@code false} and {@code 0.0d}.
+   */
+  BOOLEAN {
+    /** {@inheritDoc} */
+    @Override
+    public final void checkFeatureValue(final double value) {
+
+      if ((value != 0d) && (value != 1d)) {
+        throw new IllegalArgumentException(//
+            "Boolean (binary) feature values must be either 0 or 1, but is " //$NON-NLS-1$
+                + value);
       }
     }
   };
 
   /**
-   * Check a feature value whether it is acceptable for the given type of
-   * feature. If not, throw an {@link IllegalArgumentException}.
+   * Check whether the given feature value is valid.
    *
    * @param value
-   *          the value
-   * @param index
-   *          the index of this feature
+   *          the feature value
+   * @throws IllegalArgumentException
+   *           if the feature value is not value
    */
-  public void checkFeatureValue(final double value, final int index) {
-    if (value != value) {
-      throw new IllegalArgumentException(//
-          "Feature at index " //$NON-NLS-1$
-              + index + " is NaN.");//$NON-NLS-1$
-    }
-  }
-
+  public abstract void checkFeatureValue(final double value);
 }

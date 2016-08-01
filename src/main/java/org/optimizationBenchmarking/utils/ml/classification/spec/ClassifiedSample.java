@@ -1,13 +1,22 @@
 package org.optimizationBenchmarking.utils.ml.classification.spec;
 
+import java.util.Arrays;
+
+import org.optimizationBenchmarking.utils.comparison.Compare;
+import org.optimizationBenchmarking.utils.hash.HashUtils;
+
 /** A class for samples whose class is known. */
-public class ClassifiedSample {
+public final class ClassifiedSample
+    implements Comparable<ClassifiedSample> {
 
   /** the feature values */
   public final double[] featureValues;
 
   /** the class to which the sample belongs */
   public final int sampleClass;
+
+  /** the hash code */
+  private int m_hashCode;
 
   /**
    * Create a classified sample.
@@ -37,5 +46,59 @@ public class ClassifiedSample {
     }
     this.sampleClass = _sampleClass;
     this.featureValues = _featureValues;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final int hashCode() {
+    int hashCode;
+
+    hashCode = this.m_hashCode;
+    if (hashCode != 0) {
+      return hashCode;
+    }
+
+    hashCode = HashUtils.hashCode(this.sampleClass);
+    for (final double value : this.featureValues) {
+      hashCode = HashUtils.combineHashes(hashCode,
+          HashUtils.hashCode(value));
+    }
+
+    return (this.m_hashCode = ((hashCode == 0) ? 234098239 : hashCode));
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final boolean equals(final Object other) {
+    final ClassifiedSample sample;
+    if (other == this) {
+      return true;
+    }
+
+    if (other instanceof ClassifiedSample) {
+      sample = ((ClassifiedSample) other);
+      if (sample.sampleClass == this.sampleClass) {
+        return Arrays.equals(this.featureValues, sample.featureValues);
+      }
+    }
+    return false;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final int compareTo(final ClassifiedSample o) {
+    int index, result;
+
+    if (this.sampleClass == o.sampleClass) {
+      index = (-1);
+      for (final double value : o.featureValues) {
+        result = Compare.compare(this.featureValues[++index], value);
+        if (result != 0) {
+          return result;
+        }
+      }
+    }
+
+    return ((this.sampleClass < o.sampleClass) ? (-1) : 1);
   }
 }

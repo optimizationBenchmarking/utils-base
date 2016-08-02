@@ -1,9 +1,10 @@
 package org.optimizationBenchmarking.utils.ml.classification.spec;
 
+import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /** The interface for classifiers. */
-public interface IClassifier {
+public interface IClassifier extends ISemanticComponent {
 
   /**
    * Classify the given feature vector. Features are always represented as

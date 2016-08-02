@@ -1,5 +1,7 @@
 package org.optimizationBenchmarking.utils.ml.classification.spec;
 
+import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
+
 /**
  * A classification quality measure allows us to judge the quality of a
  * classifier.
@@ -7,7 +9,7 @@ package org.optimizationBenchmarking.utils.ml.classification.spec;
  * @param <T>
  *          the token type
  */
-public interface IClassifierQualityMeasure<T> {
+public interface IClassifierQualityMeasure<T> extends ISemanticComponent {
 
   /**
    * Compute the quality of the given {@code classifier}.

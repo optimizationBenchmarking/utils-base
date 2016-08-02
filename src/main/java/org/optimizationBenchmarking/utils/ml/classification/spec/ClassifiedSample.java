@@ -4,9 +4,11 @@ import java.util.Arrays;
 
 import org.optimizationBenchmarking.utils.comparison.Compare;
 import org.optimizationBenchmarking.utils.hash.HashUtils;
+import org.optimizationBenchmarking.utils.text.Textable;
+import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /** A class for samples whose class is known. */
-public final class ClassifiedSample
+public final class ClassifiedSample extends Textable
     implements Comparable<ClassifiedSample> {
 
   /** the feature values */
@@ -100,5 +102,20 @@ public final class ClassifiedSample
     }
 
     return ((this.sampleClass < o.sampleClass) ? (-1) : 1);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final void toText(final ITextOutput textOut) {
+    char next;
+
+    textOut.append(this.sampleClass);
+    next = '[';
+    for (final double value : this.featureValues) {
+      textOut.append(next);
+      textOut.append(value);
+      next = ',';
+    }
+    textOut.append(']');
   }
 }

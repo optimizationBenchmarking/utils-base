@@ -63,19 +63,17 @@ public class SemanticComponentSequenceable implements ISequenceable {
 
   /** {@inheritDoc} */
   @Override
-  public final void toSequence(final boolean isFirstInSequence,
+  public final ETextCase toSequence(final boolean isFirstInSequence,
       final boolean isLastInSequence, final ETextCase textCase,
       final ITextOutput textOut) {
     if (this.m_printShortName) {
       if (this.m_printLongName) {
-        SemanticComponentUtils.printLongAndShortNameIfDifferent(
+        return SemanticComponentUtils.printLongAndShortNameIfDifferent(
             this.m_component, textOut, textCase);
-      } else {
-        this.m_component.printShortName(textOut, textCase);
       }
-    } else {
-      this.m_component.printLongName(textOut, textCase);
+      return this.m_component.printShortName(textOut, textCase);
     }
+    return this.m_component.printLongName(textOut, textCase);
   }
 
   /**

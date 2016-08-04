@@ -30,20 +30,23 @@ public enum ESequenceMode {
   ET_AL(null, AND.m_end) {
     /** {@inheritDoc} */
     @Override
-    final void _appendSequence(final char sep, final ETextCase textCase,
-        final Collection<?> data,
+    final ETextCase _appendSequence(final char sep,
+        final ETextCase textCase, final Collection<?> data,
         final boolean connectLastElementWithNonBreakableSpace,
         final ITextOutput dest) {
-      final int s;
-      s = data.size();
-      if (s > 3) {
-        ESequenceMode.__append(ESequenceMode._next(data.iterator()), true,
-            true, textCase, dest);
+      final int size;
+      final ETextCase nextCase;
+
+      size = data.size();
+      if (size > 3) {
+        nextCase = ESequenceMode.__append(
+            ESequenceMode._next(data.iterator()), true, true, textCase,
+            dest);
         dest.append(ESequenceMode.ET_AL_);
-      } else {
-        super._appendSequence(sep, textCase, data,
-            connectLastElementWithNonBreakableSpace, dest);
+        return nextCase;
       }
+      return super._appendSequence(sep, textCase, data,
+          connectLastElementWithNonBreakableSpace, dest);
     }
   };
   /** the et al */
@@ -82,58 +85,59 @@ public enum ESequenceMode {
    *          the object
    * @param dest
    *          the destination
+   * @return the next text case
    */
-  static final void __append(final Object o, final boolean first,
+  static final ETextCase __append(final Object o, final boolean first,
       final boolean last, final ETextCase textCase,
       final ITextOutput dest) {
-    final String s;
-    final int l;
+    final String stringValue;
+    final int length;
     int i, j;
     char lowerCase, upperCase;
 
     if (o instanceof ISequenceable) {
-      ((ISequenceable) o).toSequence(first, last, textCase, dest);
-      return;
+      return ((ISequenceable) o).toSequence(first, last, textCase, dest);
     }
 
     if (o instanceof ISemanticComponent) {
-      ((ISemanticComponent) o).printShortName(dest, textCase);
-      return;
+      return ((ISemanticComponent) o).printShortName(dest, textCase);
     }
 
     if (textCase == ETextCase.IN_SENTENCE) {
       dest.append(o);
-      return;
+      return textCase;
     }
 
-    s = String.valueOf(o);
-    l = s.length();
+    stringValue = String.valueOf(o);
+    length = stringValue.length();
     j = 0;
     do {
       i = j;
       if (textCase == ETextCase.AT_SENTENCE_START) {
-        j = l;
+        j = length;
       } else {
-        j = s.indexOf(' ', i);
+        j = stringValue.indexOf(' ', i);
         if (j < 0) {
-          j = l;
+          j = length;
         } else {
           j++;
         }
       }
-      lowerCase = s.charAt(i);
+      lowerCase = stringValue.charAt(i);
       upperCase = textCase.adjustCaseOfFirstCharInWord(lowerCase);
       if (lowerCase != upperCase) {
         dest.append(upperCase);
-        dest.append(s, (i + 1), j);
+        dest.append(stringValue, (i + 1), j);
       } else {
-        if ((i <= 0) && (j >= l)) {
-          dest.append(s);
+        if ((i <= 0) && (j >= length)) {
+          dest.append(stringValue);
         } else {
-          dest.append(s, i, j);
+          dest.append(stringValue, i, j);
         }
       }
-    } while (j < l);
+    } while (j < length);
+
+    return textCase.nextCase();
   }
 
   /**
@@ -149,12 +153,13 @@ public enum ESequenceMode {
    *          used
    * @param dest
    *          the destination text output
+   * @return the next text case
    */
-  public final void appendSequence(final ETextCase textCase,
+  public final ETextCase appendSequence(final ETextCase textCase,
       final Collection<?> data,
       final boolean connectLastElementWithNonBreakableSpace,
       final ITextOutput dest) {
-    this._appendSequence(',', textCase, data,
+    return this._appendSequence(',', textCase, data,
         connectLastElementWithNonBreakableSpace, dest);
   }
 
@@ -175,8 +180,9 @@ public enum ESequenceMode {
    *          containing a sequence containing a sequence, etc.
    * @param dest
    *          the destination text output
+   * @return the next text case
    */
-  public final void appendNestedSequence(final ETextCase textCase,
+  public final ETextCase appendNestedSequence(final ETextCase textCase,
       final Collection<?> data,
       final boolean connectLastElementWithNonBreakableSpace,
       final int hierarchyLevel, final ITextOutput dest) {
@@ -195,7 +201,7 @@ public enum ESequenceMode {
         break;
       }
     }
-    this._appendSequence(ch, textCase, data,
+    return this._appendSequence(ch, textCase, data,
         connectLastElementWithNonBreakableSpace, dest);
   }
 
@@ -231,8 +237,9 @@ public enum ESequenceMode {
    *          used
    * @param dest
    *          the destination text output
+   * @return the next text case
    */
-  void _appendSequence(final char sep, final ETextCase textCase,
+  ETextCase _appendSequence(final char sep, final ETextCase textCase,
       final Collection<?> data,
       final boolean connectLastElementWithNonBreakableSpace,
       final ITextOutput dest) {
@@ -245,15 +252,14 @@ public enum ESequenceMode {
 
     size = data.size();
     if (size <= 0) {
-      return;
+      return textCase;
     }
 
     iterator = data.iterator();
 
     if (size <= 1) {
-      ESequenceMode.__append(ESequenceMode._next(iterator), true, true,
-          textCase, dest);
-      return;
+      return ESequenceMode.__append(ESequenceMode._next(iterator), true,
+          true, textCase, dest);
     }
 
     useCase = textCase;
@@ -301,8 +307,7 @@ public enum ESequenceMode {
       }
     }
 
-    useCase = useCase.nextCase();
-    ESequenceMode.__append(ESequenceMode._next(iterator), false, true,
-        useCase, dest);
+    return ESequenceMode.__append(ESequenceMode._next(iterator), false,
+        true, useCase, dest);
   }
 }

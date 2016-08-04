@@ -19,8 +19,9 @@ public interface ISequenceable {
    *          which text case should apply?
    * @param textOut
    *          the text output destination to write to
+   * @return the next text case
    */
-  public abstract void toSequence(final boolean isFirstInSequence,
+  public abstract ETextCase toSequence(final boolean isFirstInSequence,
       final boolean isLastInSequence, final ETextCase textCase,
       final ITextOutput textOut);
 

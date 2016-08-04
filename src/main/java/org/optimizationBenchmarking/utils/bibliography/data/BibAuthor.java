@@ -199,9 +199,9 @@ public class BibAuthor extends _BibElement<BibAuthor>
 
   /** {@inheritDoc} */
   @Override
-  public final void toSequence(final boolean isFirstInSequence,
+  public final ETextCase toSequence(final boolean isFirstInSequence,
       final boolean isLastInSequence, final ETextCase textCase,
       final ITextOutput textOut) {
-    textCase.appendWord(this.m_familyName, textOut);
+    return textCase.appendWords(this.m_familyName, textOut);
   }
 }

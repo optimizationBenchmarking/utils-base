@@ -5,9 +5,12 @@ import java.io.StringWriter;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
 
+import org.optimizationBenchmarking.utils.document.impl.EListSequenceMode;
 import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
+import org.optimizationBenchmarking.utils.text.numbers.InTextNumberAppender;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /**
@@ -566,5 +569,52 @@ public final class TextUtils {
     } while (j < length);
 
     return textCase.nextCase();
+  }
+
+  /**
+   * List the elements in the given collection
+   *
+   * @param elements
+   *          the collection with the elements to list
+   * @param singular
+   *          the singular name of the element type
+   * @param plural
+   *          the plural name of the element type
+   * @param textCase
+   *          the text case
+   * @param appender
+   *          the appender to use
+   * @param textOut
+   *          the text destination the next text case
+   * @return the next text case
+   * @param <ET>
+   *          the element type
+   */
+  public static final <ET> ETextCase appendElements(
+      final Collection<? extends ET> elements, final String singular,
+      final String plural, final ETextCase textCase,
+      final ISequenceAppender<? super ET> appender,
+      final ITextOutput textOut) {
+    final int size;
+    ETextCase next;
+
+    size = elements.size();
+
+    if (size <= 0) {
+      return textCase.appendWord("no", textOut)//$NON-NLS-1$
+          .appendWords(plural, textOut);
+    }
+
+    next = InTextNumberAppender.INSTANCE.appendTo(elements.size(),
+        textCase, textOut);
+
+    textOut.append(' ');
+    next = next.appendWords(((size > 1) ? plural : singular), textOut);
+    textOut.append(' ');
+    next = next.appendWord(", namely", textOut);//$NON-NLS-1$
+    if (!(appender instanceof EListSequenceMode)) {
+      textOut.append(' ');
+    }
+    return appender.appendSequence(next, elements, textOut);
   }
 }

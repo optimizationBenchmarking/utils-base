@@ -4,11 +4,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.optimizationBenchmarking.utils.collections.lists.ArraySetView;
-import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /** The set of sequence types. */
-public enum ESequenceMode {
+public enum ESequenceMode implements ISequenceAppender<Object> {
   /** A simple, comma-separated sequence {@code "a, b, c"}. */
   COMMA(null, null),
   /** A sequence of the type {@code "a, b, and c"}. */
@@ -39,7 +38,7 @@ public enum ESequenceMode {
 
       size = data.size();
       if (size > 3) {
-        nextCase = ESequenceMode.__append(
+        nextCase = TextUtils.appendObjectToSequence(
             ESequenceMode._next(data.iterator()), true, true, textCase,
             dest);
         dest.append(ESequenceMode.ET_AL_);
@@ -73,74 +72,6 @@ public enum ESequenceMode {
   }
 
   /**
-   * Append an object to a text output
-   *
-   * @param textCase
-   *          the text case
-   * @param first
-   *          is the object the first one in the sequence?
-   * @param last
-   *          is the object the last one in the sequence
-   * @param o
-   *          the object
-   * @param dest
-   *          the destination
-   * @return the next text case
-   */
-  static final ETextCase __append(final Object o, final boolean first,
-      final boolean last, final ETextCase textCase,
-      final ITextOutput dest) {
-    final String stringValue;
-    final int length;
-    int i, j;
-    char lowerCase, upperCase;
-
-    if (o instanceof ISequenceable) {
-      return ((ISequenceable) o).toSequence(first, last, textCase, dest);
-    }
-
-    if (o instanceof ISemanticComponent) {
-      return ((ISemanticComponent) o).printShortName(dest, textCase);
-    }
-
-    if (textCase == ETextCase.IN_SENTENCE) {
-      dest.append(o);
-      return textCase;
-    }
-
-    stringValue = String.valueOf(o);
-    length = stringValue.length();
-    j = 0;
-    do {
-      i = j;
-      if (textCase == ETextCase.AT_SENTENCE_START) {
-        j = length;
-      } else {
-        j = stringValue.indexOf(' ', i);
-        if (j < 0) {
-          j = length;
-        } else {
-          j++;
-        }
-      }
-      lowerCase = stringValue.charAt(i);
-      upperCase = textCase.adjustCaseOfFirstCharInWord(lowerCase);
-      if (lowerCase != upperCase) {
-        dest.append(upperCase);
-        dest.append(stringValue, (i + 1), j);
-      } else {
-        if ((i <= 0) && (j >= length)) {
-          dest.append(stringValue);
-        } else {
-          dest.append(stringValue, i, j);
-        }
-      }
-    } while (j < length);
-
-    return textCase.nextCase();
-  }
-
-  /**
    * Append a sequence to this text output.
    *
    * @param textCase
@@ -156,11 +87,18 @@ public enum ESequenceMode {
    * @return the next text case
    */
   public final ETextCase appendSequence(final ETextCase textCase,
-      final Collection<?> data,
+      final Collection<? extends Object> data,
       final boolean connectLastElementWithNonBreakableSpace,
       final ITextOutput dest) {
     return this._appendSequence(',', textCase, data,
         connectLastElementWithNonBreakableSpace, dest);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase appendSequence(final ETextCase textCase,
+      final Collection<?> data, final ITextOutput dest) {
+    return this.appendSequence(textCase, data, (this != COMMA), dest);
   }
 
   /**
@@ -258,8 +196,8 @@ public enum ESequenceMode {
     iterator = data.iterator();
 
     if (size <= 1) {
-      return ESequenceMode.__append(ESequenceMode._next(iterator), true,
-          true, textCase, dest);
+      return TextUtils.appendObjectToSequence(
+          ESequenceMode._next(iterator), true, true, textCase, dest);
     }
 
     useCase = textCase;
@@ -281,15 +219,15 @@ public enum ESequenceMode {
       dest.append(' ');
       useCase = useCase.nextCase();
     }
-    ESequenceMode.__append(ESequenceMode._next(iterator), true, false,
-        useCase, dest);
+    TextUtils.appendObjectToSequence(ESequenceMode._next(iterator), true,
+        false, useCase, dest);
 
     for (i = size; (--i) > 1;) {
       dest.append(sep);
       dest.append(' ');
       useCase = useCase.nextCase();
-      ESequenceMode.__append(ESequenceMode._next(iterator), false, false,
-          useCase, dest);
+      TextUtils.appendObjectToSequence(ESequenceMode._next(iterator),
+          false, false, useCase, dest);
     }
     if (size > 2) {
       dest.append(sep);
@@ -307,7 +245,7 @@ public enum ESequenceMode {
       }
     }
 
-    return ESequenceMode.__append(ESequenceMode._next(iterator), false,
-        true, useCase, dest);
+    return TextUtils.appendObjectToSequence(ESequenceMode._next(iterator),
+        false, true, useCase, dest);
   }
 }

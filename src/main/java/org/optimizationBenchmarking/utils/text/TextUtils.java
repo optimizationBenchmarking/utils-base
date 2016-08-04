@@ -7,6 +7,7 @@ import java.text.Normalizer.Form;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /**
@@ -493,5 +494,77 @@ public final class TextUtils {
     to.append(use);
     to.appendNonBreakingSpace();
     to.append(TextUtils.SIZE_NAMES[index]);
+  }
+
+  /**
+   * Append an object to a text output
+   *
+   * @param textCase
+   *          the text case
+   * @param isObjectFirstInSequence
+   *          is the object the isObjectFirstInSequence one in the
+   *          sequence?
+   * @param isObjectLastInSequence
+   *          is the object the isObjectLastInSequence one in the sequence
+   * @param objectToAppend
+   *          the object
+   * @param dest
+   *          the destination
+   * @return the next text case
+   */
+  public static final ETextCase appendObjectToSequence(
+      final Object objectToAppend, final boolean isObjectFirstInSequence,
+      final boolean isObjectLastInSequence, final ETextCase textCase,
+      final ITextOutput dest) {
+    final String stringValue;
+    final int length;
+    int i, j;
+    char lowerCase, upperCase;
+
+    if (objectToAppend instanceof ISequenceable) {
+      return ((ISequenceable) objectToAppend).toSequence(
+          isObjectFirstInSequence, isObjectLastInSequence, textCase, dest);
+    }
+
+    if (objectToAppend instanceof ISemanticComponent) {
+      return ((ISemanticComponent) objectToAppend).printShortName(dest,
+          textCase);
+    }
+
+    if (textCase == ETextCase.IN_SENTENCE) {
+      dest.append(objectToAppend);
+      return textCase;
+    }
+
+    stringValue = String.valueOf(objectToAppend);
+    length = stringValue.length();
+    j = 0;
+    do {
+      i = j;
+      if (textCase == ETextCase.AT_SENTENCE_START) {
+        j = length;
+      } else {
+        j = stringValue.indexOf(' ', i);
+        if (j < 0) {
+          j = length;
+        } else {
+          j++;
+        }
+      }
+      lowerCase = stringValue.charAt(i);
+      upperCase = textCase.adjustCaseOfFirstCharInWord(lowerCase);
+      if (lowerCase != upperCase) {
+        dest.append(upperCase);
+        dest.append(stringValue, (i + 1), j);
+      } else {
+        if ((i <= 0) && (j >= length)) {
+          dest.append(stringValue);
+        } else {
+          dest.append(stringValue, i, j);
+        }
+      }
+    } while (j < length);
+
+    return textCase.nextCase();
   }
 }

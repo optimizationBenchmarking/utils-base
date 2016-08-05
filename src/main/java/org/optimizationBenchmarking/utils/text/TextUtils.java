@@ -610,8 +610,9 @@ public final class TextUtils {
 
     textOut.append(' ');
     next = next.appendWords(((size > 1) ? plural : singular), textOut);
+    textOut.append(',');
     textOut.append(' ');
-    next = next.appendWord(", namely", textOut);//$NON-NLS-1$
+    next = next.appendWord("namely", textOut);//$NON-NLS-1$
     if (!(appender instanceof EListSequenceMode)) {
       textOut.append(' ');
     }

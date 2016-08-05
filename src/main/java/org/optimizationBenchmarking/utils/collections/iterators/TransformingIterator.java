@@ -10,7 +10,8 @@ import java.util.Iterator;
  * @param <OUT>
  *          the class of the elements provided by this iterator
  */
-public class TransformingIterator<IN, OUT> extends BasicIterator<OUT> {
+public abstract class TransformingIterator<IN, OUT>
+    extends BasicIterator<OUT> {
 
   /** the inner, wrapped iterator */
   private Iterator<IN> m_inner;

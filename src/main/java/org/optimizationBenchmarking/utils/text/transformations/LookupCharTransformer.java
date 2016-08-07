@@ -75,6 +75,19 @@ public class LookupCharTransformer extends CharTransformer {
    *          the name of the resource file
    */
   public LookupCharTransformer(final String resource) {
+    this(null, resource);
+  }
+
+  /**
+   * instantiate
+   *
+   * @param clazz
+   *          the class to load the resource from
+   * @param resource
+   *          the name of the resource file
+   */
+  protected LookupCharTransformer(final Class<?> clazz,
+      final String resource) {
     super();
 
     final ArrayList<char[]> al;
@@ -91,7 +104,7 @@ public class LookupCharTransformer extends CharTransformer {
     hyphen = LookupCharTransformer.DEF_HY;
 
     // load the transformation description from first file
-    try (final InputStream is = this.getClass()
+    try (final InputStream is = ((clazz != null) ? clazz : this.getClass())
         .getResourceAsStream(resource)) {
       try (final InputStreamReader isr = new InputStreamReader(is)) {
         try (final BufferedReader br = new BufferedReader(isr)) {

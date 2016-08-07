@@ -29,7 +29,8 @@ public class LaTeXCharTransformer extends LookupCharTransformer {
 
   /** instantiate */
   protected LaTeXCharTransformer() {
-    super("LaTeXCharTransformationMap.transform"); //$NON-NLS-1$
+    super(LaTeXCharTransformer.class,
+        "LaTeXCharTransformationMap.transform"); //$NON-NLS-1$
   }
 
   /**

@@ -336,50 +336,64 @@ public final class TextUtils {
   }
 
   /**
+   * Get an easy-to-use representation of the class of a given object.
+   *
+   * @param object
+   *          the object
+   * @return the class name
+   */
+  public static final String className(final Object object) {
+    if (object == null) {
+      return "null object, thus class is unknown"; //$NON-NLS-1$
+    }
+    return TextUtils.className(object.getClass());
+  }
+
+  /**
    * Get an easy-to-use representation of a class.
    *
-   * @param c
+   * @param clazz
    *          the class
    * @return the name
    */
-  public static final String className(final Class<?> c) {
-    String s;
-    Class<?> z;
+  public static final String className(final Class<?> clazz) {
+    String string;
+    Class<?> subclass;
 
-    if (c == null) {
-      return "Cannot get name of null class."; //$NON-NLS-1$
+    if (clazz == null) {
+      return "null class"; //$NON-NLS-1$
     }
 
-    s = c.getCanonicalName();
-    if ((s != null) && (s.length() > 0)) {
-      return s;
+    string = clazz.getCanonicalName();
+    if ((string != null) && (string.length() > 0)) {
+      return string;
     }
 
-    z = c;
-    s = "";//$NON-NLS-1$
-    while ((z != null) && (z.isArray())) {
-      s += "[]";//$NON-NLS-1$
-      z = z.getComponentType();
+    subclass = clazz;
+    string = "";//$NON-NLS-1$
+    while ((subclass != null) && (subclass.isArray())) {
+      string += "[]";//$NON-NLS-1$
+      subclass = subclass.getComponentType();
     }
-    if (z != null) {
-      if (s.length() > 0) {
-        return (TextUtils.className(z) + s);
+    if (subclass != null) {
+      if (string.length() > 0) {
+        return (TextUtils.className(subclass) + string);
       }
     }
 
-    s = c.getName();
-    if ((s != null) && (s.length() > 0)) {
-      return s;
+    string = clazz.getName();
+    if ((string != null) && (string.length() > 0)) {
+      return string;
     }
 
-    s = c.getSimpleName();
-    if ((s != null) && (s.length() > 0)) {
-      return s;
+    string = clazz.getSimpleName();
+    if ((string != null) && (string.length() > 0)) {
+      return string;
     }
 
-    s = c.toString();
-    if ((s != null) && (s.length() > 0)) {
-      return s;
+    string = clazz.toString();
+    if ((string != null) && (string.length() > 0)) {
+      return string;
     }
     return "nameless"; //$NON-NLS-1$
   }
@@ -589,6 +603,8 @@ public final class TextUtils {
    * @return the next text case
    * @param <ET>
    *          the element type
+   * @see org.optimizationBenchmarking.utils.text.ESequenceMode
+   * @see org.optimizationBenchmarking.utils.text.ISequenceAppender
    */
   public static final <ET> ETextCase appendElements(
       final Collection<? extends ET> elements, final String singular,
@@ -617,5 +633,45 @@ public final class TextUtils {
       textOut.append(' ');
     }
     return appender.appendSequence(next, elements, textOut);
+  }
+
+  /**
+   * Append the given number of non-breaking spaces to the specified text
+   * output destination.
+   *
+   * @param number
+   *          the number of non-breaking spaces to append
+   * @param textOut
+   *          the text output destination
+   * @see #appendSpaces(int, ITextOutput)
+   */
+  public static final void appendNonBreakingSpaces(final int number,
+      final ITextOutput textOut) {
+    int index;
+    if (number > 0) {
+      for (index = number; (--index) >= 0;) {
+        textOut.appendNonBreakingSpace();
+      }
+    }
+  }
+
+  /**
+   * Append the given number of spaces to the specified text output
+   * destination.
+   *
+   * @param number
+   *          the number of spaces to append
+   * @param textOut
+   *          the text output destination
+   * @see #appendNonBreakingSpaces(int, ITextOutput)
+   */
+  public static final void appendSpaces(final int number,
+      final ITextOutput textOut) {
+    int index;
+    if (number > 0) {
+      for (index = number; (--index) >= 0;) {
+        textOut.append(' ');
+      }
+    }
   }
 }

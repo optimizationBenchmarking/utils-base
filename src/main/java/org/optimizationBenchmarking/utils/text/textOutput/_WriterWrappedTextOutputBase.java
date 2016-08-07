@@ -34,7 +34,7 @@ class _WriterWrappedTextOutputBase<W extends Writer>
     } catch (final IOException ioe) {
       RethrowMode.AS_RUNTIME_EXCEPTION.rethrow((//
           "Error while trying to append CharSequence to " //$NON-NLS-1$
-              + TextUtils.className(this.getClass())),
+              + TextUtils.className(this)),
           true, ioe);
     }
     return this;
@@ -48,7 +48,7 @@ class _WriterWrappedTextOutputBase<W extends Writer>
     } catch (final IOException ioe) {
       RethrowMode.AS_RUNTIME_EXCEPTION.rethrow((//
           "Error while trying to append char[] to " //$NON-NLS-1$
-              + TextUtils.className(this.getClass())),
+              + TextUtils.className(this)),
           true, ioe);
     }
   }
@@ -61,7 +61,7 @@ class _WriterWrappedTextOutputBase<W extends Writer>
     } catch (final IOException ioe) {
       RethrowMode.AS_RUNTIME_EXCEPTION.rethrow((//
           "Error while trying to append String to " //$NON-NLS-1$
-              + TextUtils.className(this.getClass())),
+              + TextUtils.className(this)),
           true, ioe);
     }
   }
@@ -75,7 +75,7 @@ class _WriterWrappedTextOutputBase<W extends Writer>
     } catch (final IOException ioe) {
       RethrowMode.AS_RUNTIME_EXCEPTION.rethrow((//
           "Error while trying to append part of CharSequence to " //$NON-NLS-1$
-              + TextUtils.className(this.getClass())),
+              + TextUtils.className(this)),
           true, ioe);
     }
     return this;
@@ -89,7 +89,7 @@ class _WriterWrappedTextOutputBase<W extends Writer>
     } catch (final IOException ioe) {
       RethrowMode.AS_RUNTIME_EXCEPTION.rethrow((//
           "Error while trying to append char to " //$NON-NLS-1$
-              + TextUtils.className(this.getClass())),
+              + TextUtils.className(this)),
           true, ioe);
     }
     return this;
@@ -103,7 +103,7 @@ class _WriterWrappedTextOutputBase<W extends Writer>
     } catch (final IOException ioe) {
       RethrowMode.AS_RUNTIME_EXCEPTION.rethrow((//
           "Error while trying to flush " //$NON-NLS-1$
-              + TextUtils.className(this.getClass())),
+              + TextUtils.className(this)),
           true, ioe);
     }
   }
@@ -117,7 +117,7 @@ class _WriterWrappedTextOutputBase<W extends Writer>
     } catch (final IOException ioe) {
       RethrowMode.AS_RUNTIME_EXCEPTION.rethrow((//
           "Error while trying to append part of char[] to " //$NON-NLS-1$
-              + TextUtils.className(this.getClass())),
+              + TextUtils.className(this)),
           true, ioe);
     }
   }
@@ -131,7 +131,7 @@ class _WriterWrappedTextOutputBase<W extends Writer>
     } catch (final IOException ioe) {
       RethrowMode.AS_RUNTIME_EXCEPTION.rethrow((//
           "Error while trying to append part of String to " //$NON-NLS-1$
-              + TextUtils.className(this.getClass())),
+              + TextUtils.className(this)),
           true, ioe);
     }
   }

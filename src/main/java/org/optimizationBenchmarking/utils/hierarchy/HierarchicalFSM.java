@@ -725,12 +725,12 @@ public class HierarchicalFSM extends FSM implements IScope {
     sb = new MemoryTextOutput();
     FSM._name(this, sb);
     sb.append(" is an instance of "); //$NON-NLS-1$
-    sb.append(TextUtils.className(this.getClass()));
+    sb.append(TextUtils.className(this));
     sb.append(" and does not allow the child element "); //$NON-NLS-1$
     FSM._name(child, sb);
     if (child != null) {
       sb.append(", which is an instance of "); //$NON-NLS-1$
-      sb.append(TextUtils.className(child.getClass()));
+      sb.append(TextUtils.className(child));
     }
     sb.append('.');
 

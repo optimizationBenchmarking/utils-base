@@ -58,7 +58,7 @@ public class ArrayListView<DT> extends BasicList<DT>
     if (data == null) {
       throw new IllegalArgumentException(//
           "Data (element array) passed to the constructor of " + //$NON-NLS-1$
-              TextUtils.className(this.getClass()) + //
+              TextUtils.className(this) + //
               " must not be null."); //$NON-NLS-1$
     }
     if (!isNullPermitted) {
@@ -72,7 +72,7 @@ public class ArrayListView<DT> extends BasicList<DT>
                   " of " + //$NON-NLS-1$
                   data.length + //
                   " elements is null, but null elements are not permitted in this instance of "//$NON-NLS-1$
-                  + TextUtils.className(this.getClass()) + '.');
+                  + TextUtils.className(this) + '.');
         }
       }
     }

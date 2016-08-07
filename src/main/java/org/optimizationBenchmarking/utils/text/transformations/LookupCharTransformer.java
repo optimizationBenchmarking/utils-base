@@ -80,8 +80,8 @@ public class LookupCharTransformer extends CharTransformer {
     final ArrayList<char[]> al;
     byte[] state;
     int lastDir;
-    String s, a, b;
-    int i, chrA, chrB, cur, last;
+    String string, first, second;
+    int index, chrA, chrB, cur, last;
     byte nextState;
     char[] chrs, hyphen;
 
@@ -90,57 +90,57 @@ public class LookupCharTransformer extends CharTransformer {
     lastDir = -1;
     hyphen = LookupCharTransformer.DEF_HY;
 
-    // load the transformation description from a file
+    // load the transformation description from first file
     try (final InputStream is = this.getClass()
         .getResourceAsStream(resource)) {
       try (final InputStreamReader isr = new InputStreamReader(is)) {
         try (final BufferedReader br = new BufferedReader(isr)) {
 
           //
-          outer: while ((s = br.readLine()) != null) {
-            s = TextUtils.prepare(s);
-            if (s == null) {
+          outer: while ((string = br.readLine()) != null) {
+            string = TextUtils.prepare(string);
+            if (string == null) {
               continue;
             }
-            i = s.indexOf(' ');
-            if (i <= 0) {
+            index = string.indexOf(' ');
+            if (index <= 0) {
               continue;
             }
-            a = TextUtils.prepare(s.substring(0, i));
-            if (a == null) {
+            first = TextUtils.prepare(string.substring(0, index));
+            if (first == null) {
               continue;
             }
 
-            // did we find a hyphen mark?
-            if (a.equals(LookupCharTransformer.HYPHEN_MARK)) {
+            // did we find first hyphen mark?
+            if (first.equals(LookupCharTransformer.HYPHEN_MARK)) {
               if (hyphen != LookupCharTransformer.DEF_HY) {
                 throw new IllegalStateException(//
                     "You can only define one hyphen mark"); //$NON-NLS-1$
               }
-              b = TextUtils.prepare(s.substring(i + 1));
-              if (b != null) {
-                hyphen = b.toCharArray();
+              second = TextUtils.prepare(string.substring(index + 1));
+              if (second != null) {
+                hyphen = second.toCharArray();
               }
               continue;
             }
 
-            a = TextUtils.toLowerCase(a);
+            first = TextUtils.toLowerCase(first);
             try {
-              chrA = Integer.parseInt(a, 16);
-            } catch (final Throwable t) {
-              throw new IOException(t);
+              chrA = Integer.parseInt(first, 16);
+            } catch (final Throwable throwable) {
+              throw new IOException(throwable);
             }
 
             if (chrA < 0) {
               continue;
             }
 
-            b = TextUtils.prepare(s.substring(i + 1));
-            if (b == null) {
-              b = EmptyUtils.EMPTY_STRING;
+            second = TextUtils.prepare(string.substring(index + 1));
+            if (second == null) {
+              second = EmptyUtils.EMPTY_STRING;
               chrB = LookupCharTransformer.STATE_MARK_OMIT;
             } else {
-              chrB = b.charAt(0);
+              chrB = second.charAt(0);
             }
 
             nextState = (-1);
@@ -159,7 +159,8 @@ public class LookupCharTransformer extends CharTransformer {
                 break;
               }
               default: {
-                nextState = (((chrB == chrA) && (b.length() <= 1)) ? //
+                second = this.processTransformation(((char) chrA), second);
+                nextState = (((chrB == chrA) && (second.length() <= 1)) ? //
                     LookupCharTransformer.STATE_DIRECT : ((byte) (-1)));
               }
             }
@@ -171,35 +172,32 @@ public class LookupCharTransformer extends CharTransformer {
               state[chrA] = nextState;
               lastDir = Math.max(chrA, lastDir);
 
-              if (lastDir >= 0x17e) { // keep special chars outside of
-                // table
+              if (lastDir >= 0x17e) {
+                // keep special chars outside of table
                 continue outer; // for high char indices
               }
 
-              // for low char indices, try to build a complete table to
-              // speed
-              // up
-              // lookup operations
+              // for low char indices, try to build first complete table to
+              // speed up lookup operations
               chrs = new char[] { ((char) chrA) };
             } else {
-              i = b.length();
-              chrs = new char[i + 1];
+              index = second.length();
+              chrs = new char[index + 1];
               chrs[0] = ((char) (chrA));
-              b.getChars(0, i, chrs, 1);
+              second.getChars(0, index, chrs, 1);
             }
             al.add(chrs);
           }
         }
       }
-    } catch (final Throwable t) {
-      throw new ExceptionInInitializerError(t);
+    } catch (final Throwable throwable) {
+      throw new ExceptionInInitializerError(throwable);
     }
 
     // ok, we finished loading - now let us prepare the data
 
     // hyphenation is deprecated... we can read that data, but let's ignore
-    // it
-    // this.m_hyphen = (((hyphen != null) && (hyphen.length > 0))//
+    // it this.m_hyphen = (((hyphen != null) && (hyphen.length > 0))//
     // ? new CharArrayCharSequence(hyphen)
     // : null);
 
@@ -217,10 +215,10 @@ public class LookupCharTransformer extends CharTransformer {
     }
 
     // the others go into a sorted table
-    i = al.size();
-    if (i > 0) {
+    index = al.size();
+    if (index > 0) {
 
-      this.m_data = al.toArray(new char[i][]);
+      this.m_data = al.toArray(new char[index][]);
       Arrays.sort(this.m_data, _CharTransformerSorter.SORTER);
 
       last = (-1);
@@ -238,6 +236,20 @@ public class LookupCharTransformer extends CharTransformer {
     } else {
       this.m_data = LookupCharTransformer.DEF_DATA;
     }
+  }
+
+  /**
+   * This method allows us to hook into to process a transformation
+   *
+   * @param input
+   *          the input character
+   * @param output
+   *          to what it will be transformed
+   * @return either {@code output}, or a different transformation
+   */
+  protected String processTransformation(final char input,
+      final String output) {
+    return output;
   }
 
   /** {@inheritDoc} */

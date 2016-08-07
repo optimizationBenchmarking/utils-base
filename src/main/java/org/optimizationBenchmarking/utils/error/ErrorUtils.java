@@ -26,7 +26,7 @@ public final class ErrorUtils {
 
     return new IllegalArgumentException(
         (((("Can only aggregate errors or aggregation handles, but tried to aggregate an instance of " //$NON-NLS-1$
-            + TextUtils.className(object.getClass()))
+            + TextUtils.className(object))
             + " with String representation '") + object.toString()) + //$NON-NLS-1$
             '\'') + '.');
   }

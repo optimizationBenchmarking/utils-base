@@ -92,7 +92,7 @@ final class _DiagnosticListener extends LoggingWriter
     if (source == null) {
       text.append("null"); //$NON-NLS-1$
     } else {
-      text.append(TextUtils.className(source.getClass()));
+      text.append(TextUtils.className(source));
     }
     source = null;
 

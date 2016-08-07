@@ -22,8 +22,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @param <S>
  *          the source type
  */
-public class XMLInputTool<S> extends TextInputTool<S> implements
-    IXMLInputTool<S> {
+public class XMLInputTool<S> extends TextInputTool<S>
+    implements IXMLInputTool<S> {
 
   /** the xml version */
   protected static final String XML_VERSION = "1.0"; //$NON-NLS-1$
@@ -94,13 +94,13 @@ public class XMLInputTool<S> extends TextInputTool<S> implements
       logger = job.getLogger();
       if ((logger != null)
           && (logger.isLoggable(IOTool.DEFAULT_LOG_LEVEL))) {
-        logger.log(IOTool.DEFAULT_LOG_LEVEL,//
+        logger.log(IOTool.DEFAULT_LOG_LEVEL, //
             ("Beginning input from InputSource.")); //$NON-NLS-1$
       }
       this.__xml(job, data, ((InputSource) (location.m_location1)));
       if ((logger != null)
           && (logger.isLoggable(IOTool.DEFAULT_LOG_LEVEL))) {
-        logger.log(IOTool.DEFAULT_LOG_LEVEL,//
+        logger.log(IOTool.DEFAULT_LOG_LEVEL, //
             ("Finished input from InputSource.")); //$NON-NLS-1$
       }
       return;
@@ -137,7 +137,7 @@ public class XMLInputTool<S> extends TextInputTool<S> implements
   @Override
   protected void stream(final IOJob job, final S data,
       final InputStream stream, final StreamEncoding<?, ?> encoding)
-      throws Throwable {
+          throws Throwable {
     this.m_spf.newSAXParser().parse(stream,
         this.wrapDestination(data, job));
   }
@@ -184,8 +184,8 @@ public class XMLInputTool<S> extends TextInputTool<S> implements
     if (this.m_cause != null) {
       throw new UnsupportedOperationException(//
           "Cannot use tool '" + //$NON-NLS-1$
-              TextUtils.className(this.getClass())
-              + " due to error in XML parser initialization.",//$NON-NLS-1$
+              TextUtils.className(this)
+              + " due to error in XML parser initialization.", //$NON-NLS-1$
           this.m_cause);
     }
     super.checkCanUse();

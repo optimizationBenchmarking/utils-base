@@ -34,7 +34,7 @@ public abstract class Tool extends Textable implements ITool {
   public void checkCanUse() {
     if (!(this.canUse())) {
       throw new UnsupportedOperationException("Tool '" + //$NON-NLS-1$
-          TextUtils.className(this.getClass()) + "' cannot be used."); //$NON-NLS-1$
+          TextUtils.className(this) + "' cannot be used."); //$NON-NLS-1$
     }
   }
 

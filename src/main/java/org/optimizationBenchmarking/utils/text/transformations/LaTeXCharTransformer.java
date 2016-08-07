@@ -25,10 +25,10 @@ import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
  * <code>\gdef\lowerdotaccent#1{\.{#1}}%</code></li>
  * </ol>
  */
-public final class LaTeXCharTransformer extends LookupCharTransformer {
+public class LaTeXCharTransformer extends LookupCharTransformer {
 
   /** instantiate */
-  LaTeXCharTransformer() {
+  protected LaTeXCharTransformer() {
     super("LaTeXCharTransformationMap.transform"); //$NON-NLS-1$
   }
 

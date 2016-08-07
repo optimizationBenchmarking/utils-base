@@ -121,7 +121,7 @@ final class _LoggedSentinel extends Throwable {
     if (name != null) {
       return name;
     }
-    return ((((TextUtils.className(logger.getClass())) + '#')
+    return ((((TextUtils.className(logger)) + '#')
         + System.identityHashCode(logger)));
   }
 

@@ -97,7 +97,7 @@ public class IOJob extends ToolJob {
    */
   public final void handleError(final Throwable throwable,
       final String message) throws IOException {
-    final Object o;
+    final Object object;
     String msg;
 
     msg = this._id();
@@ -108,11 +108,11 @@ public class IOJob extends ToolJob {
       msg += message;
     }
 
-    if ((o = this.m_current) != null) {
+    if ((object = this.m_current) != null) {
       msg += ((((" Possible source of error: '" + //$NON-NLS-1$
-      o) + "' of class ") + //$NON-NLS-1$
-      TextUtils.className(o.getClass())) + //
-      " (but this information may not be reliable).");//$NON-NLS-1$
+          object) + "' of class ") + //$NON-NLS-1$
+          TextUtils.className(object)) + //
+          " (but this information may not be reliable).");//$NON-NLS-1$
     }
 
     ErrorUtils.logError(this.getLogger(), msg, throwable, true,

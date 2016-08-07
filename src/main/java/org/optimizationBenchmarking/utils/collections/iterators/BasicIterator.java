@@ -12,8 +12,8 @@ import org.optimizationBenchmarking.utils.text.TextUtils;
  * @param <T>
  *          the type to iterate about
  */
-public class BasicIterator<T> extends BasicEnumeration<T> implements
-    Iterator<T> {
+public class BasicIterator<T> extends BasicEnumeration<T>
+    implements Iterator<T> {
 
   /** an iterator iterating over nothing */
   public static final BasicIterator<Object> EMPTY_ITERATOR = new BasicIterator<>();
@@ -44,19 +44,17 @@ public class BasicIterator<T> extends BasicEnumeration<T> implements
   /** {@inheritDoc} */
   @Override
   public T next() {
-    throw new NoSuchElementException(
-        "The iterator of type " + TextUtils.className(this.getClass()) + //$NON-NLS-1$
-            " does not contain another element. You should have checked hasNext() before invoking next()."//$NON-NLS-1$
-    );
+    throw new NoSuchElementException("The iterator of type " //$NON-NLS-1$
+        + TextUtils.className(this)
+        + " does not contain another element. You should have checked hasNext() before invoking next()."); //$NON-NLS-1$
   }
 
   /** {@inheritDoc} */
   @Override
   public void remove() {
-    throw new UnsupportedOperationException(
-        "The iterator of type " + TextUtils.className(this.getClass()) + //$NON-NLS-1$
-            " does not allow removing the current element (or maybe you did not call next() before remove())."//$NON-NLS-1$
-    );
+    throw new UnsupportedOperationException("The iterator of type " //$NON-NLS-1$
+        + TextUtils.className(this)
+        + " does not allow removing the current element (or maybe you did not call next() before remove())."); //$NON-NLS-1$
   }
 
 }

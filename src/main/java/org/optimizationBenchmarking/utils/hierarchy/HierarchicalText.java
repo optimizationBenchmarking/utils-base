@@ -66,7 +66,7 @@ public abstract class HierarchicalText extends HierarchicalFSM {
         FSM._name(this, sb);
         sb.append(
             " receives a non-null appendable (in this case, an instance of "); //$NON-NLS-1$
-        sb.append(TextUtils.className(out.getClass()));
+        sb.append(TextUtils.className(out));
         sb.append(
             ") in the constructor, its owner cannot be an instance of "); //$NON-NLS-1$
         sb.append(TextUtils.className(HierarchicalText.class));

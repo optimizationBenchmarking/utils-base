@@ -43,7 +43,8 @@ class _Location {
    *          the encoding
    */
   _Location(final Object location1, final Object location2,
-      final StreamEncoding<?, ?> encoding, final EArchiveType archiveType) {
+      final StreamEncoding<?, ?> encoding,
+      final EArchiveType archiveType) {
     super();
     this.m_location1 = location1;
     this.m_location2 = location2;
@@ -78,7 +79,7 @@ class _Location {
             text.append(obj.toString());
           }
         } else {
-          text.append(TextUtils.className(obj.getClass()));
+          text.append(TextUtils.className(obj));
           text.append('@');
           text.append(System.identityHashCode(obj));
         }

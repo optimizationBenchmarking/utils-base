@@ -20,6 +20,8 @@ public class SemanticComponentSequenceable implements ISequenceable {
   private final boolean m_printShortName;
   /** should we print the long name? */
   private final boolean m_printLongName;
+  /** should we print the description? */
+  private final boolean m_printDescription;
 
   /**
    * Create the semantic component to sequenceable wrapper
@@ -30,19 +32,23 @@ public class SemanticComponentSequenceable implements ISequenceable {
    *          should we print the short name?
    * @param printLongName
    *          should we print the long name?
+   * @param printDescription
+   *          should we print the description?
    */
   public SemanticComponentSequenceable(final ISemanticComponent component,
-      final boolean printShortName, final boolean printLongName) {
+      final boolean printShortName, final boolean printLongName,
+      final boolean printDescription) {
     super();
     if (component == null) {
       throw new IllegalArgumentException(//
           "Semantic component to be wrapped cannot be null."); //$NON-NLS-1$
     }
-    SemanticComponentSequenceable._checkPrint(printShortName,
-        printLongName);
+    SemanticComponentSequenceable.__checkPrint(printShortName,
+        printLongName, printDescription);
     this.m_component = component;
     this.m_printShortName = printShortName;
     this.m_printLongName = printLongName;
+    this.m_printDescription = printDescription;
   }
 
   /**
@@ -52,12 +58,14 @@ public class SemanticComponentSequenceable implements ISequenceable {
    *          should we print the short name?
    * @param printLongName
    *          should we print the long name?
+   * @param printDescription
+   *          should we print the description?
    */
-  static final void _checkPrint(final boolean printShortName,
-      final boolean printLongName) {
-    if (!(printShortName || printLongName)) {
+  private static final void __checkPrint(final boolean printShortName,
+      final boolean printLongName, final boolean printDescription) {
+    if (!(printShortName || printLongName || printDescription)) {
       throw new IllegalArgumentException(//
-          "printShortName and printLongName cannot both be false.");//$NON-NLS-1$
+          "When printing a semantic component, printShortName, printLongName, and printDescription cannot all be false, i.e., we need to print at least something.");//$NON-NLS-1$
     }
   }
 
@@ -66,14 +74,30 @@ public class SemanticComponentSequenceable implements ISequenceable {
   public final ETextCase toSequence(final boolean isFirstInSequence,
       final boolean isLastInSequence, final ETextCase textCase,
       final ITextOutput textOut) {
+    ETextCase next;
     if (this.m_printShortName) {
       if (this.m_printLongName) {
-        return SemanticComponentUtils.printLongAndShortNameIfDifferent(
+        next = SemanticComponentUtils.printLongAndShortNameIfDifferent(
             this.m_component, textOut, textCase);
+      } else {
+        next = this.m_component.printShortName(textOut, textCase);
       }
-      return this.m_component.printShortName(textOut, textCase);
+    } else {
+      if (this.m_printLongName) {
+        next = this.m_component.printLongName(textOut, textCase);
+      } else {
+        next = textCase;
+      }
     }
-    return this.m_component.printLongName(textOut, textCase);
+
+    if (this.m_printDescription) {
+      if (this.m_printShortName || this.m_printLongName) {
+        textOut.append(':');
+        textOut.append(' ');
+      }
+      return this.m_component.printDescription(textOut, next);
+    }
+    return next;
   }
 
   /**
@@ -85,19 +109,24 @@ public class SemanticComponentSequenceable implements ISequenceable {
    *          should we print the short name?
    * @param printLongName
    *          should we print the long name?
+   * @param printDescription
+   *          should we print the description?
    * @return the wrapped collection
    */
   public static final ArrayListView<ISequenceable> wrap(
       final Collection<? extends ISemanticComponent> components,
-      final boolean printShortName, final boolean printLongName) {
+      final boolean printShortName, final boolean printLongName,
+      final boolean printDescription) {
     final ISequenceable[] wrapped;
     int index;
 
+    SemanticComponentSequenceable.__checkPrint(printShortName,
+        printLongName, printDescription);
     wrapped = new ISequenceable[components.size()];
     index = 0;
     for (final ISemanticComponent isc : components) {
       wrapped[index++] = new SemanticComponentSequenceable(isc,
-          printShortName, printLongName);
+          printShortName, printLongName, printDescription);
     }
     return new ArrayListView<>(wrapped, false);
   }

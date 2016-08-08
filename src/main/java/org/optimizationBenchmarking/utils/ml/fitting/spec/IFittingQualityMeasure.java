@@ -2,11 +2,13 @@ package org.optimizationBenchmarking.utils.ml.fitting.spec;
 
 import java.util.Random;
 
+import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
+
 /**
  * This interface can compute the fitting quality of a given set of model
  * parameters on a data set.
  */
-public interface IFittingQualityMeasure {
+public interface IFittingQualityMeasure extends ISemanticComponent {
 
   /**
    * Compute the quality of the given model parameters

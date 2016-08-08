@@ -3,8 +3,10 @@ package org.optimizationBenchmarking.utils.ml.fitting.spec;
 import org.optimizationBenchmarking.utils.document.spec.IMath;
 import org.optimizationBenchmarking.utils.document.spec.IMathRenderable;
 import org.optimizationBenchmarking.utils.document.spec.IParameterRenderer;
+import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
 import org.optimizationBenchmarking.utils.math.functions.UnaryFunction;
 import org.optimizationBenchmarking.utils.math.matrix.IMatrix;
+import org.optimizationBenchmarking.utils.text.ETextCase;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 
 /**
@@ -24,7 +26,8 @@ import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
  * </a></sup>
  * </p>
  */
-public abstract class ParametricUnaryFunction implements IMathRenderable {
+public abstract class ParametricUnaryFunction
+    implements IMathRenderable, ISemanticComponent {
 
   /** create */
   protected ParametricUnaryFunction() {
@@ -148,6 +151,33 @@ public abstract class ParametricUnaryFunction implements IMathRenderable {
   /** {@inheritDoc} */
   @Override
   public String toString() {
+    return this.getClass().getSimpleName();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public ETextCase printShortName(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return textCase.appendWords(this.toString(), textOut);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public ETextCase printLongName(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return this.printShortName(textOut, textCase);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public ETextCase printDescription(final ITextOutput textOut,
+      final ETextCase textCase) {
+    return this.printLongName(textOut, textCase);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getPathComponentSuggestion() {
     return this.getClass().getSimpleName();
   }
 }

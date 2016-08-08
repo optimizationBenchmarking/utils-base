@@ -118,11 +118,6 @@ public class BibArticle extends BibRecordWithPublisher {
     }
 
     this.m_number = (direct ? number : TextUtils.normalize(number));
-    if (this.m_number == null) {
-      throw new IllegalArgumentException(//
-          "Number must not be null or empty, but '" + //$NON-NLS-1$
-              number + "' is."); //$NON-NLS-1$
-    }
 
     this.m_startPage = (direct ? startPage
         : TextUtils.normalize(startPage));

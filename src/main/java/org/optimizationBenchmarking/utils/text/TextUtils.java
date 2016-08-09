@@ -547,6 +547,9 @@ public final class TextUtils {
       done = TimeUnit.MILLISECONDS.toHours(rest);
       rest -= TimeUnit.HOURS.toMillis(done);
       if ((done > 0L) || ((rest > 0L) && need)) {
+        if (need) {
+          textOut.append(' ');
+        }
         textOut.append(done);
         textOut.append(" hours"); //$NON-NLS-1$
         need = true;
@@ -556,6 +559,9 @@ public final class TextUtils {
         done = TimeUnit.MILLISECONDS.toMinutes(rest);
         rest -= TimeUnit.MINUTES.toMillis(done);
         if ((done > 0L) || ((rest > 0L) && need)) {
+          if (need) {
+            textOut.append(' ');
+          }
           textOut.append(done);
           textOut.append(" minutes"); //$NON-NLS-1$
           need = true;
@@ -565,17 +571,21 @@ public final class TextUtils {
           done = TimeUnit.MILLISECONDS.toSeconds(rest);
           rest -= TimeUnit.SECONDS.toMillis(done);
           if ((done > 0L) || ((rest > 0L) && need)) {
+            if (need) {
+              textOut.append(' ');
+            }
             textOut.append(done);
             textOut.append(" seconds"); //$NON-NLS-1$
             need = true;
           }
 
           if (rest > 0L) {
-            if (rest > 0L) {
-              textOut.append(done);
-              textOut.append(" milliseconds"); //$NON-NLS-1$
-              need = true;
+            if (need) {
+              textOut.append(' ');
             }
+            textOut.append(done);
+            textOut.append(" milliseconds"); //$NON-NLS-1$
+            need = true;
           }
         }
       }

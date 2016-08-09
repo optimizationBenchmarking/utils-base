@@ -7,11 +7,13 @@ import java.text.Normalizer.Form;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import org.optimizationBenchmarking.utils.document.impl.EListSequenceMode;
 import org.optimizationBenchmarking.utils.document.spec.ISemanticComponent;
 import org.optimizationBenchmarking.utils.text.numbers.InTextNumberAppender;
 import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
+import org.optimizationBenchmarking.utils.text.textOutput.MemoryTextOutput;
 
 /**
  * The text utilities class provides several methods that help us to
@@ -511,6 +513,89 @@ public final class TextUtils {
     to.append(use);
     to.appendNonBreakingSpace();
     to.append(TextUtils.SIZE_NAMES[index]);
+  }
+
+  /**
+   * Append a given duration to a text output
+   *
+   * @param durationInMS
+   *          the duration in milliseconds
+   * @param textOut
+   * @see #durationToString(long)
+   */
+  public static final void appendDuration(final long durationInMS,
+      final ITextOutput textOut) {
+    long rest, done;
+    boolean need;
+
+    rest = durationInMS;
+
+    done = TimeUnit.MILLISECONDS.toDays(rest);
+    rest -= TimeUnit.DAYS.toMillis(done);
+    if (rest < 0L) {
+      if (rest <= 0L) {
+        rest = (-rest);
+      }
+    }
+    need = false;
+    if (done != 0L) {
+      textOut.append(done);
+      textOut.append(" days"); //$NON-NLS-1$
+      need = true;
+    }
+    if (rest > 0L) {
+      done = TimeUnit.MILLISECONDS.toHours(rest);
+      rest -= TimeUnit.HOURS.toMillis(done);
+      if ((done > 0L) || ((rest > 0L) && need)) {
+        textOut.append(done);
+        textOut.append(" hours"); //$NON-NLS-1$
+        need = true;
+      }
+
+      if (rest > 0L) {
+        done = TimeUnit.MILLISECONDS.toMinutes(rest);
+        rest -= TimeUnit.MINUTES.toMillis(done);
+        if ((done > 0L) || ((rest > 0L) && need)) {
+          textOut.append(done);
+          textOut.append(" minutes"); //$NON-NLS-1$
+          need = true;
+        }
+
+        if (rest > 0L) {
+          done = TimeUnit.MILLISECONDS.toSeconds(rest);
+          rest -= TimeUnit.SECONDS.toMillis(done);
+          if ((done > 0L) || ((rest > 0L) && need)) {
+            textOut.append(done);
+            textOut.append(" seconds"); //$NON-NLS-1$
+            need = true;
+          }
+
+          if (rest > 0L) {
+            if (rest > 0L) {
+              textOut.append(done);
+              textOut.append(" milliseconds"); //$NON-NLS-1$
+              need = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Convert a given duration to a string
+   *
+   * @param durationInMS
+   *          the duration in milliseconds
+   * @return the string
+   * @see #appendDuration(long, ITextOutput)
+   */
+  public static final String durationToString(final long durationInMS) {
+    final MemoryTextOutput memTextOut;
+
+    memTextOut = new MemoryTextOutput();
+    TextUtils.appendDuration(durationInMS, memTextOut);
+    return memTextOut.toString();
   }
 
   /**

@@ -1,5 +1,7 @@
 package shared.junit.org.optimizationBenchmarking.utils.ml.classification;
 
+import java.util.HashSet;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.optimizationBenchmarking.utils.math.MathUtils;
@@ -43,6 +45,7 @@ public abstract class ClassifierTrainerTest
     final IClassifierTrainer trainer;
     final IClassifierTrainingResult result;
     final IClassifier classifier;
+    final HashSet<Integer> all;
     int maxClass, currentClass;
 
     Assert.assertNotNull(samples);
@@ -73,10 +76,15 @@ public abstract class ClassifierTrainerTest
       maxClass = Math.max(maxClass, sample.sampleClass);
     }
 
+    all = new HashSet<>();
     for (final ClassifiedSample sample : samples.data) {
       currentClass = classifier.classify(sample.featureValues);
       Assert.assertTrue(currentClass >= 0);
       Assert.assertTrue(currentClass <= maxClass);
+      all.add(Integer.valueOf(currentClass));
+    }
+    if (maxClass >= 1) {
+      Assert.assertTrue(all.size() > 1);
     }
 
     Assert.assertTrue(result.getQuality() >= 0d);

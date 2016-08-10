@@ -540,7 +540,7 @@ public final class TextUtils {
     need = false;
     if (done != 0L) {
       textOut.append(done);
-      textOut.append(" days"); //$NON-NLS-1$
+      textOut.append('d');
       need = true;
     }
     if (rest > 0L) {
@@ -551,7 +551,7 @@ public final class TextUtils {
           textOut.append(' ');
         }
         textOut.append(done);
-        textOut.append(" hours"); //$NON-NLS-1$
+        textOut.append('h');
         need = true;
       }
 
@@ -563,7 +563,7 @@ public final class TextUtils {
             textOut.append(' ');
           }
           textOut.append(done);
-          textOut.append(" minutes"); //$NON-NLS-1$
+          textOut.append('m');
           need = true;
         }
 
@@ -575,16 +575,19 @@ public final class TextUtils {
               textOut.append(' ');
             }
             textOut.append(done);
-            textOut.append(" seconds"); //$NON-NLS-1$
-            need = true;
-          }
-
-          if (rest > 0L) {
-            if (need) {
-              textOut.append(' ');
+            if (rest > 0L) {
+              textOut.append('.');
+              textOut.append((rest / 100L));
+              rest %= 100L;
+              if (rest > 0L) {
+                textOut.append((rest / 10L));
+                rest %= 10L;
+                if (rest > 0L) {
+                  textOut.append(rest);
+                }
+              }
             }
-            textOut.append(done);
-            textOut.append(" milliseconds"); //$NON-NLS-1$
+            textOut.append('s');
             need = true;
           }
         }

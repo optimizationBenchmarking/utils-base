@@ -17,9 +17,11 @@ public enum EListSequenceMode implements ISequenceAppender<Object> {
   /** Print the elements in an enumeration */
   ENUMERATION {
     /** {@inheritDoc} */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public final ETextCase appendSequence(final ETextCase textCase,
-        final Collection<?> data, final ITextOutput dest) {
+        final Collection<?> data, final ITextOutput dest,
+        final ISequenceAppender<?> fallback) {
       final int size;
 
       size = data.size();
@@ -33,19 +35,23 @@ public enum EListSequenceMode implements ISequenceAppender<Object> {
           EListSequenceMode._doSequence(size - 1, data, enumeration,
               textCase);
         }
-        return textCase.nextAfterSentenceEnd();
+        return textCase.nextCase();
       }
 
-      return ESequenceMode.COMMA.appendSequence(textCase, data, dest);
+      dest.append(' ');
+      return ((ISequenceAppender) fallback).appendSequence(textCase, data,
+          dest);
     }
   },
 
   /** Print the elements in an itemization */
   ITEMIZATION {
     /** {@inheritDoc} */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public final ETextCase appendSequence(final ETextCase textCase,
-        final Collection<?> data, final ITextOutput dest) {
+        final Collection<?> data, final ITextOutput dest,
+        final ISequenceAppender<?> fallback) {
       final int size;
 
       size = data.size();
@@ -59,10 +65,12 @@ public enum EListSequenceMode implements ISequenceAppender<Object> {
           EListSequenceMode._doSequence(size - 1, data, itemization,
               textCase);
         }
-        return textCase.nextAfterSentenceEnd();
+        return textCase.nextCase();
       }
 
-      return ESequenceMode.COMMA.appendSequence(textCase, data, dest);
+      dest.append(' ');
+      return ((ISequenceAppender) fallback).appendSequence(textCase, data,
+          dest);
     }
   };
 
@@ -90,5 +98,30 @@ public enum EListSequenceMode implements ISequenceAppender<Object> {
             (index >= last), textCase, item);
       }
     }
+  }
+
+  /**
+   * Transform the given collection to a sequence.
+   *
+   * @param textCase
+   *          the text case to use
+   * @param data
+   *          the data to use
+   * @param dest
+   *          the destination text output
+   * @param fallback
+   *          the fallback sequence mode, if the text destination does not
+   *          support lists
+   * @return the next text case
+   */
+  public abstract ETextCase appendSequence(final ETextCase textCase,
+      final Collection<?> data, final ITextOutput dest,
+      final ISequenceAppender<?> fallback);
+
+  /** {@inheritDoc} */
+  @Override
+  public final ETextCase appendSequence(final ETextCase textCase,
+      final Collection<?> data, final ITextOutput dest) {
+    return this.appendSequence(textCase, data, dest, ESequenceMode.AND);
   }
 }

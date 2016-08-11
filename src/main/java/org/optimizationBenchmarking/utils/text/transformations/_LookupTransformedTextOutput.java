@@ -159,20 +159,23 @@ class _LookupTransformedTextOutput extends _TransformedTextOutput {
   @Override
   public AbstractTextOutput append(final char c) {
     final char[] replace;
-    switch (this.m_state[c]) {
 
-      case LookupCharTransformer.STATE_DIRECT: {
-        this.m_out.append(c);
-        return this;
-      }
+    if (c < this.m_state.length) {
+      switch (this.m_state[c]) {
 
-      case LookupCharTransformer.STATE_OMIT: {
-        return this;
-      }
+        case LookupCharTransformer.STATE_DIRECT: {
+          this.m_out.append(c);
+          return this;
+        }
 
-      case LookupCharTransformer.STATE_TO_SPACE: {
-        this.m_out.append(' ');
-        return this;
+        case LookupCharTransformer.STATE_OMIT: {
+          return this;
+        }
+
+        case LookupCharTransformer.STATE_TO_SPACE: {
+          this.m_out.append(' ');
+          return this;
+        }
       }
     }
 

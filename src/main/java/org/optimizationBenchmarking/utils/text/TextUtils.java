@@ -692,6 +692,13 @@ public final class TextUtils {
    *          the singular name of the element type
    * @param plural
    *          the plural name of the element type
+   * @param maxElementsForListing
+   *          the maximum number of elements for which the complete list of
+   *          elements is presented, i.e., if
+   *          {@code elements.size()<=maxElementsForListing}, the elements
+   *          in {@code elements} are listed, otherwise, i.e., if
+   *          {@code elements.size()>maxElementsForListing}, the list is
+   *          omitted.
    * @param textCase
    *          the text case
    * @param appender
@@ -706,7 +713,8 @@ public final class TextUtils {
    */
   public static final <ET> ETextCase appendElements(
       final Collection<? extends ET> elements, final String singular,
-      final String plural, final ETextCase textCase,
+      final String plural, final int maxElementsForListing,
+      final ETextCase textCase,
       final ISequenceAppender<? super ET> appender,
       final ITextOutput textOut) {
     final int size;
@@ -724,6 +732,9 @@ public final class TextUtils {
 
     textOut.append(' ');
     next = next.appendWords(((size > 1) ? plural : singular), textOut);
+    if (size >= maxElementsForListing) {
+      return next;
+    }
     textOut.append(',');
     textOut.append(' ');
     next = next.appendWord("namely", textOut);//$NON-NLS-1$

@@ -11,6 +11,12 @@ import org.optimizationBenchmarking.utils.text.textOutput.ITextOutput;
 public final class ClassifiedSample extends Textable
     implements Comparable<ClassifiedSample> {
 
+  /**
+   * the maximum value of the class attribute which makes any sense (
+   * {@value}): if a data set has more than {@code MAX_CLASSES+1}classes,
+   * then something is wrong and we will throw and exception
+   */
+  public static final int MAX_CLASS = 1_000;
   /** the feature values */
   public final double[] featureValues;
 
@@ -32,9 +38,11 @@ public final class ClassifiedSample extends Textable
       final double... _featureValues) {
     super();
 
-    if ((_sampleClass < 0) || (_sampleClass > 1000)) {
+    if ((_sampleClass < 0)
+        || (_sampleClass > ClassifiedSample.MAX_CLASS)) {
       throw new IllegalArgumentException((//
-          "Class must be in 0...1000, but specified is " //$NON-NLS-1$
+          "Class must be in 0..." + ClassifiedSample.MAX_CLASS//$NON-NLS-1$
+              + ", but specified is " //$NON-NLS-1$
               + _sampleClass)
           + '.');
     }

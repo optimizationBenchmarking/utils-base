@@ -16,4 +16,12 @@ public interface IClassifierTrainingResult {
    * @return the quality, the smaller the better
    */
   public abstract double getQuality();
+
+  /**
+   * Get the complexity of a classifier: the larger this value, the more
+   * complicated is the classifier to print
+   *
+   * @return the complexity of a classifier
+   */
+  public abstract double getComplexity();
 }

@@ -232,6 +232,6 @@ public enum EFeatureType {
     if (EFeatureType.featureDoubleIsUnspecified(bool)) {
       return EFeatureType.UNSPECIFIED_BOOLEAN;
     }
-    return (Math.abs(bool) >= 0.5d) ? Boolean.TRUE : Boolean.FALSE;
+    return (bool > 0d) ? Boolean.TRUE : Boolean.FALSE;
   }
 }
